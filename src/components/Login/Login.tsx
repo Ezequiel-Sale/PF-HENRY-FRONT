@@ -1,6 +1,6 @@
-import React from 'react'
 
 const Login = () => {
+  console.log("Hola")
   return (
     <div>Login</div>
   )
