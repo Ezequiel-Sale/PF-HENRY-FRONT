@@ -1,8 +1,7 @@
 
 const Login = () => {
-  console.log("Hola")
   return (
-    <div>Login</div>
+    <div>Holis</div>
   )
 }
 
