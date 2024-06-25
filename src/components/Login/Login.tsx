@@ -1,6 +1,6 @@
 
 const Login = () => {
-  console.log("Hola")
+  console.log("Hola Mundo blabla")
   return (
     <div>Holis</div>
   )
