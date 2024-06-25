@@ -1,4 +1,1 @@
-export interface LoginProps {
-    email: string;
-    password: string;
-}
+console.log("Hola")
