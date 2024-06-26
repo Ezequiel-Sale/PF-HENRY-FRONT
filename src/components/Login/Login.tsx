@@ -4,6 +4,7 @@ import React from "react";
 import getGoogleProvider from "@/services/firebase";
 import { signInWithPopup } from "firebase/auth";
 
+
 const Login = () => {
   const signInWithGoogle = async () => {
     try {
