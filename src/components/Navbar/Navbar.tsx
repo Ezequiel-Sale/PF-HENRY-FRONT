@@ -17,11 +17,11 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="text-white rounded-xl bg-transparent  p-2 w-screen">
-      <div className="rounded-xl flex flex-wrap items-center  p-2 mx-auto md:max-w-max justify-between md:min-w-[1200px] glass-efect w-full ">
+    <nav className="text-white rounded-xl bg-transparent  p-2 w-screen flex justify-center">
+      <div className="rounded-xl flex flex-wrap items-center  md:p-2  mx-auto md:max-w-max justify-between md:min-w-[1200px] sm:border-b-0 sm:border-x-0 glass-efect w-full max-w-[70vw] border-none md:border">
         <a
           href="/"
-          className="flex items-center space-x-3 rtl:space-x-reverse  flex-col"
+          className="flex items-center space-x-3 rtl:space-x-reverse  flex-col pb-2 md:pb-0"
         >
           <img src="logo-with-name.png" className="h-10" alt="Flowbite Logo" />
         </a>
@@ -62,14 +62,14 @@ const Navbar = () => {
         <div
           className={`${
             isOpen ? "flex" : "hidden"
-          } items-center justify-between w-full md:flex md:w-auto md:order-1`}
+          } items-center md:justify-between w-full md:flex md:w-auto md:order-1 bg-black md:bg-transparent justify-center md:border border-none`}
           id="navbar-cta"
         >
-          <ul className=" text-white flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <ul className=" text-white flex flex-col font-medium p-4 md:p-0 mt-4  border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 w-full gap-1 ">
             <li>
               <a
                 href="/"
-                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
                   path === "/" ? "text-red-500" : "text-white"
                 }`}
                 aria-current="page"
@@ -80,7 +80,7 @@ const Navbar = () => {
             <li>
               <a
                 href="/services"
-                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
                   path === "/services" ? "text-red-500" : "text-white"
                 }`}
               >
@@ -90,7 +90,7 @@ const Navbar = () => {
             <li>
               <a
                 href="/about"
-                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
                   path === "/about" ? "text-red-500" : "text-white"
                 }`}
               >
@@ -100,7 +100,7 @@ const Navbar = () => {
             <li>
               <a
                 href="/contact"
-                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
                   path === "/contact" ? "text-red-500" : "text-white"
                 }`}
               >

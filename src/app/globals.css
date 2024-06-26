@@ -5,6 +5,10 @@
   border: 1px solid #ffffff4d;
 }
 
+.hollow-text {
+  -webkit-text-stroke: 3px red; /* Ancho y color del borde */
+  color: transparent; /* Hace el relleno transparente */
+}
 
 @tailwind base;
 @tailwind components;
