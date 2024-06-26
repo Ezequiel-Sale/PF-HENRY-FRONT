@@ -24,7 +24,6 @@ const Register: React.FC = () => {
         validateOnChange
         validate={registerValidations}
         onSubmit={(values, { resetForm }) => {
-            console.log(values)
           Swal.fire({
             position: "center",
             icon: "success",
