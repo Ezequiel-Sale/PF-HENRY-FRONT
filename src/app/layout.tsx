@@ -3,12 +3,14 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Power Traning",
   description: "Power Training App",
+  icons: ["logo-with-name.png"],
 };
 
 export default function RootLayout({

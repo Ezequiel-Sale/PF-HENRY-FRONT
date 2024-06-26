@@ -17,11 +17,17 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="text-white rounded-xl bg-transparent  p-2 w-screen">
-      <div className="rounded-xl flex flex-wrap items-center  p-2 mx-auto md:max-w-max justify-between md:min-w-[1200px] glass-efect w-full ">
+    <nav className="text-white rounded-xl bg-transparent  p-2 w-screen flex justify-center">
+      <div
+        className={`rounded-xl flex flex-wrap items-center  md:p-2  mx-auto md:max-w-max  md:min-w-[1200px] sm:border-b-0 sm:border-x-0 glass-efect w-full max-w-[70vw] border-none md:border ${
+          path === "/" ? "justify-around" : "justify-between"
+        }`}
+      >
         <a
           href="/"
-          className="flex items-center space-x-3 rtl:space-x-reverse  flex-col"
+          className={`flex items-center space-x-3 rtl:space-x-reverse  flex-col pb-2 md:pb-0 ${
+            path === "/" ? "hidden" : "block"
+          }`}
         >
           <img src="logo-with-name.png" className="h-10" alt="Flowbite Logo" />
         </a>
@@ -31,12 +37,12 @@ const Navbar = () => {
             className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
             onClick={handleToAuth}
           >
-            Autenticarse
+            Iniciar Sesion
           </button>
           <button
             data-collapse-toggle="navbar-cta"
             type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 "
             aria-controls="navbar-cta"
             aria-expanded="false"
             onClick={toggleMenu}
@@ -62,14 +68,14 @@ const Navbar = () => {
         <div
           className={`${
             isOpen ? "flex" : "hidden"
-          } items-center justify-between w-full md:flex md:w-auto md:order-1`}
+          } items-center md:justify-between w-full md:flex md:w-auto md:order-1 bg-black md:bg-transparent justify-center md:border border-none `}
           id="navbar-cta"
         >
-          <ul className=" text-white flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <ul className=" text-white flex flex-col font-medium p-4 md:p-0 mt-4  border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700 w-full gap-1 ">
             <li>
               <a
                 href="/"
-                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
                   path === "/" ? "text-red-500" : "text-white"
                 }`}
                 aria-current="page"
@@ -80,7 +86,7 @@ const Navbar = () => {
             <li>
               <a
                 href="/services"
-                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
                   path === "/services" ? "text-red-500" : "text-white"
                 }`}
               >
@@ -89,8 +95,18 @@ const Navbar = () => {
             </li>
             <li>
               <a
+                href="/events"
+                className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
+                  path === "/events" ? "text-red-500" : "text-white"
+                }`}
+              >
+                Eventos
+              </a>
+            </li>
+            <li>
+              <a
                 href="/about"
-                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
                   path === "/about" ? "text-red-500" : "text-white"
                 }`}
               >
@@ -100,7 +116,7 @@ const Navbar = () => {
             <li>
               <a
                 href="/contact"
-                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
                   path === "/contact" ? "text-red-500" : "text-white"
                 }`}
               >
