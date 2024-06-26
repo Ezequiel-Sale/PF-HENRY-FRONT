@@ -2,27 +2,36 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  const path = usePathname();
+
+  const handleToAuth = () => {
+    window.location.href = "/login";
+  };
+
   return (
-    <nav className="text-white rounded-xl  bg-opacity-20 shadow-lg backdrop-blur-sm p-2">
-      <div className="rounded-xl flex flex-wrap items-center  p-2 mx-auto max-w-max justify-between md:min-w-[1200px] glass-efect z-20 ">
+    <nav className="text-white rounded-xl bg-transparent  p-2 w-screen">
+      <div className="rounded-xl flex flex-wrap items-center  p-2 mx-auto md:max-w-max justify-between md:min-w-[1200px] glass-efect w-full ">
         <a
           href="/"
-          className="flex items-center space-x-3 rtl:space-x-reverse z-30 flex-col"
+          className="flex items-center space-x-3 rtl:space-x-reverse  flex-col"
         >
           <img src="logo-with-name.png" className="h-10" alt="Flowbite Logo" />
         </a>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <button
             type="button"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+            onClick={handleToAuth}
           >
-            Get started
+            Autenticarse
           </button>
           <button
             data-collapse-toggle="navbar-cta"
@@ -59,8 +68,10 @@ const Navbar = () => {
           <ul className=" text-white flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li>
               <a
-                href="#"
-                className="block py-2 px-3 md:p-0 text-white bg-red-700 rounded md:bg-transparent md:text-red-700 md:dark:text-blue-500"
+                href="/"
+                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                  path === "/" ? "text-red-500" : "text-white"
+                }`}
                 aria-current="page"
               >
                 Inicio
@@ -68,24 +79,30 @@ const Navbar = () => {
             </li>
             <li>
               <a
-                href="#"
-                className="block py-2 px-3 md:p-0  rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:dark:hover:text-red-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                href="/services"
+                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                  path === "/services" ? "text-red-500" : "text-white"
+                }`}
               >
                 Servicios
               </a>
             </li>
             <li>
               <a
-                href="#"
-                className="block py-2 px-3 md:p-0 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:dark:hover:text-red-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                href="/about"
+                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                  path === "/about" ? "text-red-500" : "text-white"
+                }`}
               >
                 Sobre Nosotros
               </a>
             </li>
             <li>
               <a
-                href="#"
-                className="block py-2 px-3 md:p-0 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-red-700 md:dark:hover:text-red-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                href="/contact"
+                className={`block py-2 px-3 md:p-0 bg-red-700 rounded md:bg-transparent hover:text-red-700 ${
+                  path === "/contact" ? "text-red-500" : "text-white"
+                }`}
               >
                 Contacto
               </a>
