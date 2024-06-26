@@ -5,7 +5,9 @@ const Dashboard = () => {
     <>
     <div>Dashboard</div>
     <p>Hola</p>
+    <h1>ezequiel</h1>
     </>
+
   )
 }
 
