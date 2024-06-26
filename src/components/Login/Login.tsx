@@ -29,7 +29,7 @@ const Login = () => {
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-white"
             >
-              correo electrónico
+              Correo electrónico
             </label>
             <input
               type="email"
