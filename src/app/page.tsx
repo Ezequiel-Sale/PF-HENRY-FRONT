@@ -13,7 +13,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="flex w-full justify-around flex-col md:flex-row h-[120vh] items-center"> 
+      <div className="flex w-full justify-around flex-col md:flex-row h-[120vh] items-center">
         <div className="w-1/3 flex flex-col justify-center gap-3">
           <h2 className="text-4xl  text-[#FF2400] font-extrabold">
             ¡Entrenamiento personalizado!
@@ -34,14 +34,14 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex w-full  gap-20 flex-col md:flex-row h-[100vh] bg-red-500 absolute bottom-0">
+      {/* <div className="flex w-full  gap-20 flex-col md:flex-row h-[100vh] bg-red-500 absolute bottom-0">
         <video
           src="reveal.mp4"
           autoPlay
           muted
           className="w-full h-full object-cover"
         />
-      </div>
+      </div> */}
     </main>
   );
 }
