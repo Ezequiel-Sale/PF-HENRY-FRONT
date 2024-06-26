@@ -1,4 +1,4 @@
-import {IFormValues} from "../types/registerType"
+import {IFormValues} from "../types/registerInterface"
 
 
 export const registerValidations: (values: IFormValues) => Partial<IFormValues> = (values) => {
@@ -6,10 +6,8 @@ export const registerValidations: (values: IFormValues) => Partial<IFormValues> 
   
     const regExEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const regexName = /^[a-zA-Z\s]+$/;
-    const regexAdress = /^[a-zA-Z0-9]+( [a-zA-Z0-9]+)*$/;
     const regexPhone = /^[0-9]+$/;
 
-  
     if (!values.name.trim()) {
       errors.name = "El nombre es requerido";
     }else if (!regexName.test(values.name)) {
@@ -20,6 +18,16 @@ export const registerValidations: (values: IFormValues) => Partial<IFormValues> 
     } else if (!regExEmail.test(values.email)) {
       errors.email = "Ingrese un email válido";
     }
+    if (!values.birthdate) {
+      errors.birthdate = "La fecha de nacimiento es requerida";
+    }else {
+      const birthdate = new Date(values.birthdate);
+      const maxDate = new Date('2023-12-31');
+      if (birthdate > maxDate) {
+        errors.birthdate = "Ingrese una fecha de nacimiento valida";
+      }
+    }
+
     if (!values.phone) {
       errors.phone = "El telefono es requerido";
     }else if (!regexPhone.test(values.phone)) {
@@ -29,15 +37,16 @@ export const registerValidations: (values: IFormValues) => Partial<IFormValues> 
     }else if (values.phone.length > 15) {
       errors.phone = "Ingrese un númer de telefono valido";
     }
-    if (!values.address.trim()) {
-      errors.address = "La dirección es requerida";
-    }else if(!regexAdress.test(values.address)){
-      errors.address = "Solo puede contener letras y numeros"
-    }else if (values.address.length < 8) {
-      errors.address = "Debe tener al menos 8 caracteres";
-    }else if (values.address.length > 50) {
-      errors.address = "Debe tener maximo 50 caracteres";
+    if (!values.dni.trim()) {
+      errors.dni = "El número de DNI es requerido";
+    }else if(!regexPhone.test(values.dni)){
+      errors.dni = "Solo puede contener numeros"
+    }else if (values.dni.length < 8) {
+      errors.dni = "Debe colocar los 8 caracteres";
+    }else if (values.dni.length > 8) {
+      errors.dni = "El número de DNI debe ser de 8 digitos";
     }
+
     if (!values.password.trim()) {
       errors.password = 
          "Ingrese una contraseña"

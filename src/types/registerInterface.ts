@@ -2,7 +2,8 @@ export interface IFormValues {
     name: string;
     email: string;
     phone: string;
-    address: string;
+    dni: string;
     password: string;
+    birthdate: string;
     repitePassword?: string;
   }

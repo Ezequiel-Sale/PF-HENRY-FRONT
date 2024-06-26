@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { IFormValues } from "../../types/registerType";
+import { IFormValues } from "../../types/registerInterface";
 import { registerValidations } from "../../helper/registerValidations";
 import Link from "next/link";
 import Swal from "sweetalert2";
@@ -16,13 +16,15 @@ const Register: React.FC = () => {
           name: "",
           email: "",
           phone: "",
-          address: "",
+          dni: "",
           password: "",
+          birthdate: "",
           repitePassword: "",
         }}
         validateOnChange
         validate={registerValidations}
         onSubmit={(values, { resetForm }) => {
+            console.log(values)
           Swal.fire({
             position: "center",
             icon: "success",
@@ -45,7 +47,6 @@ const Register: React.FC = () => {
                   Click aqui para loguearte
                 </Link>
               </p>
-              <div className="flex relative gap-2">
                 <div className="flex flex-col">
                   <label className="font-bold text-white">Nombre y Apellido</label>
                   <Field
@@ -60,6 +61,7 @@ const Register: React.FC = () => {
                     className="text-red-500 text-xs text-center absolute top-full ml-1"
                   />
                 </div>
+              <div className="flex relative gap-2">
                 <div className="flex flex-col text-white">
                   <label className="font-bold">Correo electronico</label>
                   <Field
@@ -70,6 +72,20 @@ const Register: React.FC = () => {
                   />
                   <ErrorMessage
                     name="email"
+                    component="div"
+                    className="text-red-500 text-xs text-center absolute top-full ml-1"
+                  />
+                </div>
+                <div className="flex flex-col text-white">
+                  <label className="font-bold">Fecha de nacimiento</label>
+                  <Field
+                    type="date"
+                    name="birthdate"
+                    placeholder="example@mail.com"
+                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
+                  />
+                  <ErrorMessage
+                    name="birthdate"
                     component="div"
                     className="text-red-500 text-xs text-center absolute top-full ml-1"
                   />
@@ -91,15 +107,15 @@ const Register: React.FC = () => {
                   />
                 </div>
                 <div className="flex flex-col relative">
-                  <label className="font-bold text-white">Direccion</label>
+                  <label className="font-bold text-white">Número de DNI</label>
                   <Field
                     type="text"
-                    name="address"
-                    placeholder="Ej: Calle 123"
+                    name="dni"
+                    placeholder="Ej: 01123456"
                     className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
-                    name="address"
+                    name="dni"
                     component="div"
                     className="text-red-500 text-xs text-center absolute top-full ml-1"
                   />
@@ -137,7 +153,7 @@ const Register: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="bg-red-600 w-60 h-8 text-white mb-4 rounded-md cursor-pointer hover:bg-black hover:text-white"
+                className="bg-red-600 w-60 h-8 text-white mb-4 rounded-md cursor-pointer hover:bg-red-800 hover:text-white"
               >
                 Enviar
               </button>
