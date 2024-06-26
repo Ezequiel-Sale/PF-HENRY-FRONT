@@ -4,6 +4,7 @@ import React from "react";
 import getGoogleProvider from "@/services/firebase";
 import { signInWithPopup } from "firebase/auth";
 
+
 const Login = () => {
   const signInWithGoogle = async () => {
     try {
@@ -29,7 +30,7 @@ const Login = () => {
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-white"
             >
-              correo electrónico
+              Correo electrónico
             </label>
             <input
               type="email"
