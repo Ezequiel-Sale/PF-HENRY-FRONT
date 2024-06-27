@@ -90,7 +90,7 @@ const Login = () => {
           </button>
           <div className="text-sm font-medium text-gray-300">
             ¿No tienes una cuenta?{" "}
-            <a href="#" className="text-red-500 hover:underline">
+            <a href="/register" className="text-red-500 hover:underline">
               Regístrate
             </a>
           </div>

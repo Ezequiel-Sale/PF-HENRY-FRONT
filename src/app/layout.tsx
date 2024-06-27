@@ -10,7 +10,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Power Traning",
   description: "Power Training App",
-  icons: ["logo-with-name.png"],
+  icons: {
+    icon: "full-logo.png",
+  },
 };
 
 export default function RootLayout({
