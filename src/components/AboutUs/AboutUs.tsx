@@ -34,7 +34,7 @@ const AboutUs = () => {
 
       <div className="flex flex-wrap gap-4 justify-center items-center">
        <CardAboutUs img="/eze.jpg" name="Ezequiel Sale" tecnologie="Front end developer" instagram="" facebook="" linkedin="" github=""/>
-       <CardAboutUs img="/eze.jpg" name="Jose" tecnologie="Front end developer" instagram="" facebook="" linkedin="" github=""/>
+       <CardAboutUs img="/jose.jpg" name="Jose" tecnologie="Front end developer" instagram="" facebook="" linkedin="" github=""/>
        <CardAboutUs img="/olvadis.jpeg" name="Olvadis" tecnologie="Front end developer" instagram="" facebook="" linkedin="" github=""/>
         
       </div>
