@@ -5,7 +5,6 @@ import { IFormValues } from "../../types/registerInterface";
 import { registerValidations } from "../../helper/registerValidations";
 import Link from "next/link";
 import Swal from "sweetalert2";
-import Image from "next/image";
 import "./register.css";
 
 const Register: React.FC = () => {
@@ -16,14 +15,15 @@ const Register: React.FC = () => {
           name: "",
           email: "",
           phone: "",
-          dni: "",
+          numero_dni: "",
           password: "",
-          birthdate: "",
-          repitePassword: "",
+          fecha_nacimiento: "",
+          confirmPassword: "",
         }}
         validateOnChange
         validate={registerValidations}
         onSubmit={(values, { resetForm }) => {
+          console.log(values);
           Swal.fire({
             position: "center",
             icon: "success",
@@ -79,12 +79,12 @@ const Register: React.FC = () => {
                   <label className="font-bold">Fecha de nacimiento</label>
                   <Field
                     type="date"
-                    name="birthdate"
+                    name="fecha_nacimiento"
                     placeholder="example@mail.com"
                     className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
-                    name="birthdate"
+                    name="fecha_nacimiento"
                     component="div"
                     className="text-red-500 text-xs text-center absolute top-full ml-1"
                   />
@@ -109,12 +109,12 @@ const Register: React.FC = () => {
                   <label className="font-bold text-white">Número de DNI</label>
                   <Field
                     type="text"
-                    name="dni"
+                    name="numero_dni"
                     placeholder="Ej: 01123456"
                     className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
-                    name="dni"
+                    name="numero_dni"
                     component="div"
                     className="text-red-500 text-xs text-center absolute top-full ml-1"
                   />
@@ -139,12 +139,12 @@ const Register: React.FC = () => {
                   <label className="font-bold text-white">Repita su contraseña</label>
                   <Field
                     type="password"
-                    name="repitePassword"
+                    name="confirmPassword"
                     placeholder="********"
                     className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
-                    name="repitePassword"
+                    name="confirmPassword"
                     component="div"
                     className="text-red-500 text-xs text-center absolute top-full mt-[-16px] ml-1"
                   />
