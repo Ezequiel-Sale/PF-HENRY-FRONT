@@ -12,7 +12,7 @@ export default function LayoutDashboard ({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-                <div className="flex">
+                <div className="flex bg-white">
                     <div className="hidden md:block h-[100vh] w-[45vh]">
                         <Sidebar />
                     </div>

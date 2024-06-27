@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import DashboardCard from './DashboardCard/DashboardCard'
+import SuscriptionTable from './Suscripciones/SuscriptionTable'
 import {Folder, MessageCircle, Newspaper, User, ShieldCheck, ShieldOff, PersonStanding} from 'lucide-react'
 
 const Dashboard = () => {
@@ -28,6 +29,7 @@ const Dashboard = () => {
         icon={<PersonStanding size={72} className='text-slate-500'/>} />
         
     </div>
+    <SuscriptionTable title="Suscripciones" limit={10} />
     </>
   )
 }
