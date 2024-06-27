@@ -17,9 +17,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="text-white rounded-xl bg-transparent  p-2 w-screen flex justify-center">
+    <nav className="text-white  bg-transparent p-0 md:p-2  w-[250px]  md:w-screen flex justify-center">
       <div
-        className={`rounded-xl flex flex-wrap items-center  md:p-2  mx-auto md:max-w-max  md:min-w-[1200px] sm:border-b-0 sm:border-x-0 glass-efect w-full max-w-[70vw] border-none md:border ${
+        className={` flex flex-wrap items-center  md:p-2  md:mx-auto  md:w-screen sm:border-b-0 sm:border-x-0 **/glass-efect/**  border-none md:border-b md:border-solid md:border-gray-100 w-[200px] ${
           path === "/" ? "justify-around" : "justify-between"
         }`}
       >
@@ -34,7 +34,7 @@ const Navbar = () => {
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <button
             type="button"
-            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 mr-6"
             onClick={handleToAuth}
           >
             Iniciar Sesion
@@ -93,7 +93,7 @@ const Navbar = () => {
                 Servicios
               </a>
             </li>
-            <li>
+            {/* <li>
               <a
                 href="/events"
                 className={`block py-2 px-3 md:p-0 bg-gray-400/20 rounded md:bg-transparent hover:text-red-700 ${
@@ -102,7 +102,7 @@ const Navbar = () => {
               >
                 Eventos
               </a>
-            </li>
+            </li> */}
             <li>
               <a
                 href="/about"

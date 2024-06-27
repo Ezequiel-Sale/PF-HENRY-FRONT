@@ -36,7 +36,7 @@ const Register: React.FC = () => {
       >
         {() => {
           return (
-            <Form className="flex flex-col items-center gap-3.5 bg-black bg-opacity-10 w-auto px-3 rounded-lg mr-20 h-auto my-auto">
+            <Form className="flex flex-col items-center gap-4 bg-black bg-opacity-50 w-1/3 px-3 rounded-lg mr-20 h-auto my-auto border border-solid border-gray-100 md:mb-32 ">
               <h2 className="text-2xl text-white font-sans font-extrabold">
                 Formulario de registro
               </h2>
@@ -46,20 +46,22 @@ const Register: React.FC = () => {
                   Click aqui para loguearte
                 </Link>
               </p>
-                <div className="flex flex-col">
-                  <label className="font-bold text-white">Nombre y Apellido</label>
-                  <Field
-                    type="text"
-                    name="name"
-                    placeholder="Ingrese su nombre completo"
-                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
-                  />
-                  <ErrorMessage
-                    name="name"
-                    component="div"
-                    className="text-red-500 text-xs text-center absolute top-full ml-1"
-                  />
-                </div>
+              <div className="flex flex-col w-full">
+                <label className="font-bold text-white">
+                  Nombre y Apellido
+                </label>
+                <Field
+                  type="text"
+                  name="name"
+                  placeholder="Ingrese su nombre completo"
+                  className="w-full pl-2 text-black rounded-md h-[30px] text-sm"
+                />
+                <ErrorMessage
+                  name="name"
+                  component="div"
+                  className="text-red-500 text-xs text-center absolute top-full ml-1"
+                />
+              </div>
               <div className="flex relative gap-2">
                 <div className="flex flex-col text-white">
                   <label className="font-bold">Correo electronico</label>
@@ -67,7 +69,7 @@ const Register: React.FC = () => {
                     type="text"
                     name="email"
                     placeholder="example@mail.com"
-                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
+                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
                     name="email"
@@ -81,7 +83,7 @@ const Register: React.FC = () => {
                     type="date"
                     name="birthdate"
                     placeholder="example@mail.com"
-                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
+                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
                     name="birthdate"
@@ -97,7 +99,7 @@ const Register: React.FC = () => {
                     type="text"
                     name="phone"
                     placeholder="Ingrese su numero de telefono"
-                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
+                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
                     name="phone"
@@ -111,7 +113,7 @@ const Register: React.FC = () => {
                     type="text"
                     name="dni"
                     placeholder="Ej: 01123456"
-                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
+                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
                     name="dni"
@@ -127,7 +129,7 @@ const Register: React.FC = () => {
                     type="password"
                     name="password"
                     placeholder="********"
-                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
+                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
                     name="password"
@@ -136,12 +138,14 @@ const Register: React.FC = () => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <label className="font-bold text-white">Repita su contraseña</label>
+                  <label className="font-bold text-white">
+                    Repita su contraseña
+                  </label>
                   <Field
                     type="password"
                     name="repitePassword"
                     placeholder="********"
-                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
+                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
                   />
                   <ErrorMessage
                     name="repitePassword"
