@@ -29,7 +29,7 @@ const Dashboard = () => {
         icon={<PersonStanding size={72} className='text-slate-500'/>} />
         
     </div>
-    <SuscriptionTable title="Suscripciones" limit={10} />
+    <SuscriptionTable title="Suscripciones" limit={5} />
     </>
   )
 }

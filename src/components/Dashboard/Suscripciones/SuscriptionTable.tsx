@@ -4,8 +4,6 @@ import Link from 'next/link'
 import suscripciones from '../Data/Suscripcion'
 import { Suscripcion } from '../types/Suscripcion'
 
-
-
 interface SuscriptionTableProps {
     limit?: number;
     title?: string;
