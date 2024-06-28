@@ -11,7 +11,7 @@ export default function LayoutDashboard({
             <div className="h-full w-[250px] overflow-y-auto bg-secondary">
                 <Sidebar />
             </div>
-            <div className="flex-1 flex flex-col p-5 w-full md:max-w-[1140px] overflow-y-auto">
+            <div className="flex-1 flex flex-col bg-gray-200 p-5 w-full md:max-w-[1140px] overflow-y-auto">
                 {children}
             </div>
         </div>
