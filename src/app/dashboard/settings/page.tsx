@@ -1,14 +1,8 @@
 "use client"
+import { ProfesorData } from '@/types/registerInterface';
 import React, { useState, useEffect, useRef, ChangeEvent, FormEvent } from 'react';
 
-interface ProfesorData {
-  nombre: string;
-  edad: string;
-  dias: string[];
-  horario: string[];
-  email: string;
-  password: string;
-}
+
 
 const Settings: React.FC = () => {
   const [profesorData, setProfesorData] = useState<ProfesorData>({
