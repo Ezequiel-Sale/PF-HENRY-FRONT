@@ -18,13 +18,13 @@ export const registerValidations: (values: IFormValues) => Partial<IFormValues> 
     } else if (!regExEmail.test(values.email)) {
       errors.email = "Ingrese un email válido";
     }
-    if (!values.birthdate) {
-      errors.birthdate = "La fecha de nacimiento es requerida";
+    if (!values.fecha_nacimiento) {
+      errors.fecha_nacimiento = "La fecha de nacimiento es requerida";
     }else {
-      const birthdate = new Date(values.birthdate);
+      const birthdate = new Date(values.fecha_nacimiento);
       const maxDate = new Date('2023-12-31');
       if (birthdate > maxDate) {
-        errors.birthdate = "Ingrese una fecha de nacimiento valida";
+        errors.fecha_nacimiento = "Ingrese una fecha de nacimiento valida";
       }
     }
 
@@ -37,14 +37,14 @@ export const registerValidations: (values: IFormValues) => Partial<IFormValues> 
     }else if (values.phone.length > 15) {
       errors.phone = "Ingrese un númer de telefono valido";
     }
-    if (!values.dni.trim()) {
-      errors.dni = "El número de DNI es requerido";
-    }else if(!regexPhone.test(values.dni)){
-      errors.dni = "Solo puede contener numeros"
-    }else if (values.dni.length < 8) {
-      errors.dni = "Debe colocar los 8 caracteres";
-    }else if (values.dni.length > 8) {
-      errors.dni = "El número de DNI debe ser de 8 digitos";
+    if (!values.numero_dni) {
+      errors.numero_dni = "El número de DNI es requerido";
+    }else if(!regexPhone.test(values.numero_dni)){
+      errors.numero_dni = "Solo puede contener numeros"
+    }else if (values.numero_dni.length < 8) {
+      errors.numero_dni = "Debe colocar los 8 caracteres";
+    }else if (values.numero_dni.length > 8) {
+      errors.numero_dni = "El número de DNI debe ser de 8 digitos";
     }
 
     if (!values.password.trim()) {
@@ -58,8 +58,8 @@ export const registerValidations: (values: IFormValues) => Partial<IFormValues> 
       errors.password =  "Debe ser de entre 6 y 20 caracteres"
       
     }  
-    if(values.repitePassword !== values.password){
-      errors.repitePassword = "Las contrasenas no coinciden"
+    if(values.confirmPassword !== values.password){
+      errors.confirmPassword = "Las contrasenas no coinciden"
     }
     return errors;
   }

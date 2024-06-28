@@ -10,7 +10,7 @@ const Footer = () => {
                 className="h-8 me-3"
                 alt="Power Training logo"
               />
-              <span className="self-center text-2xl font-semibold whitespace-nowrap text-orange-400">
+              <span className="self-center text-2xl font-semibold whitespace-nowrap text-red-600">
                 Power Training
               </span>
             </a>
