@@ -6,8 +6,12 @@ import { registerValidations } from "../../helper/registerValidations";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import "./register.css";
+import { registerUser } from "@/helper/petitions";
+import { useRouter } from "next/navigation";
 
 const Register: React.FC = () => {
+  const router = useRouter()
+
   return (
     <div className="background-image h-[100vh] flex justify-end bg-black">
       <Formik<IFormValues>
@@ -24,19 +28,35 @@ const Register: React.FC = () => {
         validate={registerValidations}
         onSubmit={(values, { resetForm }) => {
           console.log(values);
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Usuario registrado correctamente",
-            showConfirmButton: false,
-            timer: 1500,
+          registerUser(values)
+          .then((res) => {
+            console.log(res)
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Usuario registrado correctamente",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            resetForm();
+            setTimeout(() => {
+              router.push("/login");
+            }, 2000);
+          })
+          .catch((err) => {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Error al registrar el usuario",
+              text: err.message,
+              showConfirmButton: true,
+            });
           });
-          resetForm();
         }}
       >
         {() => {
           return (
-            <Form className="flex flex-col items-center gap-4 bg-black bg-opacity-50 w-1/3 px-3 rounded-lg mr-20 h-auto my-auto border border-solid border-gray-100 md:mb-32 ">
+            <Form className="flex flex-col items-center gap-4 bg-black bg-opacity-50 px-3 rounded-lg mr-20 h-auto my-auto border border-solid border-gray-100 md:mb-32 ">
               <h2 className="text-2xl text-white font-sans font-extrabold">
                 Formulario de registro
               </h2>
