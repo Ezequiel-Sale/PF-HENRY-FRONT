@@ -68,7 +68,7 @@ export async function getUsers() {
     }
   }
 
-  async function updateUserStatus(id: string) {
+  export async function updateUserStatus(id: string) {
     try {
       const response = await fetch(`http://localhost:3001/profesor/users/${id}`, {
         method: 'PUT',
@@ -89,14 +89,14 @@ export async function getUsers() {
     }
   }
 
-  async function loginUser(credentials: ICredential) {
+ export async function loginUser({email, password}: ICredential) {
     try {
-      const response = await fetch('http://localhost:3001/auth/login', {
+      const response = await fetch('http://localhost:3001/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify({email , password, type: "user" }),
       });
   
       if (!response.ok) {
