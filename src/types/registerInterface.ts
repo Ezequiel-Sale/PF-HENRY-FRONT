@@ -7,3 +7,12 @@ export interface IFormValues {
     fecha_nacimiento: string;
     confirmPassword: string;
   }
+
+  export interface ProfesorData {
+    nombre: string;
+    edad: string;
+    dias: string[];
+    horario: string[];
+    email: string;
+    password: string;
+  }

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { IFormValues } from "../../types/registerInterface";
 import { registerValidations } from "../../helper/registerValidations";
@@ -8,10 +8,20 @@ import Swal from "sweetalert2";
 import "./register.css";
 import { registerUser } from "@/helper/petitions";
 import { useRouter } from "next/navigation";
+import emailjs from '@emailjs/browser';
 
 const Register: React.FC = () => {
   const router = useRouter()
-
+  const form = useRef<HTMLFormElement | null>(null);
+  const sendEmail = () => {
+    if (form.current) {
+        emailjs.sendForm('service_470nr1h', 'template_q5eze0c', form.current, 'n0O6aFCx_KHd4rnfR')
+        .then(
+            () => {console.log('SUCCESS!')},
+            (error) => {console.log('FAILED...', error.text)}
+        );
+    }
+};
   return (
     <div className="background-image h-[100vh] flex justify-end bg-black">
       <Formik<IFormValues>
@@ -28,6 +38,7 @@ const Register: React.FC = () => {
         validate={registerValidations}
         onSubmit={(values, { resetForm }) => {
           console.log(values);
+          sendEmail()
           registerUser(values)
           .then((res) => {
             console.log(res)
@@ -56,7 +67,7 @@ const Register: React.FC = () => {
       >
         {() => {
           return (
-            <Form className="flex flex-col items-center gap-4 bg-black bg-opacity-50 px-3 rounded-lg mr-20 h-auto my-auto border border-solid border-gray-100 md:mb-32 ">
+            <Form ref={form} className="flex flex-col items-center gap-4 bg-black bg-opacity-50 px-3 rounded-lg mr-20 h-auto my-auto border border-solid border-gray-100 md:mb-32 ">
               <h2 className="text-2xl text-white font-sans font-extrabold">
                 Formulario de registro
               </h2>

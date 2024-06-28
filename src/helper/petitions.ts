@@ -23,7 +23,7 @@ export const registerUser = async (user: IFormValues) => {
 
 export async function getUsers() {
     try {
-      const response = await fetch('http://localhost:3001/users');
+      const response = await fetch('http://localhost:3001/profesor/users');
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
@@ -57,7 +57,7 @@ export async function getUsers() {
   
   export async function getProfesors() {
     try {
-      const response = await fetch('http://localhost:3001/profesor');
+      const response = await fetch('http://localhost:3001/profesor/profesores');
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
@@ -70,7 +70,7 @@ export async function getUsers() {
 
   async function updateUserStatus(id: string) {
     try {
-      const response = await fetch(`http://localhost:3001/users/${id}`, {
+      const response = await fetch(`http://localhost:3001/profesor/users/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
