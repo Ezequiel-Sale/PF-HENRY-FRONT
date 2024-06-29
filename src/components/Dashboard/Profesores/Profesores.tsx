@@ -8,16 +8,23 @@ import React, { useEffect, useState } from "react";
 
 const Profesores: React.FC = () => {
   const [profesores, setProfesores] = useState<IProfesor[]>([]);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchProfesors = async () => {
       const profesors = await getProfesors();
       setProfesores(profesors);
+      setLoading(false);
+
     }
 
     fetchProfesors();
   }, []);
 
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
  
   return (
     <>
