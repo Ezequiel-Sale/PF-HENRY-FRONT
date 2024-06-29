@@ -1,4 +1,5 @@
 "use client"
+import { createProfesor } from '@/helper/petitions';
 import { ProfesorData } from '@/types/registerInterface';
 import React, { useState, useEffect, useRef, ChangeEvent, FormEvent } from 'react';
 
@@ -8,7 +9,7 @@ const Settings: React.FC = () => {
   const [profesorData, setProfesorData] = useState<ProfesorData>({
     nombre: '',
     edad: '',
-    dias: [],
+    dia: [],
     horario: [],
     email: '',
     password: ''
@@ -45,6 +46,8 @@ const Settings: React.FC = () => {
     });
   };
 
+ 
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Validar campos antes de enviar
@@ -60,8 +63,8 @@ const Settings: React.FC = () => {
         validationErrors.edad = 'La edad debe estar entre 18 y 99 años';
       }
     }
-    if (profesorData.dias.length === 0) {
-      validationErrors.dias = ['Selecciona al menos un día'];
+    if (profesorData.dia.length === 0) {
+      validationErrors.dia = ['Selecciona al menos un día'];
     }
     if (profesorData.horario.length === 0) {
       validationErrors.horario = ['Selecciona al menos un horario'];
@@ -79,9 +82,17 @@ const Settings: React.FC = () => {
     }
 
     // Aquí puedes enviar los datos al backend si todos los campos son válidos
-    console.log(profesorData);
     // Lógica para enviar datos al backend
+    createProfesor(profesorData);
     // resetear formulario o realizar otras acciones post envío
+    setProfesorData({
+      nombre: '',
+      edad: '',
+      dia: [],
+      horario: [],
+      email: '',
+      password: ''
+    })
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -144,7 +155,7 @@ const Settings: React.FC = () => {
                 className="w-full p-2.5 bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-red-500 focus:border-red-500 cursor-pointer"
                 onClick={() => setDiasDropdownOpen(!diasDropdownOpen)}
               >
-                {profesorData.dias.length > 0 ? profesorData.dias.join(', ') : 'Selecciona los días'}
+                {profesorData.dia.length > 0 ? profesorData.dia.join(', ') : 'Selecciona los días'}
               </div>
               {diasDropdownOpen && (
                 <div className="absolute mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
@@ -153,9 +164,9 @@ const Settings: React.FC = () => {
                       <input
                         type="checkbox"
                         id={dia}
-                        name="dias"
+                        name="dia"
                         value={dia}
-                        checked={profesorData.dias.includes(dia)}
+                        checked={profesorData.dia.includes(dia)}
                         onChange={handleCheckboxChange}
                         className="mr-2"
                       />
@@ -164,8 +175,8 @@ const Settings: React.FC = () => {
                   ))}
                 </div>
               )}
-              {errors.dias && (
-                <p className="text-red-500 text-sm mt-1">{errors.dias}</p>
+              {errors.dia && (
+                <p className="text-red-500 text-sm mt-1">{errors.dia}</p>
               )}
             </div>
             <div ref={horarioRef} className="relative">
