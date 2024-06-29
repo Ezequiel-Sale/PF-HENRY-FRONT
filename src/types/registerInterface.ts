@@ -11,7 +11,7 @@ export interface IFormValues {
   export interface ProfesorData {
     nombre: string;
     edad: string;
-    dias: string[];
+    dia: string[];
     horario: string[];
     email: string;
     password: string;

@@ -1,9 +1,10 @@
 export interface IProfesor {
+    id?: string;
     nombre: string;
     edad: string;
     email: string;
-    horario: string[];
     dia: string[];
+    horario: string[];
     password: string;
 }
 
