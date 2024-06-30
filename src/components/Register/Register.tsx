@@ -1,73 +1,107 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { IFormValues } from "../../types/registerInterface";
 import { registerValidations } from "../../helper/registerValidations";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import "./register.css";
 import { registerUser } from "@/helper/petitions";
 import { useRouter } from "next/navigation";
-import emailjs from '@emailjs/browser';
+import emailjs from "@emailjs/browser";
+import { IFormValues } from "@/types/registerInterface";
 
 const Register: React.FC = () => {
-  const router = useRouter()
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+
+  const router = useRouter();
   const form = useRef<HTMLFormElement | null>(null);
+
   const sendEmail = () => {
     if (form.current) {
-        emailjs.sendForm('service_470nr1h', 'template_q5eze0c', form.current, 'n0O6aFCx_KHd4rnfR')
+      emailjs
+        .sendForm(
+          "service_470nr1h",
+          "template_q5eze0c",
+          form.current,
+          "n0O6aFCx_KHd4rnfR"
+        )
         .then(
-            () => {console.log('SUCCESS!')},
-            (error) => {console.log('FAILED...', error.text)}
+          () => {
+            console.log("SUCCESS!");
+          },
+          (error) => {
+            console.log("FAILED...", error.text);
+          }
         );
     }
-};
+  };
+
+  useEffect(() => {
+    const storedEmail = window.localStorage.getItem("email");
+    const storedName = window.localStorage.getItem("name");
+
+    if (storedEmail && storedName) {
+      setEmail(storedEmail);
+      setName(storedName);
+      setPassword("R@@t12345");
+      setIsDisabled(true);
+    }
+  }, []);
+
   return (
     <div className="background-image h-[100vh] flex justify-end bg-black">
       <Formik<IFormValues>
         initialValues={{
-          name: "",
-          email: "",
+          name: name || "",
+          email: email || "",
           phone: "",
           numero_dni: "",
-          password: "",
+          password: password || "",
           fecha_nacimiento: "",
-          confirmPassword: "",
+          confirmPassword: password || "",
         }}
+        enableReinitialize={true}
         validateOnChange
         validate={registerValidations}
         onSubmit={(values, { resetForm }) => {
+          console.log("********PASA********");
           console.log(values);
-          sendEmail()
+          sendEmail();
           registerUser(values)
-          .then((res) => {
-            console.log(res)
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Usuario registrado correctamente",
-              showConfirmButton: false,
-              timer: 1500,
+            .then((res) => {
+              console.log(res);
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Usuario registrado correctamente",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              resetForm();
+              setTimeout(() => {
+                router.push("/login");
+              }, 2000);
+            })
+            .catch((err) => {
+              Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Error al registrar el usuario",
+                text: err.message,
+                showConfirmButton: true,
+              });
             });
-            resetForm();
-            setTimeout(() => {
-              router.push("/login");
-            }, 2000);
-          })
-          .catch((err) => {
-            Swal.fire({
-              position: "center",
-              icon: "error",
-              title: "Error al registrar el usuario",
-              text: err.message,
-              showConfirmButton: true,
-            });
-          });
         }}
       >
         {() => {
           return (
-            <Form ref={form} className="flex flex-col items-center gap-4 bg-black bg-opacity-50 px-3 rounded-lg mr-20 h-auto my-auto border border-solid border-gray-100 md:mb-32 ">
+            <Form
+              ref={form}
+              className="flex flex-col items-center gap-4 bg-black bg-opacity-50 px-3 rounded-lg mr-20 h-auto my-auto border border-solid border-gray-100 md:mb-32 "
+            >
               <h2 className="text-2xl text-white font-sans font-extrabold">
                 Formulario de registro
               </h2>
@@ -86,6 +120,12 @@ const Register: React.FC = () => {
                   name="name"
                   placeholder="Ingrese su nombre completo"
                   className="w-full pl-2 text-black rounded-md h-[30px] text-sm"
+                  id="name"
+                  value={name}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setName(e.target.value);
+                  }}
+                  disabled={isDisabled}
                 />
                 <ErrorMessage
                   name="name"
@@ -101,6 +141,12 @@ const Register: React.FC = () => {
                     name="email"
                     placeholder="example@mail.com"
                     className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                    id="email"
+                    value={email}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setEmail(e.target.value);
+                    }}
+                    disabled={isDisabled}
                   />
                   <ErrorMessage
                     name="email"
@@ -153,6 +199,7 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
+              (
               <div className="flex relative gap-2">
                 <div className="flex flex-col relative mb-4">
                   <label className="font-bold text-white">Contraseña</label>
@@ -161,6 +208,11 @@ const Register: React.FC = () => {
                     name="password"
                     placeholder="********"
                     className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                    id="password"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setPassword(e.target.value);
+                    }}
+                    disabled={isDisabled}
                   />
                   <ErrorMessage
                     name="password"
@@ -177,6 +229,11 @@ const Register: React.FC = () => {
                     name="confirmPassword"
                     placeholder="********"
                     className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                    id="confirmPassword"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setPassword(e.target.value);
+                    }}
+                    disabled={isDisabled}
                   />
                   <ErrorMessage
                     name="confirmPassword"
