@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import getGoogleProvider from "@/services/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { loginSchema } from "@/zod/loginShema";
@@ -18,8 +18,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { loginUser } from "@/helper/petitions";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
+  const router = useRouter()
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -27,9 +30,15 @@ const Login = () => {
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof loginSchema>) {
-    console.log(values);
-  }
+
+   async function onSubmit(values: z.infer<typeof loginSchema>) {
+     const response = await loginUser(values);
+     const token = response.token
+     localStorage.setItem("token", token);
+      router.push("/dashboard")
+    }
+
+
 
   const signInWithGoogle = async () => {
     try {

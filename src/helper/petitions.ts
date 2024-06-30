@@ -23,7 +23,7 @@ export const registerUser = async (user: IFormValues) => {
 
 export async function getUsers() {
     try {
-      const response = await fetch('http://localhost:3001/users');
+      const response = await fetch('http://localhost:3001/profesor/users');
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
@@ -34,6 +34,27 @@ export async function getUsers() {
     }
   }
 
+  // export async function createProfesor(profesor: IProfesor) {
+  //   try {
+  //     const response = await fetch('http://localhost:3001/profesor/create', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(profesor),
+  //     });
+  
+  //     if (!response.ok) {
+  //       throw new Error(`Error: ${response.status} ${response.statusText}`);
+  //     }
+  
+  //     const createdProfesor = await response.json();
+  //     return createdProfesor;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+  
   export async function createProfesor(profesor: IProfesor) {
     try {
       const response = await fetch('http://localhost:3001/profesor/create', {
@@ -44,20 +65,23 @@ export async function getUsers() {
         body: JSON.stringify(profesor),
       });
   
+      // Revisa el estado de la respuesta
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
+        const errorText = await response.text(); // Intenta obtener el mensaje de error como texto
+        throw new Error(`Error: ${response.status} ${response.statusText} - ${errorText}`);
       }
   
+      // Intenta parsear la respuesta como JSON
       const createdProfesor = await response.json();
       return createdProfesor;
     } catch (error) {
-      console.error('Error creating profesor:', error);
-    }
+      console.error('Error en la creación del profesor:', error);
+      throw error;
+    }
   }
-  
   export async function getProfesors() {
     try {
-      const response = await fetch('http://localhost:3001/profesor');
+      const response = await fetch('http://localhost:3001/profesor/profesores');
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
@@ -68,9 +92,9 @@ export async function getUsers() {
     }
   }
 
-  async function updateUserStatus(id: string) {
+  export async function updateUserStatus(id: string) {
     try {
-      const response = await fetch(`http://localhost:3001/users/${id}`, {
+      const response = await fetch(`http://localhost:3001/profesor/users/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -89,14 +113,14 @@ export async function getUsers() {
     }
   }
 
-  async function loginUser(credentials: ICredential) {
+ export async function loginUser({email, password}: ICredential) {
     try {
-      const response = await fetch('http://localhost:3001/auth/login', {
+      const response = await fetch('http://localhost:3001/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify({email , password, type: "user" }),
       });
   
       if (!response.ok) {
