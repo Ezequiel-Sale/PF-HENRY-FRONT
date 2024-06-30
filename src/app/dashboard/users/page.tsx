@@ -18,28 +18,23 @@ const UsersPage = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-
-
       try {
-        const response = await fetch('http://localhost:3001/profesor/users');
-        const data = await response.json();
-        console.log(response)
-        // Assuming the API returns an array of users
-        console.log(data)
-        setUsers(data);
+          const response = await fetch("http://localhost:3001/profesor/users");
+          const data = await response.json();
+          console.log(response);
+          console.log(data);
+          // Verifica si data es un arreglo antes de actualizar el estado
+          if (Array.isArray(data)) {
+              setUsers(data);
+          } else {
+              console.error("La respuesta no es un arreglo");
+              // Opcional: manejar el caso cuando data no es un arreglo
+              setUsers([]); // Establece users como un arreglo vacío o maneja de otra manera
+          }
       } catch (error) {
-        console.error('Error fetching users:', error);
-      } finally {
+          console.error("Error fetching users:", error);
       }
-      // const mockUsers: User[] = [
-      //   { id: '1', name: 'Juan Pérez', email: 'juan@example.com', fecha_nacimiento: '1990-01-01', phone: 1234567890, numero_dni: 12345678, estado: 'activo' },
-      //   { id: '2', name: 'María García', email: 'maria@example.com', fecha_nacimiento: '1985-05-15', phone: 9876543210, numero_dni: 87654321, estado: 'inactivo' },
-      //   { id: '3', name: 'Carlos Rodríguez', email: 'carlos@example.com', fecha_nacimiento: '1988-07-22', phone: 5555555555, numero_dni: 23456789, estado: 'activo' },
-      //   { id: '4', name: 'Ana Martínez', email: 'ana@example.com', fecha_nacimiento: '1992-03-10', phone: 9999999999, numero_dni: 34567890, estado: 'activo' },
-      //   { id: '5', name: 'Luis Sánchez', email: 'luis@example.com', fecha_nacimiento: '1987-11-30', phone: 8888888888, numero_dni: 45678901, estado: 'inactivo' },
-      // ];
-      // setUsers(mockUsers);
-    };
+  };
 
     fetchUsers();
   }, []);
