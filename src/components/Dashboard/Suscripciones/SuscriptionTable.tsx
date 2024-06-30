@@ -19,24 +19,30 @@ const SuscriptionTable = ({ limit, title }: SuscriptionTableProps) => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch('http://localhost:3001/profesor/users');
-        const data = await response.json();
-        console.log(response)
-        // Assuming the API returns an array of users
-        console.log(data)
+useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/profesor/users');
+      const data = await response.json();
+      console.log(response);
+      console.log(data);
+      // Verifica que data es un array antes de asignarlo a users
+      if (Array.isArray(data)) {
         setUsers(data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      } finally {
-        setLoading(false);
+      } else {
+        console.error('La respuesta no es un array:', data);
+        setUsers([]); // Asegura que users sea un array incluso si la respuesta no lo es
       }
-    };
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      setUsers([]); // Asegura que users sea un array en caso de error
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchUsers();
-  }, []);
+  fetchUsers();
+}, []);
 
   // Ordenar los usuarios por las más recientes
   const usersOrdenados: User[] = [...users].sort((a, b) => new Date(b.fecha_nacimiento).getTime() - new Date(a.fecha_nacimiento).getTime());
