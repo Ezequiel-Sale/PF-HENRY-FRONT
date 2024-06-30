@@ -20,9 +20,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { loginUser } from "@/helper/petitions";
 import { useRouter } from "next/navigation";
+import { userAlreadyExists } from "@/services/auth";
 
 const Login = () => {
-  const router = useRouter()
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -31,20 +32,42 @@ const Login = () => {
     },
   });
 
-   async function onSubmit(values: z.infer<typeof loginSchema>) {
-     const response = await loginUser(values);
-     const token = response.token
-     localStorage.setItem("token", token);
-      router.push("/dashboard")
-    }
-
-
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
+    const response = await loginUser(values);
+    const token = response.token;
+    localStorage.setItem("token", token);
+    router.push("/dashboard");
+  }
 
   const signInWithGoogle = async () => {
     try {
       const { auth, googleProvider } = getGoogleProvider();
       const result = await signInWithPopup(auth, googleProvider);
-      console.log(result.user);
+
+      const resultFullProps: typeof result & {
+        user: {
+          accessToken: string;
+        };
+      } = result as any;
+
+      try {
+        const alreadyExists = await userAlreadyExists(
+          resultFullProps.user.email ?? "",
+          resultFullProps.user.accessToken
+        );
+        router.push("/dashboard");
+      } catch (error) {
+        window.localStorage.setItem(
+          "token",
+          resultFullProps.user.accessToken ?? ""
+        );
+        window.localStorage.setItem("email", resultFullProps.user.email ?? "");
+        window.localStorage.setItem(
+          "name",
+          resultFullProps.user.displayName ?? ""
+        );
+        router.push("/register");
+      }
     } catch (error) {
       console.error(error);
     }

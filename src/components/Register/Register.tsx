@@ -1,27 +1,71 @@
 "use client";
-import React, { useRef } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { IFormValues } from "../../types/registerInterface";
+import React, { use, useEffect, useRef, useState } from "react";
+import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
 import { registerValidations } from "../../helper/registerValidations";
 import Link from "next/link";
 import Swal from "sweetalert2";
 import "./register.css";
 import { registerUser } from "@/helper/petitions";
 import { useRouter } from "next/navigation";
-import emailjs from '@emailjs/browser';
+import emailjs from "@emailjs/browser";
+import { IFormValues } from "@/types/registerInterface";
 
 const Register: React.FC = () => {
-  const router = useRouter()
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [email, setEmail] = useState(window.localStorage.getItem("email"));
+  const [name, setName] = useState(window.localStorage.getItem("name"));
+  const disableInputs = () => {
+    setIsDisabled(true);
+  };
+
+  const router = useRouter();
   const form = useRef<HTMLFormElement | null>(null);
   const sendEmail = () => {
     if (form.current) {
-        emailjs.sendForm('service_470nr1h', 'template_q5eze0c', form.current, 'n0O6aFCx_KHd4rnfR')
+      emailjs
+        .sendForm(
+          "service_470nr1h",
+          "template_q5eze0c",
+          form.current,
+          "n0O6aFCx_KHd4rnfR"
+        )
         .then(
-            () => {console.log('SUCCESS!')},
-            (error) => {console.log('FAILED...', error.text)}
+          () => {
+            console.log("SUCCESS!");
+          },
+          (error) => {
+            console.log("FAILED...", error.text);
+          }
         );
     }
-};
+  };
+  useEffect(() => {
+    const email = window.localStorage.getItem("email");
+    const name = window.localStorage.getItem("name");
+
+    if (email && name) {
+      // setIsDisabled(true);
+      const emailInput = document.querySelector("#email") as HTMLInputElement;
+      emailInput.value = email;
+      emailInput.disabled = true;
+
+      const nameInput = document.querySelector("#name") as HTMLInputElement;
+      nameInput.value = name;
+      nameInput.disabled = true;
+
+      const passwordInput = document.querySelector(
+        "#password"
+      ) as HTMLInputElement;
+      passwordInput.disabled = true;
+
+      const confirmPasswordInput = document.querySelector(
+        "#confirmPassword"
+      ) as HTMLInputElement;
+      confirmPasswordInput.disabled = true;
+    }
+    // window.localStorage.removeItem("email");
+    // window.localStorage.removeItem("name");
+  }, [email, name]);
   return (
     <div className="background-image h-[100vh] flex justify-end bg-black">
       <Formik<IFormValues>
@@ -38,36 +82,39 @@ const Register: React.FC = () => {
         validate={registerValidations}
         onSubmit={(values, { resetForm }) => {
           console.log(values);
-          sendEmail()
+          sendEmail();
           registerUser(values)
-          .then((res) => {
-            console.log(res)
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Usuario registrado correctamente",
-              showConfirmButton: false,
-              timer: 1500,
+            .then((res) => {
+              console.log(res);
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Usuario registrado correctamente",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              resetForm();
+              setTimeout(() => {
+                router.push("/login");
+              }, 2000);
+            })
+            .catch((err) => {
+              Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Error al registrar el usuario",
+                text: err.message,
+                showConfirmButton: true,
+              });
             });
-            resetForm();
-            setTimeout(() => {
-              router.push("/login");
-            }, 2000);
-          })
-          .catch((err) => {
-            Swal.fire({
-              position: "center",
-              icon: "error",
-              title: "Error al registrar el usuario",
-              text: err.message,
-              showConfirmButton: true,
-            });
-          });
         }}
       >
         {() => {
           return (
-            <Form ref={form} className="flex flex-col items-center gap-4 bg-black bg-opacity-50 px-3 rounded-lg mr-20 h-auto my-auto border border-solid border-gray-100 md:mb-32 ">
+            <Form
+              ref={form}
+              className="flex flex-col items-center gap-4 bg-black bg-opacity-50 px-3 rounded-lg mr-20 h-auto my-auto border border-solid border-gray-100 md:mb-32 "
+            >
               <h2 className="text-2xl text-white font-sans font-extrabold">
                 Formulario de registro
               </h2>
@@ -86,6 +133,7 @@ const Register: React.FC = () => {
                   name="name"
                   placeholder="Ingrese su nombre completo"
                   className="w-full pl-2 text-black rounded-md h-[30px] text-sm"
+                  id="name"
                 />
                 <ErrorMessage
                   name="name"
@@ -101,6 +149,10 @@ const Register: React.FC = () => {
                     name="email"
                     placeholder="example@mail.com"
                     className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                    id="email"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      console.log("****************ACTION************");
+                    }}
                   />
                   <ErrorMessage
                     name="email"
@@ -161,6 +213,7 @@ const Register: React.FC = () => {
                     name="password"
                     placeholder="********"
                     className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                    id="password"
                   />
                   <ErrorMessage
                     name="password"
@@ -177,6 +230,7 @@ const Register: React.FC = () => {
                     name="confirmPassword"
                     placeholder="********"
                     className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                    id="confirmPassword"
                   />
                   <ErrorMessage
                     name="confirmPassword"

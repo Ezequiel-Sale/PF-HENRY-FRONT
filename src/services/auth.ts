@@ -13,3 +13,23 @@ export const login = async (email: string, password: string) => {
     throw error;
   }
 };
+
+export const userAlreadyExists = async (email: string, token: string) => {
+  try {
+    const response = await axios.post(
+      `https://v9jh36wp-3001.euw.devtunnels.ms/users/exist`,
+      {
+        email,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "X-Requested-With": "XMLHttpRequest",
+        },
+      }
+    );
+    return response.status === 201;
+  } catch (error) {
+    throw error;
+  }
+};
