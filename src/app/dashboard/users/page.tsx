@@ -18,14 +18,27 @@ const UsersPage = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const mockUsers: User[] = [
-        { id: '1', name: 'Juan Pérez', email: 'juan@example.com', fecha_nacimiento: '1990-01-01', phone: 1234567890, numero_dni: 12345678, estado: 'activo' },
-        { id: '2', name: 'María García', email: 'maria@example.com', fecha_nacimiento: '1985-05-15', phone: 9876543210, numero_dni: 87654321, estado: 'inactivo' },
-        { id: '3', name: 'Carlos Rodríguez', email: 'carlos@example.com', fecha_nacimiento: '1988-07-22', phone: 5555555555, numero_dni: 23456789, estado: 'activo' },
-        { id: '4', name: 'Ana Martínez', email: 'ana@example.com', fecha_nacimiento: '1992-03-10', phone: 9999999999, numero_dni: 34567890, estado: 'activo' },
-        { id: '5', name: 'Luis Sánchez', email: 'luis@example.com', fecha_nacimiento: '1987-11-30', phone: 8888888888, numero_dni: 45678901, estado: 'inactivo' },
-      ];
-      setUsers(mockUsers);
+
+
+      try {
+        const response = await fetch('http://localhost:3001/profesor/users');
+        const data = await response.json();
+        console.log(response)
+        // Assuming the API returns an array of users
+        console.log(data)
+        setUsers(data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      } finally {
+      }
+      // const mockUsers: User[] = [
+      //   { id: '1', name: 'Juan Pérez', email: 'juan@example.com', fecha_nacimiento: '1990-01-01', phone: 1234567890, numero_dni: 12345678, estado: 'activo' },
+      //   { id: '2', name: 'María García', email: 'maria@example.com', fecha_nacimiento: '1985-05-15', phone: 9876543210, numero_dni: 87654321, estado: 'inactivo' },
+      //   { id: '3', name: 'Carlos Rodríguez', email: 'carlos@example.com', fecha_nacimiento: '1988-07-22', phone: 5555555555, numero_dni: 23456789, estado: 'activo' },
+      //   { id: '4', name: 'Ana Martínez', email: 'ana@example.com', fecha_nacimiento: '1992-03-10', phone: 9999999999, numero_dni: 34567890, estado: 'activo' },
+      //   { id: '5', name: 'Luis Sánchez', email: 'luis@example.com', fecha_nacimiento: '1987-11-30', phone: 8888888888, numero_dni: 45678901, estado: 'inactivo' },
+      // ];
+      // setUsers(mockUsers);
     };
 
     fetchUsers();
@@ -73,7 +86,7 @@ const UsersPage = () => {
                         ? 'bg-green-200 text-green-800 border-2 border-green-400' 
                         : 'bg-red-200 text-red-800 border-2 border-red-400'
                     }`}>
-                      {user.estado.toUpperCase()}
+                      {user.estado}
                     </span>
                   </td>
                   <td className="px-2 py-2 lg:px-4 lg:py-3">

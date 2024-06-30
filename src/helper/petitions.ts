@@ -1,3 +1,5 @@
+import { ICredential } from "@/types/credentialInterface";
+import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
 
 export const registerUser = async (user: IFormValues) => {
@@ -21,7 +23,7 @@ export const registerUser = async (user: IFormValues) => {
 
 export async function getUsers() {
     try {
-      const response = await fetch('http://localhost:3001/users');
+      const response = await fetch('http://localhost:3001/profesor/users');
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
@@ -32,4 +34,102 @@ export async function getUsers() {
     }
   }
 
+  // export async function createProfesor(profesor: IProfesor) {
+  //   try {
+  //     const response = await fetch('http://localhost:3001/profesor/create', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(profesor),
+  //     });
   
+  //     if (!response.ok) {
+  //       throw new Error(`Error: ${response.status} ${response.statusText}`);
+  //     }
+  
+  //     const createdProfesor = await response.json();
+  //     return createdProfesor;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+  
+  export async function createProfesor(profesor: IProfesor) {
+    try {
+      const response = await fetch('http://localhost:3001/profesor/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profesor),
+      });
+  
+      // Revisa el estado de la respuesta
+      if (!response.ok) {
+        const errorText = await response.text(); // Intenta obtener el mensaje de error como texto
+        throw new Error(`Error: ${response.status} ${response.statusText} - ${errorText}`);
+      }
+  
+      // Intenta parsear la respuesta como JSON
+      const createdProfesor = await response.json();
+      return createdProfesor;
+    } catch (error) {
+      console.error('Error en la creación del profesor:', error);
+      throw error;
+    }
+  }
+  export async function getProfesors() {
+    try {
+      const response = await fetch('http://localhost:3001/profesor/profesores');
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+      const users = await response.json();
+      return users;
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  }
+
+  export async function updateUserStatus(id: string) {
+    try {
+      const response = await fetch(`http://localhost:3001/profesor/users/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id}),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+  
+      const updatedUser = await response.json();
+      return updatedUser;
+    } catch (error) {
+      console.error('Error updating user status:', error);
+    }
+  }
+
+ export async function loginUser({email, password}: ICredential) {
+    try {
+      const response = await fetch('http://localhost:3001/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email , password, type: "user" }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+  
+      const loginData = await response.json();
+      return loginData;
+    } catch (error) {
+      console.error('Error logging in:', error);
+    }
+  }

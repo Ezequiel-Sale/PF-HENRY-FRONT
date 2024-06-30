@@ -8,6 +8,7 @@ export interface IFormValues {
     confirmPassword: string;
   }
 
+<<<<<<< HEAD
 export interface ProfesorData {
   nombre: string;
   edad: string;
@@ -16,3 +17,13 @@ export interface ProfesorData {
   email: string;
   password: string;
 }
+=======
+  export interface ProfesorData {
+    nombre: string;
+    edad: string;
+    dia: string[];
+    horario: string[];
+    email: string;
+    password: string;
+  }
+>>>>>>> developer
