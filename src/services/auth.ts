@@ -17,7 +17,7 @@ export const login = async (email: string, password: string) => {
 export const userAlreadyExists = async (email: string, token: string) => {
   try {
     const response = await axios.post(
-      `https://v9jh36wp-3001.euw.devtunnels.ms/users/exist`,
+      `http://localhost:3001/users/exist`,
       {
         email,
       },

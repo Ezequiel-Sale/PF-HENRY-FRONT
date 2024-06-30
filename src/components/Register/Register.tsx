@@ -14,6 +14,7 @@ const Register: React.FC = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
 
   const router = useRouter();
   const form = useRef<HTMLFormElement | null>(null);
@@ -45,6 +46,7 @@ const Register: React.FC = () => {
     if (storedEmail && storedName) {
       setEmail(storedEmail);
       setName(storedName);
+      setPassword("R@@t12345");
       setIsDisabled(true);
     }
   }, []);
@@ -57,14 +59,15 @@ const Register: React.FC = () => {
           email: email || "",
           phone: "",
           numero_dni: "",
-          password: "",
+          password: password || "",
           fecha_nacimiento: "",
-          confirmPassword: "",
+          confirmPassword: password || "",
         }}
         enableReinitialize={true}
         validateOnChange
         validate={registerValidations}
         onSubmit={(values, { resetForm }) => {
+          console.log("********PASA********");
           console.log(values);
           sendEmail();
           registerUser(values)
@@ -196,42 +199,49 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
-              {!isDisabled && (
-                <div className="flex relative gap-2">
-                  <div className="flex flex-col relative mb-4">
-                    <label className="font-bold text-white">Contraseña</label>
-                    <Field
-                      type="password"
-                      name="password"
-                      placeholder="********"
-                      className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
-                      id="password"
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="text-red-500 text-xs text-center absolute top-full ml-1"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label className="font-bold text-white">
-                      Repita su contraseña
-                    </label>
-                    <Field
-                      type="password"
-                      name="confirmPassword"
-                      placeholder="********"
-                      className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
-                      id="confirmPassword"
-                    />
-                    <ErrorMessage
-                      name="confirmPassword"
-                      component="div"
-                      className="text-red-500 text-xs text-center absolute top-full mt-[-16px] ml-1"
-                    />
-                  </div>
+              (
+              <div className="flex relative gap-2">
+                <div className="flex flex-col relative mb-4">
+                  <label className="font-bold text-white">Contraseña</label>
+                  <Field
+                    type="password"
+                    name="password"
+                    placeholder="********"
+                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                    id="password"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setPassword(e.target.value);
+                    }}
+                    disabled={isDisabled}
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-red-500 text-xs text-center absolute top-full ml-1"
+                  />
                 </div>
-              )}
+                <div className="flex flex-col">
+                  <label className="font-bold text-white">
+                    Repita su contraseña
+                  </label>
+                  <Field
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="********"
+                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                    id="confirmPassword"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setPassword(e.target.value);
+                    }}
+                    disabled={isDisabled}
+                  />
+                  <ErrorMessage
+                    name="confirmPassword"
+                    component="div"
+                    className="text-red-500 text-xs text-center absolute top-full mt-[-16px] ml-1"
+                  />
+                </div>
+              </div>
               <button
                 type="submit"
                 className="bg-red-600 w-60 h-8 text-white mb-4 rounded-md cursor-pointer hover:bg-red-800 hover:text-white"
