@@ -47,6 +47,14 @@ export const registerValidations: (values: IFormValues) => Partial<IFormValues> 
       errors.numero_dni = "El número de DNI debe ser de 8 digitos";
     }
 
+    if (!values.password && !localStorage.getItem("password")) {
+      errors.password = "La contraseña es requerida";
+    }
+  
+    if (!values.confirmPassword && !localStorage.getItem("confirmPassword")) {
+      errors.confirmPassword = "La confirmación de contraseña es requerida";
+    }
+    
     if (!values.password.trim()) {
       errors.password = 
          "Ingrese una contraseña"

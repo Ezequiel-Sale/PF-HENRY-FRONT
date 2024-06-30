@@ -1,6 +1,6 @@
 "use client";
-import React, { use, useEffect, useRef, useState } from "react";
-import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
+import React, { useEffect, useRef, useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { registerValidations } from "../../helper/registerValidations";
 import Link from "next/link";
 import Swal from "sweetalert2";
@@ -12,14 +12,12 @@ import { IFormValues } from "@/types/registerInterface";
 
 const Register: React.FC = () => {
   const [isDisabled, setIsDisabled] = useState(false);
-  const [email, setEmail] = useState(window.localStorage.getItem("email"));
-  const [name, setName] = useState(window.localStorage.getItem("name"));
-  const disableInputs = () => {
-    setIsDisabled(true);
-  };
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
   const router = useRouter();
   const form = useRef<HTMLFormElement | null>(null);
+
   const sendEmail = () => {
     if (form.current) {
       emailjs
@@ -39,45 +37,31 @@ const Register: React.FC = () => {
         );
     }
   };
+
   useEffect(() => {
-    const email = window.localStorage.getItem("email");
-    const name = window.localStorage.getItem("name");
+    const storedEmail = window.localStorage.getItem("email");
+    const storedName = window.localStorage.getItem("name");
 
-    if (email && name) {
-      // setIsDisabled(true);
-      const emailInput = document.querySelector("#email") as HTMLInputElement;
-      emailInput.value = email;
-      emailInput.disabled = true;
-
-      const nameInput = document.querySelector("#name") as HTMLInputElement;
-      nameInput.value = name;
-      nameInput.disabled = true;
-
-      const passwordInput = document.querySelector(
-        "#password"
-      ) as HTMLInputElement;
-      passwordInput.disabled = true;
-
-      const confirmPasswordInput = document.querySelector(
-        "#confirmPassword"
-      ) as HTMLInputElement;
-      confirmPasswordInput.disabled = true;
+    if (storedEmail && storedName) {
+      setEmail(storedEmail);
+      setName(storedName);
+      setIsDisabled(true);
     }
-    // window.localStorage.removeItem("email");
-    // window.localStorage.removeItem("name");
-  }, [email, name]);
+  }, []);
+
   return (
     <div className="background-image h-[100vh] flex justify-end bg-black">
       <Formik<IFormValues>
         initialValues={{
-          name: "",
-          email: "",
+          name: name || "",
+          email: email || "",
           phone: "",
           numero_dni: "",
           password: "",
           fecha_nacimiento: "",
           confirmPassword: "",
         }}
+        enableReinitialize={true}
         validateOnChange
         validate={registerValidations}
         onSubmit={(values, { resetForm }) => {
@@ -134,6 +118,11 @@ const Register: React.FC = () => {
                   placeholder="Ingrese su nombre completo"
                   className="w-full pl-2 text-black rounded-md h-[30px] text-sm"
                   id="name"
+                  value={name}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setName(e.target.value);
+                  }}
+                  disabled={isDisabled}
                 />
                 <ErrorMessage
                   name="name"
@@ -150,9 +139,11 @@ const Register: React.FC = () => {
                     placeholder="example@mail.com"
                     className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
                     id="email"
+                    value={email}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      console.log("****************ACTION************");
+                      setEmail(e.target.value);
                     }}
+                    disabled={isDisabled}
                   />
                   <ErrorMessage
                     name="email"
@@ -205,40 +196,42 @@ const Register: React.FC = () => {
                   />
                 </div>
               </div>
-              <div className="flex relative gap-2">
-                <div className="flex flex-col relative mb-4">
-                  <label className="font-bold text-white">Contraseña</label>
-                  <Field
-                    type="password"
-                    name="password"
-                    placeholder="********"
-                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
-                    id="password"
-                  />
-                  <ErrorMessage
-                    name="password"
-                    component="div"
-                    className="text-red-500 text-xs text-center absolute top-full ml-1"
-                  />
+              {!isDisabled && (
+                <div className="flex relative gap-2">
+                  <div className="flex flex-col relative mb-4">
+                    <label className="font-bold text-white">Contraseña</label>
+                    <Field
+                      type="password"
+                      name="password"
+                      placeholder="********"
+                      className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                      id="password"
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="text-red-500 text-xs text-center absolute top-full ml-1"
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <label className="font-bold text-white">
+                      Repita su contraseña
+                    </label>
+                    <Field
+                      type="password"
+                      name="confirmPassword"
+                      placeholder="********"
+                      className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
+                      id="confirmPassword"
+                    />
+                    <ErrorMessage
+                      name="confirmPassword"
+                      component="div"
+                      className="text-red-500 text-xs text-center absolute top-full mt-[-16px] ml-1"
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <label className="font-bold text-white">
-                    Repita su contraseña
-                  </label>
-                  <Field
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="********"
-                    className="w-52 pl-2 text-black rounded-md h-[30px] text-sm"
-                    id="confirmPassword"
-                  />
-                  <ErrorMessage
-                    name="confirmPassword"
-                    component="div"
-                    className="text-red-500 text-xs text-center absolute top-full mt-[-16px] ml-1"
-                  />
-                </div>
-              </div>
+              )}
               <button
                 type="submit"
                 className="bg-red-600 w-60 h-8 text-white mb-4 rounded-md cursor-pointer hover:bg-red-800 hover:text-white"
