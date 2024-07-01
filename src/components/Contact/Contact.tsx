@@ -2,7 +2,6 @@
 import { IContactValues, contactValidations } from "@/helper/contactValidations";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useRef } from "react";
-import "../Register/register.css";
 import Swal from "sweetalert2";
 import emailjs from '@emailjs/browser';
 
@@ -11,7 +10,7 @@ const Contact = () => {
 
     const sendEmail = () => {
         if (form.current) {
-            emailjs.sendForm('service_470nr1h', 'template_q5eze0c', form.current, 'n0O6aFCx_KHd4rnfR')
+            emailjs.sendForm('service_470nr1h', 'template_0k0oog7', form.current, 'n0O6aFCx_KHd4rnfR')
             .then(
                 () => {
                     console.log('SUCCESS!');
@@ -38,77 +37,80 @@ const Contact = () => {
     };
 
     return (
-        <div className="ml-10 background-image">
-            <div className="text-3xl font-bold text-white my-5">Escribenos!</div>
-            <Formik<IContactValues>
-                initialValues={{
-                    name: "",
-                    email: "",
-                    message: "",
-                }}
-                validateOnChange
-                validate={contactValidations}
-                onSubmit={(values, { resetForm }) => {
-                    console.log(values);
-                    sendEmail();
-                    resetForm();
-                }}
-            >
-                {() => {
-                    return (
-                        <Form ref={form} className="flex flex-col items-center justify-center gap-4 bg-black bg-opacity-50 w-[300px] px-3 py-3 mb-4 rounded-lg h-auto border border-solid border-gray-100 ">
-                            <div className="flex flex-col relative">
-                                <label className="font-bold text-white">Nombre y Apellido</label>
+        <div className="flex md:justify-start items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/image.png')" }}>
+            <div className="w-full max-w-sm p-4 bg-black border border-gray-800 rounded-lg shadow sm:p-6 md:p-8 md:ml-10 md:mb-10">
+                <h5 className="text-xl font-medium text-white mb-4">Escribenos!</h5>
+                <Formik<IContactValues>
+                    initialValues={{
+                        name: "",
+                        email: "",
+                        message: "",
+                    }}
+                    validateOnChange
+                    validate={contactValidations}
+                    onSubmit={(values, { resetForm }) => {
+                        console.log(values);
+                        sendEmail();
+                        resetForm();
+                    }}
+                >
+                    {() => (
+                        <Form ref={form} className="space-y-6">
+                            <div>
+                                <label htmlFor="name" className="block mb-2 text-sm font-medium text-white">Nombre y Apellido</label>
                                 <Field
                                     type="text"
                                     name="name"
+                                    id="name"
                                     placeholder="Ingrese su nombre completo"
-                                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
+                                    className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 />
                                 <ErrorMessage
                                     name="name"
                                     component="div"
-                                    className="text-red-500 text-xs text-center absolute top-full ml-1"
+                                    className="text-red-500 text-xs mt-1"
                                 />
                             </div>
-                            <div className="flex flex-col text-white relative">
-                                <label className="font-bold">Correo electronico</label>
+                            <div>
+                                <label htmlFor="email" className="block mb-2 text-sm font-medium text-white">Correo electrónico</label>
                                 <Field
-                                    type="text"
+                                    type="email"
                                     name="email"
+                                    id="email"
                                     placeholder="example@mail.com"
-                                    className="w-60 pl-2 text-black rounded-md h-[30px] text-sm"
+                                    className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                                 />
                                 <ErrorMessage
                                     name="email"
                                     component="div"
-                                    className="text-red-500 text-xs text-center absolute top-full ml-1"
+                                    className="text-red-500 text-xs mt-1"
                                 />
                             </div>
-                            <div className="flex flex-col relative mb-2">
-                                <label className="font-bold text-white">Mensaje</label>
+                            <div>
+                                <label htmlFor="message" className="block mb-2 text-sm font-medium text-white">Mensaje</label>
                                 <Field
                                     as="textarea"
                                     name="message"
+                                    id="message"
                                     placeholder="Escriba su consulta"
-                                    className="w-60 pl-2 text-black rounded-md h-[100px] text-sm"
+                                    className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 h-24"
                                 />
                                 <ErrorMessage
                                     name="message"
                                     component="div"
-                                    className="text-red-500 text-xs text-center absolute top-full ml-1"
+                                    className="text-red-500 text-xs mt-1"
                                 />
                             </div>
                             <button
                                 type="submit"
-                                className="bg-red-600 w-60 h-8 text-white mb-4 rounded-md cursor-pointer hover:bg-red-800 hover:text-white"
+                                className="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                             >
                                 Enviar
                             </button>
                         </Form>
-                    );
-                }}
-            </Formik>
+                    )}
+                </Formik>
+            </div>
         </div>
     );
 };

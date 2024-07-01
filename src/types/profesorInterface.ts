@@ -17,6 +17,7 @@ export interface IUser {
     phone: string;
     fecha_nacimiento: string;
     numero_dni: string;
+    estado?: string;
 }
 
 export interface userSession {
