@@ -1,0 +1,140 @@
+"use client"
+
+import React, { useState, useEffect } from 'react';
+
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  fecha_nacimiento: string;
+  phone: number;
+  numero_dni: number;
+  estado: boolean;
+};
+
+const UsersPage = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState({ type: '', content: '' });
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/profesor/users');
+        const data = await response.json();
+        setUsers(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        setUsers([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const updateUserStatus = async (id: string, newState: boolean) => {
+    try {
+      const response = await fetch(`http://localhost:3001/users/updateState/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ estado: newState }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al actualizar el estado del usuario');
+      }
+
+      const updatedUser = await response.json();
+      return updatedUser;
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      throw error;
+    }
+  };
+
+  const handleStatusChange = async (id: string, currentState: boolean) => {
+    setLoading(true);
+    setMessage({ type: '', content: '' });
+    try {
+      const updatedUser = await updateUserStatus(id, !currentState);
+      setUsers(prevUsers => prevUsers.map(u => u.id === updatedUser.id ? updatedUser : u));
+      setMessage({ type: 'success', content: 'Estado actualizado con éxito' });
+    } catch (error) {
+      console.error('Error al cambiar el estado del usuario:', error);
+      setMessage({ type: 'error', content: 'Error al actualizar el estado' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getStatusDisplay = (isActive: boolean) => {
+    return isActive ? 'Activo' : 'Inactivo';
+  };
+
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-8">
+      <div className="max-w-full mx-auto bg-white rounded-xl shadow-2xl p-4 lg:p-8">
+        <h1 className="text-2xl lg:text-4xl font-bold text-gray-800 mb-4 lg:mb-8 text-center">Gestión de Usuarios</h1>
+        {message.content && (
+          <div className={`mb-4 p-4 rounded ${message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+            {message.content}
+          </div>
+        )}
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs sm:text-sm text-left text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100 rounded-t-lg">
+              <tr>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Nombre</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Email</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Fecha de Nac.</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Teléfono</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">DNI</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Estado</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Modificar</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map(user => (
+                <tr key={user.id} className="bg-white border-b hover:bg-gray-50 transition duration-150 ease-in-out">
+                  <td className="px-2 py-2 lg:px-4 lg:py-3 font-medium text-gray-900">{user.name}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3">{user.email}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3">{user.fecha_nacimiento}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3">{user.phone}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3">{user.numero_dni}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3">
+                    <span className={`inline-block w-24 text-center px-2 py-1 rounded-full text-sm font-semibold ${
+                      user.estado 
+                        ? 'bg-green-200 text-green-800 border-2 border-green-400' 
+                        : 'bg-red-200 text-red-800 border-2 border-red-400'
+                    }`}>
+                      {getStatusDisplay(user.estado)}
+                    </span>
+                  </td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3">
+                    <button
+                      className="font-medium text-red-600 hover:text-red-800 transition duration-150 ease-in-out"
+                      onClick={() => handleStatusChange(user.id, user.estado)}
+                    >
+                      Modificar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UsersPage;
