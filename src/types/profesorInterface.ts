@@ -6,6 +6,7 @@ export interface IProfesor {
     dia: string[];
     horario: string[];
     password: string;
+    estado?: boolean;
 }
 
 export interface IUser {
