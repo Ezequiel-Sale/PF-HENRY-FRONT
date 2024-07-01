@@ -55,7 +55,7 @@ const Login = () => {
           resultFullProps.user.email ?? "",
           resultFullProps.user.accessToken
         );
-        router.push("/dashboard");
+        router.push("/dashboard/usuarios");
       } catch (error) {
         window.localStorage.setItem(
           "token",

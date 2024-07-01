@@ -84,7 +84,7 @@ const Register: React.FC = () => {
               });
               resetForm();
               setTimeout(() => {
-                router.push("/login");
+                router.push("/dashboard/usuarios");
               }, 2000);
             })
             .catch((err) => {
