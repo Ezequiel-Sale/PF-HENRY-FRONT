@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { userSession } from "@/types/profesorInterface";
 
 const Navbar = () => {
+  const [userData, setUserData] = useState<userSession | null>(null)
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -15,6 +17,13 @@ const Navbar = () => {
   const handleToAuth = () => {
     window.location.href = "/login";
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const userData = localStorage.getItem('userSession')
+      setUserData(userData ? JSON.parse(userData) : null)
+    }
+  }, [])
 
   return (
     <nav className="text-white  bg-transparent p-0 md:p-2  w-[250px]  md:w-screen flex justify-center">

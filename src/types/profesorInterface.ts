@@ -18,3 +18,15 @@ export interface IUser {
     fecha_nacimiento: string;
     numero_dni: string;
 }
+
+export interface userSession {
+    token: string;
+    userData: {
+        name: string;
+        email: string;
+        password: string;
+        phone: string;
+        fecha_nacimiento: string;
+        numero_dni: string;
+    }   
+}

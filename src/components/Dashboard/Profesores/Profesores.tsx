@@ -1,6 +1,6 @@
 "use client";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getProfesors, updateUserStatus, updateProfesorStatus } from "@/helper/petitions"; // Asegúrate de importar la función updateUserStatus
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getProfesors, updateProfesorStatus } from "@/helper/petitions"; // Asegúrate de importar la función updateUserStatus
 import { IProfesor } from "@/types/profesorInterface";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -39,7 +39,6 @@ const Profesores: React.FC = () => {
     } catch (error) {
       console.error('Error updating user status:', error);
     }
-    
   };
 
   if (loading) {
@@ -52,47 +51,55 @@ const Profesores: React.FC = () => {
         <h3 className='text-2xl mb-4 font-semibold'>
           Profesores
         </h3>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nombre</TableHead>
-              <TableHead className='hidden md:table-cell'>Edad</TableHead>
-              <TableHead className='hidden md:table-cell'>Email</TableHead>
-              <TableHead className='hidden md:table-cell'>Horario</TableHead>
-              <TableHead className='hidden md:table-cell'>Dias</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead>Modificar</TableHead>
-              <TableHead>Ver</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {profesores.map((profesor) => (
-              <TableRow key={profesor.id}>
-                <TableCell>{profesor.nombre}</TableCell>
-                <TableCell className='hidden md:table-cell'>{profesor.edad}</TableCell>
-                <TableCell className='hidden md:table-cell'>{profesor.email}</TableCell>
-                <TableCell className='hidden md:table-cell'>{profesor.horario}</TableCell>
-                <TableCell className='hidden md:table-cell'>{profesor.dia}</TableCell>
-                <TableCell>{profesor.estado ? "Activo" : "Inactivo"}</TableCell>
-                <TableCell>
-                  <button
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded text-xs"
-                    onClick={() => handleStatusChange(profesor.id??"")}
-                  >
-                    Modificar
-                  </button>
-                </TableCell>
-                <TableCell>
-                  <Link href="#">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs">
-                      Ver
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs sm:text-sm text-left text-gray-500">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100 rounded-t-lg">
+              <tr>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Nombre</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">Edad</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">Email</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">Horario</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">Dias</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Estado</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Modificar</th>
+                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Ver</th>
+              </tr>
+            </thead>
+            <tbody>
+              {profesores.map((profesor) => (
+                <tr key={profesor.id} className="bg-white border-b hover:bg-gray-50 transition duration-150 ease-in-out">
+                  <td className="px-2 py-2 lg:px-4 lg:py-3 font-medium text-gray-900">{profesor.nombre}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">{profesor.edad}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">{profesor.email}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">{profesor.horario}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">{profesor.dia}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3">
+                    <span className={`inline-block w-24 text-center px-2 py-1 rounded-full text-sm font-semibold ${
+                      profesor.estado ? 'bg-green-200 text-green-800 border-2 border-green-400' : 'bg-red-200 text-red-800 border-2 border-red-400'
+                    }`}>
+                      {profesor.estado ? "Activo" : "Inactivo"}
+                    </span>
+                  </td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3">
+                    <button
+                      className="font-medium text-red-600 hover:text-red-800 transition duration-150 ease-in-out"
+                      onClick={() => handleStatusChange(profesor.id ?? "")}
+                    >
+                      Modificar
                     </button>
-                  </Link>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  </td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3">
+                    <Link href="#">
+                      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-xs">
+                        Ver
+                      </button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );
