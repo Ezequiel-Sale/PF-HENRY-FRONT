@@ -21,9 +21,10 @@ import { Input } from "@/components/ui/input";
 import { loginUser } from "@/helper/petitions";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { userAlreadyExists } from "@/services/auth";
 
 const Login = () => {
-  const router = useRouter();
+  const router = useRouter();;
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -33,35 +34,41 @@ const Login = () => {
   });
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
-    try {
-      const response = await loginUser(values);
-      console.log(response)
-      const {token, user} = response;
-      localStorage.setItem("userSession", JSON.stringify({token: token, userData: user}));
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Sesión iniciada exitosamente",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      router.push("/dashboard");
-    } catch (error: any) {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error al iniciar sesión",
-        text: error.message,
-        showConfirmButton: true,
-      });
-    }
+    const response = await loginUser(values);
+    const token = response.token;
+    localStorage.setItem("token", token);
+    router.push("/dashboard");
   }
 
   const signInWithGoogle = async () => {
     try {
       const { auth, googleProvider } = getGoogleProvider();
       const result = await signInWithPopup(auth, googleProvider);
-      console.log(result.user);
+
+      const resultFullProps: typeof result & {
+        user: {
+          accessToken: string;
+        };
+      } = result as any;
+
+      try {
+        const alreadyExists = await userAlreadyExists(
+          resultFullProps.user.email ?? "",
+          resultFullProps.user.accessToken
+        );
+        router.push("/dashboard/usuarios");
+      } catch (error) {
+        window.localStorage.setItem(
+          "token",
+          resultFullProps.user.accessToken ?? ""
+        );
+        window.localStorage.setItem("email", resultFullProps.user.email ?? "");
+        window.localStorage.setItem(
+          "name",
+          resultFullProps.user.displayName ?? ""
+        );
+        router.push("/register");
+      }
     } catch (error) {
       console.error(error);
     }
