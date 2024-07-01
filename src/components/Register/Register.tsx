@@ -188,7 +188,6 @@ const Register: React.FC = () => {
                 />
                 <ErrorMessage name="numero_dni" component="div" className="text-red-500 text-xs text-center mt-1" />
               </div>
-              (
               <div className="flex relative gap-2">
                 <div className="flex flex-col relative mb-4">
                   <label className="font-bold text-white">Contraseña</label>
@@ -240,9 +239,9 @@ const Register: React.FC = () => {
                 </button>
               </div>
             </Form>
-          )}
-        </Formik>
-      </div>
+          );
+        }}
+      </Formik>
     </div>
   );
 };
