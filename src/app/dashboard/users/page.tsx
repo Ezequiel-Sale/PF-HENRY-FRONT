@@ -9,7 +9,7 @@ type User = {
   fecha_nacimiento: string;
   phone: number;
   numero_dni: number;
-  estado: 'activo' | 'inactivo';
+  estado: 'active' | 'cancelled';
 };
 
 const UsersPage = () => {
@@ -19,22 +19,15 @@ const UsersPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-          const response = await fetch("http://localhost:3001/profesor/users");
-          const data = await response.json();
-          console.log(response);
-          console.log(data);
-          // Verifica si data es un arreglo antes de actualizar el estado
-          if (Array.isArray(data)) {
-              setUsers(data);
-          } else {
-              console.error("La respuesta no es un arreglo");
-              // Opcional: manejar el caso cuando data no es un arreglo
-              setUsers([]); // Establece users como un arreglo vacío o maneja de otra manera
-          }
+        const response = await fetch('http://localhost:3001/profesor/users');
+        const data = await response.json();
+        console.log(response)
+        console.log(data)
+        setUsers(data);
       } catch (error) {
-          console.error("Error fetching users:", error);
+        console.error('Error fetching users:', error);
       }
-  };
+    };
 
     fetchUsers();
   }, []);
@@ -42,12 +35,16 @@ const UsersPage = () => {
   const toggleUserStatus = (user: User) => {
     const updatedUsers = users.map(u => {
       if (u.id === user.id) {
-        return { ...u, estado: u.estado === 'activo' ? 'inactivo' : 'activo' } as User;
+        return { ...u, estado: u.estado === 'active' ? 'cancelled' : 'active' } as User;
       }
       return u;
     });
     setUsers(updatedUsers);
     setSelectedUser(null);
+  };
+
+  const getStatusDisplay = (status: 'active' | 'cancelled') => {
+    return status === 'active' ? 'Activo' : 'Inactivo';
   };
 
   return (
@@ -77,11 +74,11 @@ const UsersPage = () => {
                   <td className="px-2 py-2 lg:px-4 lg:py-3">{user.numero_dni}</td>
                   <td className="px-2 py-2 lg:px-4 lg:py-3">
                     <span className={`inline-block w-24 text-center px-2 py-1 rounded-full text-sm font-semibold ${
-                      user.estado === 'activo' 
+                      user.estado === 'active' 
                         ? 'bg-green-200 text-green-800 border-2 border-green-400' 
                         : 'bg-red-200 text-red-800 border-2 border-red-400'
                     }`}>
-                      {user.estado}
+                      {getStatusDisplay(user.estado)}
                     </span>
                   </td>
                   <td className="px-2 py-2 lg:px-4 lg:py-3">
@@ -106,7 +103,7 @@ const UsersPage = () => {
               <h3 className="text-2xl leading-6 font-bold text-gray-900 mb-4">Modificar Estado de Usuario</h3>
               <div className="mt-2 px-7 py-3">
                 <p className="text-lg text-gray-500">
-                  ¿Desea cambiar el estado de <span className="font-semibold">{selectedUser.name}</span> a <span className="font-semibold">{selectedUser.estado === 'activo' ? 'inactivo' : 'activo'}</span>?
+                  ¿Desea cambiar el estado de <span className="font-semibold">{selectedUser.name}</span> a <span className="font-semibold">{getStatusDisplay(selectedUser.estado === 'active' ? 'cancelled' : 'active')}</span>?
                 </p>
               </div>
               <div className="items-center px-4 py-3">
