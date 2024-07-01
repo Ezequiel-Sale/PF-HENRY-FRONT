@@ -2,6 +2,8 @@
 import { createProfesor } from '@/helper/petitions';
 import { ProfesorData } from '@/types/registerInterface';
 import React, { useState, useEffect, useRef, ChangeEvent, FormEvent } from 'react';
+import Swal from 'sweetalert2';
+import { string } from 'zod';
 
 
 
@@ -12,7 +14,7 @@ const Settings: React.FC = () => {
     dia: [],
     horario: [],
     email: '',
-    password: ''
+    password: '',
   });
 
   const [errors, setErrors] = useState<Partial<ProfesorData>>({});
@@ -83,7 +85,15 @@ const Settings: React.FC = () => {
 
     // Aquí puedes enviar los datos al backend si todos los campos son válidos
     // Lógica para enviar datos al backend
-    createProfesor(profesorData);
+    createProfesor(profesorData)
+    .then((response) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Profesor creado con exito',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    })
     // resetear formulario o realizar otras acciones post envío
     setProfesorData({
       nombre: '',
