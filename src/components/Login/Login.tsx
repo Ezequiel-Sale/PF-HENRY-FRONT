@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { loginUser } from "@/helper/petitions";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { userAlreadyExists } from "@/services/auth";
 
 const Login = () => {
@@ -34,6 +35,28 @@ const Login = () => {
   });
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
+    try {
+      const response = await loginUser(values);
+      console.log(response)
+      const {token, user} = response;
+      localStorage.setItem("userSession", JSON.stringify({token: token, userData: user}));
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Sesión iniciada exitosamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      router.push("/dashboard");
+    } catch (error: any) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al iniciar sesión",
+        text: error.message,
+        showConfirmButton: true,
+      });
+    }
     const response = await loginUser(values);
     const token = response.token;
     localStorage.setItem("token", token);
