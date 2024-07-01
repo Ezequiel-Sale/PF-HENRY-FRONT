@@ -17,10 +17,10 @@ const Services = () => {
           Servicios
         </h2>
       </div>
-      <div className="w-full bg-white text-xl font-bold">
-        <div className="text-black flex gap-6  justify-around py-5">
+      <div className="w-full bg-transparent text-xl font-bold">
+        <div className="text-white flex gap-6  justify-around py-5">
           <a
-            className="border border-solid border-gray-900 rounded-md p-2 flex-col flex justify-center items-center min-w-36 hover:bg-black hover:text-white hover:cursor-pointer"
+            className="border border-solid border-white rounded-md p-2 flex-col flex justify-center items-center min-w-36 hover:bg-black hover:text-white hover:cursor-pointer"
             href="#salud"
           >
             <MdHealthAndSafety size={70} />

@@ -26,7 +26,7 @@ const Sidebar = () => {
     <Command className="bg-secondary rounded-none h-screen w-full">
         <CommandInput placeholder="Type a command or search..." />
         <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>No se encontraron resultados.</CommandEmpty>
             <CommandGroup heading="Suggestions">
                 <CommandItem>
                     <LayoutDashboard className='mr-2 h4 w4' />
@@ -45,7 +45,7 @@ const Sidebar = () => {
             <CommandGroup heading="Settings">
                 <CommandItem>
                     <User className='mr-2 h4 w4' />
-                    <span>Profile</span>
+                    <span>Perfil</span>
                 </CommandItem>
                 <CommandItem>
                     <UsersRound className='mr-2 h4 w4' />
@@ -53,11 +53,11 @@ const Sidebar = () => {
                 </CommandItem>
                 <CommandItem>
                     <CreditCard className='mr-2 h4 w4' />
-                    <span>Billing</span>
+                    <span>Pagos</span>
                 </CommandItem>
                 <CommandItem>
                     <Settings className='mr-2 h4 w4' />
-                    <Link href="/dashboard/settings"><span>Settings</span></Link>
+                    <Link href="/dashboard/settings"><span>Crear Profesores</span></Link>
                 </CommandItem>
             </CommandGroup>
         </CommandList>

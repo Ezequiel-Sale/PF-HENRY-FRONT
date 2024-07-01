@@ -1,7 +1,6 @@
 
 .background-image{
-    background-image: url('https://media.discordapp.net/attachments/1254587065241174086/1255283873122619493/pixelcut-export.jpeg?ex=667c91b5&is=667b4035&hm=2f06ff444717dfd986385e234e5a32a86142beed41f3d232317e4628bb547929&=&format=webp&width=1219&height=663');
-    background-repeat: no-repeat;
+    background-image: url("/image.png");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
