@@ -87,7 +87,6 @@ const Settings: React.FC = () => {
         timer: 1500
       })
     })
-    createProfesor(profesorData);
     // resetear formulario o realizar otras acciones post envío
     setProfesorData({
       nombre: '',

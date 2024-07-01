@@ -1,17 +1,14 @@
 "use client";
-
-import React, { useEffect } from "react";
+import React from "react";
 import getGoogleProvider from "@/services/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { loginSchema } from "@/zod/loginShema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,12 +17,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { loginUser } from "@/helper/petitions";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
-import Swal from "sweetalert2";
 import { userAlreadyExists } from "@/services/auth";
+import Swal from "sweetalert2";
 
 const Login = () => {
-  const router = useRouter();;
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -37,9 +33,9 @@ const Login = () => {
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
       const response = await loginUser(values);
-      console.log(response)
-      const {token, user} = response;
-      localStorage.setItem("userSession", JSON.stringify({token: token, userData: user}));
+      console.log(response);
+      const { token, user } = response;
+      localStorage.setItem("userSession", JSON.stringify({ token: token, userData: user }));
       Swal.fire({
         position: "center",
         icon: "success",
@@ -57,10 +53,6 @@ const Login = () => {
         showConfirmButton: true,
       });
     }
-    const response = await loginUser(values);
-    const token = response.token;
-    localStorage.setItem("token", token);
-    router.push("/dashboard");
   }
 
   const signInWithGoogle = async () => {
@@ -99,10 +91,10 @@ const Login = () => {
 
   return (
     <div
-      className="flex md:justify-end items-center min-h-screen bg-cover bg-center justify-center"
+      className="flex md:justify-start items-center min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/image.png')" }}
     >
-      <div className="w-full max-w-sm p-4 bg-black border border-gray-800 rounded-lg shadow sm:p-6 md:p-8 md:mr-10 md:mb-10 ">
+      <div className="w-full max-w-sm p-4 bg-black border border-gray-800 rounded-lg shadow sm:p-6 md:p-8 md:ml-10 md:mb-10">
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <h5 className="text-xl font-medium text-white">
@@ -235,4 +227,3 @@ const Login = () => {
 };
 
 export default Login;
-
