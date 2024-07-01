@@ -26,16 +26,16 @@ const AboutUs = () => {
               </span>
       </div>
       <div className="flex flex-wrap gap-4 justify-center items-center mb-4">
-      <CardAboutUs img="/ornella.jpeg" name="Ornella" tecnologie="Back end developer" instagram="" facebook="" linkedin="" github=""/>
-       <CardAboutUs img="/julieth.jpeg" name="Julieth" tecnologie="Back end developer" instagram="" facebook="" linkedin="" github=""/>
-       <CardAboutUs img="/JoseFreggiaro.jpeg" name="Jose" tecnologie="Back end developer" instagram="" facebook="" linkedin="" github=""/>
-       <CardAboutUs img="/enrique.jpeg" name="Enrique" tecnologie="Back end developer" instagram="" facebook="" linkedin="" github=""/>
+      <CardAboutUs img="/ornella.jpeg" name="Ornella Ferrario" tecnologie="Back end developer" instagram="" facebook="" linkedin="" github=""/>
+       <CardAboutUs img="/julieth.jpeg" name="Julieth Perdomo" tecnologie="Back end developer" instagram="" facebook="" linkedin="" github=""/>
+       <CardAboutUs img="/JoseFreggiaro.jpeg" name="Jose Freggiaro" tecnologie="Back end developer" instagram="" facebook="" linkedin="" github=""/>
+       <CardAboutUs img="/enrique.jpeg" name="Enrique Orozco" tecnologie="Back end developer" instagram="" facebook="" linkedin="" github=""/>
       </div>
 
       <div className="flex flex-wrap gap-4 justify-center items-center">
        <CardAboutUs img="/eze.jpg" name="Ezequiel Sale" tecnologie="Front end developer" instagram="" facebook="" linkedin="" github=""/>
-       <CardAboutUs img="/jose.jpg" name="Jose" tecnologie="Front end developer" instagram="" facebook="" linkedin="" github=""/>
-       <CardAboutUs img="/olvadis.jpeg" name="Olvadis" tecnologie="Front end developer" instagram="" facebook="" linkedin="" github=""/>
+       <CardAboutUs img="/jose.jpg" name="Jose Llanos" tecnologie="Front end developer" instagram="" facebook="" linkedin="" github=""/>
+       <CardAboutUs img="/olvadis.jpeg" name="Olvadis Hernández" tecnologie="Front end developer" instagram="" facebook="" linkedin="" github=""/>
         
       </div>
     </>
