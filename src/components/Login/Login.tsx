@@ -21,10 +21,11 @@ import { Input } from "@/components/ui/input";
 import { loginUser } from "@/helper/petitions";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import { userAlreadyExists } from "@/services/auth";
 
 const Login = () => {
-  const router = useRouter();
+  const router = useRouter();;
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {

@@ -151,17 +151,11 @@ const Register: React.FC = () => {
                   }}
                   disabled={isDisabled}
                 />
-                <ErrorMessage name="name" component="div" className="text-red-500 text-xs text-center mt-1" />
-              </div>
-              <div className="flex flex-col">
-                <label className="font-bold text-white">Correo electrónico</label>
-                <Field
-                  type="email"
-                  name="email"
-                  placeholder="example@mail.com"
-                  className="w-full pl-2 text-black rounded-md h-[30px] text-sm"
+                <ErrorMessage
+                  name="name"
+                  component="div"
+                  className="text-red-500 text-xs text-center absolute top-full ml-1"
                 />
-                <ErrorMessage name="email" component="div" className="text-red-500 text-xs text-center mt-1" />
               </div>
               <div className="flex flex-col">
                 <label className="font-bold text-white">Fecha de nacimiento</label>
@@ -298,9 +292,9 @@ const Register: React.FC = () => {
                 </div>
               </div>
             </Form>
-          )}
-        </Formik>
-      </div>
+          );
+        }}
+      </Formik>
     </div>
   );
 };
