@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { loginUser } from "@/helper/petitions";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { userAlreadyExists } from "@/services/auth";
 
 const Login = () => {
   const router = useRouter();
@@ -55,13 +56,41 @@ const Login = () => {
         showConfirmButton: true,
       });
     }
+    const response = await loginUser(values);
+    const token = response.token;
+    localStorage.setItem("token", token);
+    router.push("/dashboard");
   }
 
   const signInWithGoogle = async () => {
     try {
       const { auth, googleProvider } = getGoogleProvider();
       const result = await signInWithPopup(auth, googleProvider);
-      console.log(result.user);
+
+      const resultFullProps: typeof result & {
+        user: {
+          accessToken: string;
+        };
+      } = result as any;
+
+      try {
+        const alreadyExists = await userAlreadyExists(
+          resultFullProps.user.email ?? "",
+          resultFullProps.user.accessToken
+        );
+        router.push("/dashboard/usuarios");
+      } catch (error) {
+        window.localStorage.setItem(
+          "token",
+          resultFullProps.user.accessToken ?? ""
+        );
+        window.localStorage.setItem("email", resultFullProps.user.email ?? "");
+        window.localStorage.setItem(
+          "name",
+          resultFullProps.user.displayName ?? ""
+        );
+        router.push("/register");
+      }
     } catch (error) {
       console.error(error);
     }
