@@ -131,7 +131,7 @@ const AdditionalInfoForm = () => {
               />
               <FormItem>
                 <FormLabel className="block mb-2 text-sm font-medium text-white">
-                  Ver horarios de profesores
+                  Ver horarios de profesores disponibles
                 </FormLabel>
                 <select
                   className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
