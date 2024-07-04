@@ -1,5 +1,5 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -13,18 +13,28 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { additionalInfoSchema } from "@/helper/finalStepValidation";
+import dynamic from 'next/dynamic'
+
+const SelectNoSSR = dynamic(() => import('react-select'), { ssr: false })
 
 type AdditionalInfoFormValues = z.infer<typeof additionalInfoSchema>;
 
 const AdditionalInfoForm = () => {
+  const [selectedProfessor, setSelectedProfessor] = useState("");
+  const [availableHours, setAvailableHours] = useState<string[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState("");
+
   const form = useForm<AdditionalInfoFormValues>({
     resolver: zodResolver(additionalInfoSchema),
     defaultValues: {
-      altura: undefined,
-      peso: undefined,
+      altura: "",
+      peso: "",
+      plan: "",
+      dias: [],
       horario: "",
-      nivelActividad: undefined,
-      objetivo: undefined,
+      nivelActividad: "",
+      objetivo: "",
+      profesor: "",
     },
   });
 
@@ -33,18 +43,40 @@ const AdditionalInfoForm = () => {
     // Manejar acá el envío del formulario con el back
   };
 
-  const horarios = Array.from({ length: 17 }, (_, i) => {
-    const hora = i + 8;
-    return `${hora.toString().padStart(2, "0")}:00 - ${(hora + 1)
-      .toString()
-      .padStart(2, "0")}:00`;
-  });
-
-  const horariosProfesor = [
-    "Fernando Gómez - 08:00 a 12:00",
-    "María González - 12:00 a 16:00",
-    "Cristian Aguirre - 16:00 a 00:00"
+  const profesores = [
+    { nombre: "Fernando Gómez", horario: "08:00 a 12:00" },
+    { nombre: "María González", horario: "12:00 a 16:00" },
+    { nombre: "Cristian Aguirre", horario: "16:00 a 20:00" },
+    { nombre: "Marcelo Pérez", horario: "20:00 a 00:00" }
   ];
+
+  const planes = [
+    { value: "2", label: "2 veces por semana" },
+    { value: "3", label: "3 veces por semana" },
+    { value: "5", label: "5 veces por semana" },
+  ];
+
+  const diasSemana = [
+    { value: "Lunes", label: "Lunes" },
+    { value: "Martes", label: "Martes" },
+    { value: "Miércoles", label: "Miércoles" },
+    { value: "Jueves", label: "Jueves" },
+    { value: "Viernes", label: "Viernes" },
+  ];
+
+  useEffect(() => {
+    if (selectedProfessor) {
+      const profesor = profesores.find(p => p.nombre === selectedProfessor);
+      if (profesor) {
+        const [start, end] = profesor.horario.split(' a ').map(time => parseInt(time.split(':')[0]));
+        const horasDisponibles = Array.from({ length: end - start }, (_, i) => {
+          const hora = start + i;
+          return `${hora.toString().padStart(2, "0")}:00 - ${(hora + 1).toString().padStart(2, "0")}:00`;
+        });
+        setAvailableHours(horasDisponibles);
+      }
+    }
+  }, [selectedProfessor]);
 
   return (
     <div
@@ -73,7 +105,7 @@ const AdditionalInfoForm = () => {
                       <Input
                         type="number"
                         {...field}
-                        onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                        onChange={(e) => field.onChange(e.target.value)}
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                         required
                       />
@@ -94,10 +126,114 @@ const AdditionalInfoForm = () => {
                       <Input
                         type="number"
                         {...field}
-                        onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                        onChange={(e) => field.onChange(e.target.value)}
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                         required
                       />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs mt-1" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="plan"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block mb-2 text-sm font-medium text-white">
+                      Plan
+                    </FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSelectedPlan(e.target.value);
+                          form.setValue('dias', []); // Reset dias when plan changes
+                        }}
+                        required
+                      >
+                        <option value="">Selecciona un plan</option>
+                        {planes.map((plan) => (
+                          <option key={plan.value} value={plan.value}>
+                            {plan.label}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs mt-1" />
+                  </FormItem>
+                )}
+              />
+              <Controller
+                name="dias"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block mb-2 text-sm font-medium text-white">
+                      Días
+                    </FormLabel>
+                    <SelectNoSSR
+                      isMulti
+                      options={diasSemana}
+                      className="bg-gray-900 text-white"
+                      classNamePrefix="select"
+                      onChange={(selected) => {
+                        const maxDias = parseInt(selectedPlan);
+                        if (selected.length <= maxDias) {
+                          field.onChange(selected.map(item => item.value));
+                        }
+                      }}
+                      value={diasSemana.filter(dia => field.value.includes(dia.value))}
+                      isDisabled={!selectedPlan}
+                      maxMenuHeight={200}
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          backgroundColor: '#1f2937',
+                          borderColor: '#374151',
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          backgroundColor: '#1f2937',
+                        }),
+                        option: (provided, state) => ({
+                          ...provided,
+                          backgroundColor: state.isFocused ? '#374151' : '#1f2937',
+                          color: 'white',
+                        }),
+                      }}
+                    />
+                    <FormMessage className="text-red-500 text-xs mt-1" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="profesor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block mb-2 text-sm font-medium text-white">
+                      Elegir profesor
+                    </FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSelectedProfessor(e.target.value);
+                        }}
+                        required
+                      >
+                        <option value="">Selecciona un profesor</option>
+                        {profesores.map((profesor) => (
+                          <option key={profesor.nombre} value={profesor.nombre}>
+                            {`${profesor.nombre} - ${profesor.horario}`}
+                          </option>
+                        ))}
+                      </select>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />
                   </FormItem>
@@ -116,55 +252,14 @@ const AdditionalInfoForm = () => {
                         {...field}
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                         required
+                        disabled={!selectedProfessor}
                       >
                         <option value="">Selecciona tu horario ideal</option>
-                        {horarios.map((horario) => (
+                        {availableHours.map((horario) => (
                           <option key={horario} value={horario}>
                             {horario}
                           </option>
                         ))}
-                      </select>
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
-              <FormItem>
-                <FormLabel className="block mb-2 text-sm font-medium text-white">
-                  Ver horarios de profesores disponibles
-                </FormLabel>
-                <select
-                  className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                  onChange={(e) => e.preventDefault()}
-                >
-                  <option value="">Horarios de profesores</option>
-                  {horariosProfesor.map((horario) => (
-                    <option key={horario} value={horario} disabled>
-                      {horario}
-                    </option>
-                  ))}
-                </select>
-              </FormItem>
-              <FormField
-                control={form.control}
-                name="nivelActividad"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-white">
-                      Nivel de actividad
-                    </FormLabel>
-                    <FormControl>
-                      <select
-                        {...field}
-                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                        required
-                      >
-                        <option value="">Elige tu nivel de actividad</option>
-                        <option value="Sedentario">Sedentario (poco o ningún ejercicio)</option>
-                        <option value="Ligeramente activo">Ligeramente activo (ejercicio ligero 1-3 días/semana)</option>
-                        <option value="Moderadamente activo">Moderadamente activo (ejercicio moderado 3-5 días/semana)</option>
-                        <option value="Muy activo">Muy activo (ejercicio intenso 6-7 días/semana)</option>
-                        <option value="Extremadamente activo">Extremadamente activo (ejercicio muy intenso diario, o trabajo físico)</option>
                       </select>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />
@@ -198,6 +293,32 @@ const AdditionalInfoForm = () => {
                         </select>
                       </FormControl>
                     </div>
+                    <FormMessage className="text-red-500 text-xs mt-1" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="nivelActividad"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block mb-2 text-sm font-medium text-white">
+                      Nivel de actividad
+                    </FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                        required
+                      >
+                        <option value="">Elige tu nivel de actividad</option>
+                        <option value="Sedentario">Sedentario (poco o ningún ejercicio)</option>
+                        <option value="Ligeramente activo">Ligeramente activo (ejercicio ligero 1-3 días/semana)</option>
+                        <option value="Moderadamente activo">Moderadamente activo (ejercicio moderado 3-5 días/semana)</option>
+                        <option value="Muy activo">Muy activo (ejercicio intenso 6-7 días/semana)</option>
+                        <option value="Extremadamente activo">Extremadamente activo (ejercicio muy intenso diario, o trabajo físico)</option>
+                      </select>
+                    </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />
                   </FormItem>
                 )}
