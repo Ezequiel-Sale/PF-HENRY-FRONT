@@ -50,6 +50,8 @@ const Register: React.FC = () => {
       window.localStorage.removeItem("email");
       window.localStorage.removeItem("name");
     }
+    window.localStorage.removeItem("email");
+    window.localStorage.removeItem("name");
   }, []);
 
   return (

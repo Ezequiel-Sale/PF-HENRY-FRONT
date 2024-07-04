@@ -3,6 +3,16 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { userSession } from "@/types/profesorInterface";
+import NotificationsDropdown from "../NotificationsDropdown/NotificationsDropdown";
+import {
+  useNotification,
+  Notification,
+} from "../NotificationContext/NotificationContext";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const Navbar = () => {
   const [userData, setUserData] = useState<userSession | null>(null);
@@ -17,7 +27,7 @@ const Navbar = () => {
 
   const handleToAuth = () => {
     if (userData) {
-      localStorage.removeItem('userSession');
+      localStorage.removeItem("userSession");
       setUserData(null);
       window.location.href = "/";
     } else {
@@ -30,12 +40,21 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const userDataString = localStorage.getItem('userSession');
+    if (typeof window !== "undefined" && window.localStorage) {
+      const userDataString = localStorage.getItem("userSession");
       setUserData(userDataString ? JSON.parse(userDataString) : null);
       setIsLoading(false);
     }
   }, []);
+
+  const { addNotification, unreadCount } = useNotification();
+
+  const handleButtonClick = () => {
+    const newNotification = {
+      message: "Tu profesor subió tu rutina",
+    };
+    addNotification(newNotification);
+  };
 
   return (
     <nav className="text-white bg-transparent p-0 md:p-2 w-[250px] md:w-screen flex justify-center">
@@ -53,9 +72,43 @@ const Navbar = () => {
           <img src="logo-with-name.png" className="h-10" alt="Flowbite Logo" />
         </a>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          {!isLoading && (
-            userData ? (
+          {!isLoading &&
+            (userData ? (
               <>
+                <button
+                  onClick={handleButtonClick}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-5"
+                >
+                  agregar notificacion
+                </button>
+
+                <div className="flex justify-center items-center">
+                  <Popover>
+                    <PopoverTrigger>
+                      <div className="relative mr-4">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1em"
+                          height="1em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M21 19v1H3v-1l2-2v-6c0-3.1 2.03-5.83 5-6.71V4a2 2 0 0 1 2-2a2 2 0 0 1 2 2v.29c2.97.88 5 3.61 5 6.71v6zm-7 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2"
+                          />
+                        </svg>
+                        {unreadCount > 0 && (
+                          <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            {unreadCount}
+                          </span>
+                        )}
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-72 p-0">
+                      <NotificationsDropdown />
+                    </PopoverContent>
+                  </Popover>
+                </div>
                 <button
                   type="button"
                   className="text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-2"
@@ -79,8 +132,7 @@ const Navbar = () => {
               >
                 Iniciar Sesión
               </button>
-            )
-          )}
+            ))}
           <button
             data-collapse-toggle="navbar-cta"
             type="button"
