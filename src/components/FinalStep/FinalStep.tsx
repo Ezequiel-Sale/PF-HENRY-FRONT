@@ -13,9 +13,9 @@ import {
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { additionalInfoSchema } from "@/helper/finalStepValidation";
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
 
-const SelectNoSSR = dynamic(() => import('react-select'), { ssr: false })
+const SelectNoSSR = dynamic(() => import('react-select'), { ssr: false });
 
 type AdditionalInfoFormValues = z.infer<typeof additionalInfoSchema>;
 
@@ -27,13 +27,13 @@ const AdditionalInfoForm = () => {
   const form = useForm<AdditionalInfoFormValues>({
     resolver: zodResolver(additionalInfoSchema),
     defaultValues: {
-      altura: "",
-      peso: "",
-      plan: "",
+      altura: 0,
+      peso: 0,
+      plan: undefined,
       dias: [],
       horario: "",
-      nivelActividad: "",
-      objetivo: "",
+      nivelActividad: undefined,
+      objetivo: undefined,
       profesor: "",
     },
   });
@@ -105,7 +105,7 @@ const AdditionalInfoForm = () => {
                       <Input
                         type="number"
                         {...field}
-                        onChange={(e) => field.onChange(e.target.value)}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                         required
                       />
@@ -126,7 +126,7 @@ const AdditionalInfoForm = () => {
                       <Input
                         type="number"
                         {...field}
-                        onChange={(e) => field.onChange(e.target.value)}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                         required
                       />
@@ -179,13 +179,13 @@ const AdditionalInfoForm = () => {
                       options={diasSemana}
                       className="bg-gray-900 text-white"
                       classNamePrefix="select"
-                      onChange={(selected) => {
+                      onChange={(selected: any) => {
                         const maxDias = parseInt(selectedPlan);
                         if (selected.length <= maxDias) {
-                          field.onChange(selected.map(item => item.value));
+                          field.onChange(selected.map((item: any) => item.value));
                         }
                       }}
-                      value={diasSemana.filter(dia => field.value.includes(dia.value))}
+                      value={diasSemana.filter(dia => field.value.includes(dia.value as "Lunes" | "Martes" | "Miércoles" | "Jueves" | "Viernes"))}
                       isDisabled={!selectedPlan}
                       maxMenuHeight={200}
                       styles={{
@@ -224,13 +224,14 @@ const AdditionalInfoForm = () => {
                         onChange={(e) => {
                           field.onChange(e);
                           setSelectedProfessor(e.target.value);
+                          form.setValue('horario', ''); // Reset horario when professor changes
                         }}
                         required
                       >
                         <option value="">Selecciona un profesor</option>
                         {profesores.map((profesor) => (
                           <option key={profesor.nombre} value={profesor.nombre}>
-                            {`${profesor.nombre} - ${profesor.horario}`}
+                            {profesor.nombre} ({profesor.horario})
                           </option>
                         ))}
                       </select>
@@ -245,54 +246,23 @@ const AdditionalInfoForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="block mb-2 text-sm font-medium text-white">
-                      Horario preferido
+                      Horario
                     </FormLabel>
                     <FormControl>
                       <select
                         {...field}
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                        required
                         disabled={!selectedProfessor}
+                        required
                       >
-                        <option value="">Selecciona tu horario ideal</option>
-                        {availableHours.map((horario) => (
-                          <option key={horario} value={horario}>
-                            {horario}
+                        <option value="">Selecciona un horario</option>
+                        {availableHours.map((hour) => (
+                          <option key={hour} value={hour}>
+                            {hour}
                           </option>
                         ))}
                       </select>
                     </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="objetivo"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex flex-col h-full">
-                      <div className="flex items-center justify-between mb-2">
-                        <FormLabel className="text-sm font-medium text-white">
-                          Tu meta principal
-                        </FormLabel>
-                        <Link href="/services" target="_blank" className="text-xs text-red-500 hover:text-red-400">
-                          ¿Tenés dudas? Más info acá
-                        </Link>
-                      </div>
-                      <FormControl>
-                        <select
-                          {...field}
-                          className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                          required
-                        >
-                          <option value="">Elige tu objetivo</option>
-                          <option value="Salud">Salud general</option>
-                          <option value="Deporte">Rendimiento deportivo</option>
-                          <option value="Estética">Transformación física</option>
-                        </select>
-                      </FormControl>
-                    </div>
                     <FormMessage className="text-red-500 text-xs mt-1" />
                   </FormItem>
                 )}
@@ -311,12 +281,36 @@ const AdditionalInfoForm = () => {
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                         required
                       >
-                        <option value="">Elige tu nivel de actividad</option>
-                        <option value="Sedentario">Sedentario (poco o ningún ejercicio)</option>
-                        <option value="Ligeramente activo">Ligeramente activo (ejercicio ligero 1-3 días/semana)</option>
-                        <option value="Moderadamente activo">Moderadamente activo (ejercicio moderado 3-5 días/semana)</option>
-                        <option value="Muy activo">Muy activo (ejercicio intenso 6-7 días/semana)</option>
-                        <option value="Extremadamente activo">Extremadamente activo (ejercicio muy intenso diario, o trabajo físico)</option>
+                        <option value="">Selecciona tu nivel de actividad</option>
+                        <option value="Sedentario">Sedentario</option>
+                        <option value="Ligeramente activo">Ligeramente activo</option>
+                        <option value="Moderadamente activo">Moderadamente activo</option>
+                        <option value="Muy activo">Muy activo</option>
+                        <option value="Extremadamente activo">Extremadamente activo</option>
+                      </select>
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs mt-1" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="objetivo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block mb-2 text-sm font-medium text-white">
+                      Objetivo
+                    </FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                        required
+                      >
+                        <option value="">Selecciona tu objetivo</option>
+                        <option value="Estética">Estética</option>
+                        <option value="Deporte">Deporte</option>
+                        <option value="Salud">Salud</option>
                       </select>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />
@@ -324,12 +318,17 @@ const AdditionalInfoForm = () => {
                 )}
               />
             </div>
-            <button
-              type="submit"
-              className="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition duration-300 ease-in-out transform hover:scale-105"
-            >
-              ¡Comenzar mi transformación!
-            </button>
+            <div className="flex justify-between">
+              <Link href="/previous-step" className="text-red-500 hover:text-red-700">
+                Volver
+              </Link>
+              <button
+                type="submit"
+                className="w-full sm:w-auto bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              >
+                Confirmar
+              </button>
+            </div>
           </form>
         </Form>
       </div>
