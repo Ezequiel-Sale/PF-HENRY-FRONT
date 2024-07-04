@@ -4,7 +4,10 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { userSession } from "@/types/profesorInterface";
 import NotificationsDropdown from "../NotificationsDropdown/NotificationsDropdown";
-import { useNotification, Notification } from "../NotificationContext/NotificationContext";
+import {
+  useNotification,
+  Notification,
+} from "../NotificationContext/NotificationContext";
 import {
   Popover,
   PopoverContent,
@@ -44,15 +47,14 @@ const Navbar = () => {
     }
   }, []);
 
-  const { addNotification, unreadCount  } = useNotification();
+  const { addNotification, unreadCount } = useNotification();
 
   const handleButtonClick = () => {
     const newNotification = {
-      message: 'Tu profesor subió tu rutina'
+      message: "Tu profesor subió tu rutina",
     };
     addNotification(newNotification);
   };
-  
 
   return (
     <nav className="text-white bg-transparent p-0 md:p-2 w-[250px] md:w-screen flex justify-center">
@@ -73,33 +75,39 @@ const Navbar = () => {
           {!isLoading &&
             (userData ? (
               <>
-                <div>
-                <Popover>
-        <PopoverTrigger>
-          <div className="relative mr-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="1em"
-              height="1em"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                d="M21 19v1H3v-1l2-2v-6c0-3.1 2.03-5.83 5-6.71V4a2 2 0 0 1 2-2a2 2 0 0 1 2 2v.29c2.97.88 5 3.61 5 6.71v6zm-7 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2"
-              />
-            </svg>
-            {unreadCount > 0 && (
-              <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                {unreadCount}
-              </span>
-            )}
-          </div>
-        </PopoverTrigger>
-        <PopoverContent className="w-72 p-0">
-          <NotificationsDropdown />
-        </PopoverContent>
-      </Popover>
-      <button onClick={handleButtonClick}>agregar noti</button>
+                <button
+                  onClick={handleButtonClick}
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-5"
+                >
+                  agregar notificacion
+                </button>
+
+                <div className="flex justify-center items-center">
+                  <Popover>
+                    <PopoverTrigger>
+                      <div className="relative mr-4">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="1em"
+                          height="1em"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            fill="currentColor"
+                            d="M21 19v1H3v-1l2-2v-6c0-3.1 2.03-5.83 5-6.71V4a2 2 0 0 1 2-2a2 2 0 0 1 2 2v.29c2.97.88 5 3.61 5 6.71v6zm-7 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2"
+                          />
+                        </svg>
+                        {unreadCount > 0 && (
+                          <span className="absolute -top-3 -right-3 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                            {unreadCount}
+                          </span>
+                        )}
+                      </div>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-72 p-0">
+                      <NotificationsDropdown />
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <button
                   type="button"

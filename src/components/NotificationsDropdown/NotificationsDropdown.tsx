@@ -2,7 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { useNotification, Notification } from '../NotificationContext/NotificationContext';
 
 const NotificationsDropdown: FC = () => {
-  const { notifications, markAsRead } = useNotification();
+  const { notifications, markAsRead, removeNotification } = useNotification();
 
   useEffect(() => {
     notifications.forEach(notif => {
@@ -22,9 +22,10 @@ const NotificationsDropdown: FC = () => {
           notifications.map((notification: Notification) => (
             <div 
               key={notification.id} 
-              className={`notification p-3 border-b ${notification.read ? 'bg-gray-50' : 'bg-white'}`}
+              className={`notification relative p-3 border-b ${notification.read ? 'bg-gray-300' : 'bg-white'}`}
             >
-              <p className="text-black">{notification.message}</p>
+                <button onClick={() => removeNotification(notification.id)} className="absolute top-0 right-3">x</button>
+              <p className="text-black font-sans">{notification.message}</p>
             </div>
           ))
         )}
