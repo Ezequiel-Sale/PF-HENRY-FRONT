@@ -42,7 +42,7 @@ const AdditionalInfoForm = () => {
     console.log(values);
     // Manejar acá el envío del formulario con el back
   };
-
+    
   const profesores = [
     { nombre: "Fernando Gómez", horario: "08:00 a 12:00" },
     { nombre: "María González", horario: "12:00 a 16:00" },
@@ -68,6 +68,7 @@ const AdditionalInfoForm = () => {
     if (selectedProfessor) {
       const profesor = profesores.find(p => p.nombre === selectedProfessor);
       if (profesor) {
+        console.log(profesores);
         const [start, end] = profesor.horario.split(' a ').map(time => parseInt(time.split(':')[0]));
         const horasDisponibles = Array.from({ length: end - start }, (_, i) => {
           const hora = start + i;
