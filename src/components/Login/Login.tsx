@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import getGoogleProvider from "@/services/firebase";
 import { signInWithPopup } from "firebase/auth";
 import { loginSchema } from "@/zod/loginShema";
@@ -22,6 +22,8 @@ import Swal from "sweetalert2";
 
 const Login = () => {
   const router = useRouter();
+  const [userRole, setUserRole] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -30,20 +32,46 @@ const Login = () => {
     },
   });
 
+  // Hook para manejar la redirección basada en el rol
+  useEffect(() => {
+    if (userRole) {
+      console.log("User role updated:", userRole); // Log para verificar cuando userRole cambia
+      if (userRole === "admin") {
+        router.push("/dashboard");
+      } else if (userRole === "profesor") {
+        router.push("/dashboard-profesor");
+      } else if (userRole === "user") {
+        router.push("/dashboard/users");
+      }
+    }
+  }, [userRole, router]);
+
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
       const response = await loginUser(values);
-      console.log(response);
-      const { token, user } = response;
-      localStorage.setItem("userSession", JSON.stringify({ token: token, userData: user }));
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Sesión iniciada exitosamente",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      router.push("/dashboard");
+      console.log("Login response:", response); // Verifica la respuesta de login
+      if (response && response.token && response.Role) {
+        const { token, Role } = response;
+        localStorage.setItem("userSession", JSON.stringify({ token: token, role: Role }));
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Sesión iniciada exitosamente",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        setUserRole(Role); // Establecer el rol del usuario para la redirección
+        console.log("Setting user role:", Role); // Verifica que el rol se está estableciendo
+      } else {
+        console.error("Invalid response structure:", response);
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error al iniciar sesión",
+          text: "Estructura de respuesta inválida",
+          showConfirmButton: true,
+        });
+      }
     } catch (error: any) {
       Swal.fire({
         position: "center",
