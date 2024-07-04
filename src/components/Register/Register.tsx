@@ -49,6 +49,8 @@ const Register: React.FC = () => {
       setPassword("R@@t12345");
       setIsDisabled(true);
     }
+    window.localStorage.removeItem("email");
+    window.localStorage.removeItem("name");
   }, []);
 
   return (
