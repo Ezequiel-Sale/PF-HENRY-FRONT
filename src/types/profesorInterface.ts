@@ -6,6 +6,7 @@ export interface IProfesor {
     dia: string[];
     horario: string[];
     password: string;
+    estado?: boolean;
 }
 
 export interface IUser {
@@ -16,4 +17,17 @@ export interface IUser {
     phone: string;
     fecha_nacimiento: string;
     numero_dni: string;
+    estado?: string;
+}
+
+export interface userSession {
+    token: string;
+    userData: {
+        name: string;
+        email: string;
+        password: string;
+        phone: string;
+        fecha_nacimiento: string;
+        numero_dni: string;
+    }   
 }

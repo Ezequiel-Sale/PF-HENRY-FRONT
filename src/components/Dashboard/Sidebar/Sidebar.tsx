@@ -57,7 +57,7 @@ const Sidebar = () => {
                 </CommandItem>
                 <CommandItem>
                     <Settings className='mr-2 h4 w4' />
-                    <Link href="/dashboard/settings"><span>Opciones</span></Link>
+                    <Link href="/dashboard/settings"><span>Crear Profesores</span></Link>
                 </CommandItem>
             </CommandGroup>
         </CommandList>

@@ -2,8 +2,8 @@
 import { createProfesor } from '@/helper/petitions';
 import { ProfesorData } from '@/types/registerInterface';
 import React, { useState, useEffect, useRef, ChangeEvent, FormEvent } from 'react';
-
-
+import Swal from 'sweetalert2';
+import { string } from 'zod';
 
 const Settings: React.FC = () => {
   const [profesorData, setProfesorData] = useState<ProfesorData>({
@@ -12,7 +12,7 @@ const Settings: React.FC = () => {
     dia: [],
     horario: [],
     email: '',
-    password: ''
+    password: '',
   });
 
   const [errors, setErrors] = useState<Partial<ProfesorData>>({});
@@ -32,21 +32,16 @@ const Settings: React.FC = () => {
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setProfesorData(prevData => {
-      const isChecked = (prevData[name as keyof ProfesorData] as string[]).includes(value);
-      let newValues: string[];
-      if (isChecked) {
-        newValues = (prevData[name as keyof ProfesorData] as string[]).filter(item => item !== value);
-      } else {
-        newValues = [...(prevData[name as keyof ProfesorData] as string[]), value];
-      }
+      const currentValues = prevData[name as keyof ProfesorData] as string[];
+      const newValues = currentValues.includes(value)
+        ? currentValues.filter(item => item !== value)
+        : [...currentValues, value];
       return {
         ...prevData,
         [name]: newValues
       };
     });
   };
-
- 
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -83,7 +78,15 @@ const Settings: React.FC = () => {
 
     // Aquí puedes enviar los datos al backend si todos los campos son válidos
     // Lógica para enviar datos al backend
-    createProfesor(profesorData);
+    createProfesor(profesorData)
+    .then((response) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Profesor creado con exito',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    })
     // resetear formulario o realizar otras acciones post envío
     setProfesorData({
       nombre: '',
@@ -92,7 +95,7 @@ const Settings: React.FC = () => {
       horario: [],
       email: '',
       password: ''
-    })
+    });
   };
 
   const handleClickOutside = (event: MouseEvent) => {
