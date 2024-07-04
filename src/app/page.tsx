@@ -50,65 +50,14 @@ export default function Home() {
         <h3 className=" text-6xl  text-red-600 font-extrabold mb-4">
           Calificación del Gimnasio
         </h3>
-        <div className="flex items-center mb-4 flex-col">
-          <span className="text-yellow-400 text-7xl mr-2">★★★★☆</span>
-          <span className="text-lg">4.7 de 5.0</span>
-        </div>
-        <p className="text-center w-1/2 mb-6">
-          Nuestros usuarios aman este gimnasio y lo califican altamente por su
-          excelente equipamiento, amable personal y ambiente motivador. ¡Únete a
-          nosotros y empieza tu transformación hoy!
-        </p>
-        <div className="flex gap-4">
-          <div className="card rounded-md">
-            <div className="stars">
-              <span className="text-yellow-400 text-2xl mr-2">★★★★☆</span>
-            </div>
-            <div className="infos">
-              <p className="date-time">2 day ago</p>
-              <p className="description">
-                Estoy muy contenta con los resultados que he obtenido en Power
-                Training. ¡Gracias a su equipo de profesionales, he logrado
-                mejorar mi condición física y alcanzar mis objetivos de salud y
-                bienestar! Recomiendo este gimnasio a todos los que buscan un
-                lugar donde entrenar de forma segura y efectiva.
-              </p>
-            </div>
-            <div className="author">— Ornellia Ferrario</div>
-          </div>
-          <div className="card rounded-md">
-            <div className="stars">
-              <span className="text-yellow-400 text-2xl mr-2">★★★★☆</span>
-            </div>
-            <div className="infos">
-              <p className="date-time">2 day ago</p>
-              <p className="description">
-                Estoy muy contenta con los resultados que he obtenido en Power
-                Training. ¡Gracias a su equipo de profesionales, he logrado
-                mejorar mi condición física y alcanzar mis objetivos de salud y
-                bienestar! Recomiendo este gimnasio a todos los que buscan un
-                lugar donde entrenar de forma segura y efectiva.
-              </p>
-            </div>
-            <div className="author">— Ornellia Ferrario</div>
-          </div>
-          <div className="card rounded-md">
-            <div className="stars">
-              <span className="text-yellow-400 text-2xl mr-2">★★★★☆</span>
-            </div>
-            <div className="infos">
-              <p className="date-time">2 day ago</p>
-              <p className="description">
-                Estoy muy contenta con los resultados que he obtenido en Power
-                Training. ¡Gracias a su equipo de profesionales, he logrado
-                mejorar mi condición física y alcanzar mis objetivos de salud y
-                bienestar! Recomiendo este gimnasio a todos los que buscan un
-                lugar donde entrenar de forma segura y efectiva.
-              </p>
-            </div>
-            <div className="author">— Ornellia Ferrario</div>
-          </div>
-        </div>
+        <iframe
+          src="https://widgets.commoninja.com/iframe/9170895a-3e16-4fed-8a80-80421c6dadb4"
+          width="100%"
+          height="100%"
+          frameBorder="0"
+          scrolling="no"
+          className="w-full h-[80vh]"
+        ></iframe>
       </div>
 
       {/* <div className="flex w-full  gap-20 flex-col md:flex-row h-[100vh] bg-red-500 absolute bottom-0">
