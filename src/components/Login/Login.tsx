@@ -1,3 +1,4 @@
+// Login.tsx
 "use client";
 import React, { useEffect, useState } from "react";
 import getGoogleProvider from "@/services/firebase";
@@ -46,13 +47,21 @@ const Login = () => {
     }
   }, [userRole, router]);
 
+  useEffect(() => {
+    const userSession = localStorage.getItem("userSession");
+    if (userSession) {
+      console.log("User session from localStorage:", JSON.parse(userSession));
+    }
+  }, []);
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
       const response = await loginUser(values);
       console.log("Login response:", response); // Verifica la respuesta de login
-      if (response && response.token && response.Role) {
-        const { token, Role } = response;
-        localStorage.setItem("userSession", JSON.stringify({ token: token, role: Role }));
+      if (response && response.token && response.user) {
+        const { token, user } = response;
+        const userSession = { token, role: user };
+        console.log("Setting user session:", userSession); // Log para verificar el valor que se está guardando
+        localStorage.setItem("userSession", JSON.stringify(userSession));
         Swal.fire({
           position: "center",
           icon: "success",
@@ -60,8 +69,8 @@ const Login = () => {
           showConfirmButton: false,
           timer: 1500,
         });
-        setUserRole(Role); // Establecer el rol del usuario para la redirección
-        console.log("Setting user role:", Role); // Verifica que el rol se está estableciendo
+        setUserRole(user); // Establecer el rol del usuario para la redirección
+        console.log("Setting user role:", user); // Verifica que el rol se está estableciendo
       } else {
         console.error("Invalid response structure:", response);
         Swal.fire({

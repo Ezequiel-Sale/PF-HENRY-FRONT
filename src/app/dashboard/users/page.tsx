@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-type User = {
+export type User = {
   id: string;
   name: string;
   email: string;
@@ -10,6 +10,8 @@ type User = {
   phone: number;
   numero_dni: number;
   estado: boolean;
+  horario?: string;
+  peso?: string;
 };
 
 const UsersPage = () => {
