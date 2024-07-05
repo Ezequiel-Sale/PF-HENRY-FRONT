@@ -19,14 +19,11 @@ const Dashboard = () => {
    const [profesorNumber, setProfesorNumber] = useState([]);
    const [users, setUsers] = useState([]);
    const [activeUser, setActiveUser] = useState(0);
- console.log(activeUser)
   useEffect(() => {
     const fetchProfesors = async () =>{
       const profesors = await getProfesors();
       setProfesorNumber(profesors);
       const user = await getUsers()
-      console.log(user)
-      setUsers(user)
 
       const activeUsers = user.filter((u: IUser) => u.estado === 'active');
       setActiveUser(activeUsers.length);
