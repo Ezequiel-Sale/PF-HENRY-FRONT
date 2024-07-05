@@ -34,7 +34,8 @@ export const objetivos = [
 ];
 
 export const planes = [
-  { label: "2 veces por semana", value: "2" },
-  { label: "3 veces por semana", value: "3", id: "235b92fa-da07-4496-90e1-a6c6148d995c" },
+  { label: "2 veces por semana", value: "2", id:"" },
+  { label: "3 veces por semana", value: "3", id: "54015bef-8fda-4099-a89e-55a401919fcb" },
   { label: "5 veces por semana", value: "5" },
 ];
+
