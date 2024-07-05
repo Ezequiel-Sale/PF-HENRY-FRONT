@@ -32,6 +32,7 @@ const Profesores: React.FC = () => {
 
   const handleStatusChange = async (id: string) => {
     try {
+      console.log("prueba")
       await updateProfesorStatus(id);
       setProfesores(prevProfesores => prevProfesores.map(profesor =>
         profesor.id === id ? { ...profesor, estado: !profesor.estado } : profesor
