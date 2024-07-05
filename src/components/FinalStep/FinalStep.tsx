@@ -27,7 +27,7 @@ const AdditionalInfoForm = () => {
   const [selectedProfessor, setSelectedProfessor] = useState("");
   const [availableHours, setAvailableHours] = useState<string[]>([]);
   const [selectedPlan, setSelectedPlan] = useState("");
-  const [professorsList, setProfessorsList] = useState<{ nombre: string; horario: string[]; }[]>([]);
+  const [professorsList, setProfessorsList] = useState<{ nombre: string; horario: string[]; id:string;  }[]>([]);
   const router = useRouter();
 
   const form = useForm<AdditionalInfoFormValues>({
@@ -57,7 +57,7 @@ const AdditionalInfoForm = () => {
 
   useEffect(() => {
     if (selectedProfessor) {
-      const profesor = professorsList.find(p => p.nombre === selectedProfessor);
+      const profesor = professorsList.find(p => p.id === selectedProfessor);
       if (profesor && Array.isArray(profesor.horario) && profesor.horario.length > 0) {
         const horarioString = profesor.horario[0];
         const [start, end] = horarioString.split(' a ').map((time: string) => parseInt(time.split(':')[0]));
@@ -84,7 +84,7 @@ const AdditionalInfoForm = () => {
       });
       return;
     }
-
+    
     try {
       const response = await fetch(`http://localhost:3001/users/${userId}`, {
         method: 'PUT',
@@ -197,7 +197,7 @@ const AdditionalInfoForm = () => {
                       >
                         <option value="">Selecciona un plan</option>
                         {planes.map((plan) => (
-                          <option key={plan.value} value={plan.value}>
+                          <option key={plan.id} value={plan.id}>
                             {plan.label}
                           </option>
                         ))}
@@ -271,7 +271,7 @@ const AdditionalInfoForm = () => {
                       >
                         <option value="">Selecciona un profesor</option>
                         {professorsList.map((profesor) => (
-                          <option key={profesor.nombre} value={profesor.nombre}>
+                          <option key={profesor.id} value={profesor.id}>
                             {profesor.nombre} ({profesor.horario[0]})
                           </option>
                         ))}

@@ -17,30 +17,29 @@ import { IUser } from "@/types/profesorInterface";
 
 const Dashboard = () => {
    const [profesorNumber, setProfesorNumber] = useState([]);
-   const [users, setUsers] = useState([]);
+   const [users, setUsers] = useState<IUser[]>([]);
    const [activeUser, setActiveUser] = useState(0);
- console.log(activeUser)
-  useEffect(() => {
+
+   useEffect(() => {
     const fetchProfesors = async () =>{
       const profesors = await getProfesors();
       setProfesorNumber(profesors);
-      const user = await getUsers()
-      console.log(user)
-      setUsers(user)
+      const user = await getUsers();
+      setUsers(user);
 
-      const activeUsers = user.filter((u: IUser) => u.estado === 'active');
+      const activeUsers = users.filter((u: IUser) => u.estado === 'active');
       setActiveUser(activeUsers.length);
-    }
+    };
 
     fetchProfesors();
-  },[]);
+  }, []);
 
   return (
     <>
       <div className="flex flex-col md:flex-row justift-betweeen gap-5 mb-5">
         <DashboardCard
           title="Usuarios"
-          count={users.length}
+          count={users ? users.length : 0}
           icon={<User size={72} className="text-slate-500" />}
         />
 
@@ -52,7 +51,7 @@ const Dashboard = () => {
 
         <DashboardCard
           title="Inactivos"
-          count={users.length - activeUser}
+          count={users ? users.length - activeUser : 0}
           icon={<ShieldOff size={72} className="text-slate-500" />}
         />
 
