@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -12,8 +13,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { additionalInfoSchema } from "@/helper/finalStepValidation";
 import dynamic from 'next/dynamic';
+import { planes, diasSemana, nivelesActividad, objetivos } from "@/helper/finalStepValidation";
+import { additionalInfoSchema } from "@/helper/finalStepValidation";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 const SelectNoSSR = dynamic(() => import('react-select'), { ssr: false });
 
@@ -23,6 +27,8 @@ const AdditionalInfoForm = () => {
   const [selectedProfessor, setSelectedProfessor] = useState("");
   const [availableHours, setAvailableHours] = useState<string[]>([]);
   const [selectedPlan, setSelectedPlan] = useState("");
+  const [professorsList, setProfessorsList] = useState<{ nombre: string; horario: string[]; }[]>([]);
+  const router = useRouter();
 
   const form = useForm<AdditionalInfoFormValues>({
     resolver: zodResolver(additionalInfoSchema),
@@ -30,7 +36,7 @@ const AdditionalInfoForm = () => {
       altura: 0,
       peso: 0,
       plan: undefined,
-      dias: [],
+      diasSeleccionados: [],
       horario: "",
       nivelActividad: undefined,
       objetivo: undefined,
@@ -38,46 +44,80 @@ const AdditionalInfoForm = () => {
     },
   });
 
-  const onSubmit = (values: AdditionalInfoFormValues) => {
-    console.log(values);
-    // Manejar acá el envío del formulario con el back
-  };
-    
-  const profesores = [
-    { nombre: "Fernando Gómez", horario: "08:00 a 12:00" },
-    { nombre: "María González", horario: "12:00 a 16:00" },
-    { nombre: "Cristian Aguirre", horario: "16:00 a 20:00" },
-    { nombre: "Marcelo Pérez", horario: "20:00 a 00:00" }
-  ];
-
-  const planes = [
-    { value: "2", label: "2 veces por semana" },
-    { value: "3", label: "3 veces por semana" },
-    { value: "5", label: "5 veces por semana" },
-  ];
-
-  const diasSemana = [
-    { value: "Lunes", label: "Lunes" },
-    { value: "Martes", label: "Martes" },
-    { value: "Miércoles", label: "Miércoles" },
-    { value: "Jueves", label: "Jueves" },
-    { value: "Viernes", label: "Viernes" },
-  ];
+  useEffect(() => {
+    fetch('http://localhost:3001/profesor/profesores')
+      .then(response => response.json())
+      .then(data => {
+        setProfessorsList(data);
+      })
+      .catch(error => {
+        console.error('Error fetching professors:', error);
+      });
+  }, []);
 
   useEffect(() => {
     if (selectedProfessor) {
-      const profesor = profesores.find(p => p.nombre === selectedProfessor);
-      if (profesor) {
-        console.log(profesores);
-        const [start, end] = profesor.horario.split(' a ').map(time => parseInt(time.split(':')[0]));
+      const profesor = professorsList.find(p => p.nombre === selectedProfessor);
+      if (profesor && Array.isArray(profesor.horario) && profesor.horario.length > 0) {
+        const horarioString = profesor.horario[0];
+        const [start, end] = horarioString.split(' a ').map((time: string) => parseInt(time.split(':')[0]));
         const horasDisponibles = Array.from({ length: end - start }, (_, i) => {
           const hora = start + i;
           return `${hora.toString().padStart(2, "0")}:00 - ${(hora + 1).toString().padStart(2, "0")}:00`;
         });
         setAvailableHours(horasDisponibles);
+      } else {
+        console.error(`Profesor ${selectedProfessor} not found or horario is invalid`);
+        setAvailableHours([]);
       }
     }
-  }, [selectedProfessor]);
+  }, [selectedProfessor, professorsList]);
+
+  const onSubmit = async (values: AdditionalInfoFormValues) => {
+    const userId = window.localStorage.getItem("userId");
+    console.log(userId)
+    if (!userId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo encontrar el ID del usuario',
+      });
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar la información del usuario');
+      }
+
+      const updatedUser = await response.json();
+      console.log('Usuario actualizado:', updatedUser);
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'La información se ha actualizado correctamente',
+      });
+
+      // Redirigir al usuario a la página principal o de perfil
+      router.push('/dashboard');
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al actualizar la información',
+      });
+    }
+  };
 
   return (
     <div
@@ -151,7 +191,7 @@ const AdditionalInfoForm = () => {
                         onChange={(e) => {
                           field.onChange(e);
                           setSelectedPlan(e.target.value);
-                          form.setValue('dias', []); // Reset dias when plan changes
+                          form.setValue('diasSeleccionados', []); // Reset dias when plan changes
                         }}
                         required
                       >
@@ -168,7 +208,7 @@ const AdditionalInfoForm = () => {
                 )}
               />
               <Controller
-                name="dias"
+                name="diasSeleccionados"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
@@ -230,9 +270,9 @@ const AdditionalInfoForm = () => {
                         required
                       >
                         <option value="">Selecciona un profesor</option>
-                        {profesores.map((profesor) => (
+                        {professorsList.map((profesor) => (
                           <option key={profesor.nombre} value={profesor.nombre}>
-                            {profesor.nombre} ({profesor.horario})
+                            {profesor.nombre} ({profesor.horario[0]})
                           </option>
                         ))}
                       </select>
@@ -274,7 +314,7 @@ const AdditionalInfoForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="block mb-2 text-sm font-medium text-white">
-                      Nivel de actividad
+                      Nivel de actividad física
                     </FormLabel>
                     <FormControl>
                       <select
@@ -282,12 +322,12 @@ const AdditionalInfoForm = () => {
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                         required
                       >
-                        <option value="">Selecciona tu nivel de actividad</option>
-                        <option value="Sedentario">Sedentario</option>
-                        <option value="Ligeramente activo">Ligeramente activo</option>
-                        <option value="Moderadamente activo">Moderadamente activo</option>
-                        <option value="Muy activo">Muy activo</option>
-                        <option value="Extremadamente activo">Extremadamente activo</option>
+                        <option value="">Selecciona un nivel</option>
+                        {nivelesActividad.map((nivel) => (
+                          <option key={nivel.value} value={nivel.value}>
+                            {nivel.label}
+                          </option>
+                        ))}
                       </select>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />
@@ -308,10 +348,12 @@ const AdditionalInfoForm = () => {
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                         required
                       >
-                        <option value="">Selecciona tu objetivo</option>
-                        <option value="Estética">Estética</option>
-                        <option value="Deporte">Deporte</option>
-                        <option value="Salud">Salud</option>
+                        <option value="">Selecciona un objetivo</option>
+                        {objetivos.map((objetivo) => (
+                          <option key={objetivo.value} value={objetivo.value}>
+                            {objetivo.label}
+                          </option>
+                        ))}
                       </select>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />

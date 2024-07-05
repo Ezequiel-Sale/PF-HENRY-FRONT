@@ -54,6 +54,47 @@ const Register: React.FC = () => {
     window.localStorage.removeItem("name");
   }, []);
 
+
+  const handleRegister = async (values: IFormValues, { resetForm }: any) => {
+    try {
+      const response = await registerUser(values);
+      console.log(response)
+      const userId = response.id; // Assuming your API response has the ID of the created user
+      console.log("User registered:", response);
+
+      // Store userId in localStorage
+      window.localStorage.setItem("userId", userId);
+
+      // Send email (assuming it's part of your flow)
+      sendEmail();
+
+      // Show success message
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Usuario registrado correctamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
+      // Reset form
+      resetForm();
+
+      // Redirect to the next step or form
+      router.push("/finalstep"); // Replace with your second form route
+    } catch (error: any) {
+      console.error("Error al registrar el usuario:", error);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error al registrar el usuario",
+        text: error.message,
+        showConfirmButton: true,
+      });
+    }
+  };
+
+
   return (
     <div className="flex md:justify-start items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/image.png')" }}>
       <div className="w-full max-w-2xl p-4 bg-black border border-gray-800 rounded-lg shadow sm:p-6 md:p-8 md:ml-10 md:mb-10">
@@ -71,33 +112,7 @@ const Register: React.FC = () => {
           validateOnChange
           validate={registerValidations}
           onSubmit={(values, { resetForm }) => {
-            console.log(values);
-            sendEmail();
-            registerUser(values)
-              .then((res) => {
-                console.log(res);
-                Swal.fire({
-                  position: "center",
-                  icon: "success",
-                  title: "Usuario registrado correctamente",
-                  showConfirmButton: false,
-                  timer: 1500,
-                });
-                resetForm();
-                setTimeout(() => {
-                  router.push("/login");
-                  router.push("/dashboard/usuarios");
-                }, 2000);
-              })
-              .catch((err) => {
-                Swal.fire({
-                  position: "center",
-                  icon: "error",
-                  title: "Error al registrar el usuario",
-                  text: err.message,
-                  showConfirmButton: true,
-                });
-              });
+            handleRegister(values, { resetForm });
           }}
         >
           {() => (
