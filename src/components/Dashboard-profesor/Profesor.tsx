@@ -71,7 +71,6 @@ const Profesor = () => {
 
   return (
     <>
-      <h3 className="text-3xl font-bold text-center text-white">Foto?</h3>
       <h1 className="text-3xl font-bold text-center text-white">Profesor `nombre del profesor`</h1>
       <div className="flex justify-center mt-4 h-[100%] pb-10">
         <Tabs defaultValue={currentDay} className="bg-white rounded-md">
