@@ -21,8 +21,10 @@ export interface IUser {
 }
 
 export interface userSession {
+    id: string;
     token: string;
     userData: {
+        id: any;
         name: string;
         email: string;
         password: string;

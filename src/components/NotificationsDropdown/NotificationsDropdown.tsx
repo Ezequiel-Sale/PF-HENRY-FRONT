@@ -1,8 +1,24 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useNotification, Notification } from '../NotificationContext/NotificationContext';
+// import { getNotifications } from '@/helper/petitions';
 
 const NotificationsDropdown: FC = () => {
   const { notifications, markAsRead, removeNotification } = useNotification();
+  const [Notificaciones, setNotificaciones] = useState<Notification[]>([]);
+
+
+  // useEffect(() => {
+  //   const fetchNotifications = async () => {
+  //     try {
+  //       const data = await getNotifications();
+  //       setNotificaciones(data);
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+
+  //   fetchNotifications();
+  // },[])
 
   useEffect(() => {
     notifications.forEach(notif => {

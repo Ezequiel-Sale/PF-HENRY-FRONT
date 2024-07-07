@@ -1,13 +1,43 @@
+import { Anuncios } from "@/components/Dashboard/Anuncios/Anuncios";
 import { ICredential } from "@/types/credentialInterface";
 import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
 
+function getTokenFromLocalStorage() {
+  // Obtener la cadena JSON del localStorage
+  const userSessionString = localStorage.getItem('userSession');
+
+  if (userSessionString) {
+    try {
+      // Parsear la cadena JSON a un objeto
+      const userSession = JSON.parse(userSessionString);
+      
+      // Extraer el token del objeto
+      const token = userSession.token;
+
+      return token;
+    } catch (error) {
+      console.error('Error al parsear userSession:', error);
+      return null;
+    }
+  }
+
+  return null;
+}
+const token = getTokenFromLocalStorage();
+
+if (token) {
+  console.log('Token obtenido:', token);
+} else {
+  console.log('No se encontró un token válido');
+}
 export const registerUser = async (user: IFormValues) => {
     try {
       const response = await fetch("http://localhost:3001/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization : `Bearer ${token}`,
         },
         body: JSON.stringify(user),
       })
@@ -46,6 +76,7 @@ export async function getUsers() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization : `Bearer ${token}`,
         },
         body: JSON.stringify(profesorData),
       });
@@ -98,6 +129,7 @@ export async function updateUserStatus(id: string) {
   }
 }
 
+
 export async function loginUser({email, password}: ICredential) {
   try {
     const response = await fetch('http://localhost:3001/auth/signin', {
@@ -105,7 +137,7 @@ export async function loginUser({email, password}: ICredential) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({email , password, type: "user" }),
+      body: JSON.stringify({email , password, type: "user" ||  "profesor"}),
     });
 
     if (!response.ok) {
@@ -140,3 +172,38 @@ export async function updateProfesorStatus(id: string) {
     console.error('Error updating user status:', error);
   }
 }
+
+export const crearAnuncio = async ({message}: Anuncios) => {
+  try {
+      const response = await fetch(`http://localhost:3001/notifications/rutinaSubida`, {
+        method: "POST",
+        headers: {
+          Authorization : `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({message}),
+      });
+      if (!response.ok) {
+        throw new Error(`Error al enviar la notificación: ${response.statusText}`);
+      }
+      const result = await response.json();
+      console.log("Notificación enviada exitosamente:", result);
+      alert("Notificación enviada exitosamente");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al enviar la notificación");
+    }
+}
+
+// export async function getNotifications() {
+//   try {
+//     const response = await fetch('http://localhost:3001/notifications/rutinaSubida');
+//     if (!response.ok) {
+//       throw new Error(`Error: ${response.status} ${response.statusText}`);
+//     }
+//     const notifications = await response.json();
+//     return notifications;
+//   } catch (error) {
+//     console.error('Error fetching notifications:', error);
+//   }
+// }
