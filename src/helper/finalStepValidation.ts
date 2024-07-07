@@ -5,8 +5,12 @@ export const additionalInfoSchema = z.object({
   peso: z.number().min(30, "El peso debe ser mayor a 30"),
   diasSeleccionados: z
     .array(z.string())
-    .min(1, "Selecciona al menos un día")
-    .max(5, "Selecciona máximo 5 días"),
+    .refine(
+      (dias) => dias.length === 2 || dias.length === 3 || dias.length === 5,
+      {
+        message: "Selecciona 2, 3 o 5 días",
+      }
+    ),
   horario: z.string().nonempty("Selecciona un horario"),
   nivelActividad: z.string().optional(),
   objetivo: z.string().nonempty("Selecciona un objetivo"),
@@ -35,15 +39,7 @@ export const objetivos = [
   { label: "Salud", value: "Salud" },
 ];
 
-export const planes = [
-  { label: "2 veces por semana", value: "2", id: "" },
-  {
-    label: "3 veces por semana",
-    value: "3",
-    id: "54015bef-8fda-4099-a89e-55a401919fcb",
-  },
-  { label: "5 veces por semana", value: "5" },
-];
+
 
 export const defaultValues = {
   altura: 20,

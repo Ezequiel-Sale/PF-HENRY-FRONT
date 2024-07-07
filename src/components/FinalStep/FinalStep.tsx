@@ -12,13 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-import {
-  planes,
-  diasSemana,
-  nivelesActividad,
-  objetivos,
-} from "@/helper/finalStepValidation";
+import { nivelesActividad, objetivos } from "@/helper/finalStepValidation";
 import { additionalInfoSchema } from "@/helper/finalStepValidation";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -93,7 +87,9 @@ const AdditionalInfoForm = () => {
     }
   }, [selectedProfessor, professorsList]);
 
-  const onSubmit = async (values: AdditionalInfoFormValues) => {
+  const onSubmit = async (
+    values: AdditionalInfoFormValues & { plan: number }
+  ) => {
     const userId = window.localStorage.getItem("userId");
     console.log("Values:", values);
     console.log(userId);
@@ -108,6 +104,7 @@ const AdditionalInfoForm = () => {
 
     try {
       values.plan = values.diasSeleccionados.length;
+      console.log("Values:", values);
       const response = await fetch(`http://localhost:3001/users/${userId}`, {
         method: "PUT",
         headers: {
@@ -158,7 +155,12 @@ const AdditionalInfoForm = () => {
           </p>
         </div>
         <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+          <form
+            className="space-y-6"
+            onSubmit={form.handleSubmit((values) =>
+              onSubmit({ ...values, plan: 1 })
+            )}
+          >
             <div className="grid grid-cols-3 gap-4">
               <FormField
                 control={form.control}
