@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
@@ -11,110 +11,129 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import dynamic from 'next/dynamic';
-import { planes, diasSemana, nivelesActividad, objetivos } from "@/helper/finalStepValidation";
+import { nivelesActividad, objetivos } from "@/helper/finalStepValidation";
 import { additionalInfoSchema } from "@/helper/finalStepValidation";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-
-const SelectNoSSR = dynamic(() => import('react-select'), { ssr: false });
+import { defaultValues } from "@/helper/finalStepValidation";
+import CircularInput from "@/components/CircularInput/CircularInput";
+import WeekdayPicker from "../WeekDayPeeker/WeekDayPeeker";
+import { Card } from "../ui/card";
 
 type AdditionalInfoFormValues = z.infer<typeof additionalInfoSchema>;
 
 const AdditionalInfoForm = () => {
-  const [selectedProfessor, setSelectedProfessor] = useState("");
-  const [availableHours, setAvailableHours] = useState<string[]>([]);
-  const [selectedPlan, setSelectedPlan] = useState("");
-  const [professorsList, setProfessorsList] = useState<{ nombre: string; horario: string[]; id:string;  }[]>([]);
+  const [professorsList, setProfessorsList] = useState<
+    { nombre: string; horario: string[]; id: string; email: string; edad: 35 }[]
+  >([]);
   const router = useRouter();
+
+  const [selectedProfessorId, setSelectedProfessorId] = useState("");
+  const [selectedHorario, setSelectedHorario] = useState("");
+
+  const handleHorarioChange = (e: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setSelectedHorario(e.target.value);
+  };
+
+  const selectedProfessor = professorsList.find(
+    (profesor) => profesor.id === selectedProfessorId
+  );
 
   const form = useForm<AdditionalInfoFormValues>({
     resolver: zodResolver(additionalInfoSchema),
-    defaultValues: {
-      altura: 0,
-      peso: 0,
-      plan: undefined,
-      diasSeleccionados: [],
-      horario: "",
-      nivelActividad: undefined,
-      objetivo: undefined,
-      profesor: "",
-    },
+    defaultValues,
   });
 
   useEffect(() => {
-    fetch('http://localhost:3001/profesor/profesores')
-      .then(response => response.json())
-      .then(data => {
+    fetch("http://localhost:3001/profesor/profesores")
+      .then((response) => response.json())
+      .then((data) => {
         setProfessorsList(data);
+        console.log("Profesores:", data);
       })
-      .catch(error => {
-        console.error('Error fetching professors:', error);
+      .catch((error) => {
+        console.error("Error fetching professors:", error);
       });
   }, []);
 
   useEffect(() => {
     if (selectedProfessor) {
-      const profesor = professorsList.find(p => p.id === selectedProfessor);
-      if (profesor && Array.isArray(profesor.horario) && profesor.horario.length > 0) {
+      const profesor = professorsList.find(
+        (p) => p.id === selectedProfessor.id
+      );
+      if (
+        profesor &&
+        Array.isArray(profesor.horario) &&
+        profesor.horario.length > 0
+      ) {
         const horarioString = profesor.horario[0];
-        const [start, end] = horarioString.split(' a ').map((time: string) => parseInt(time.split(':')[0]));
+        const [start, end] = horarioString
+          .split(" a ")
+          .map((time: string) => parseInt(time.split(":")[0]));
         const horasDisponibles = Array.from({ length: end - start }, (_, i) => {
           const hora = start + i;
-          return `${hora.toString().padStart(2, "0")}:00 - ${(hora + 1).toString().padStart(2, "0")}:00`;
+          return `${hora.toString().padStart(2, "0")}:00 - ${(hora + 1)
+            .toString()
+            .padStart(2, "0")}:00`;
         });
-        setAvailableHours(horasDisponibles);
       } else {
-        console.error(`Profesor ${selectedProfessor} not found or horario is invalid`);
-        setAvailableHours([]);
+        console.error(
+          `Profesor ${selectedProfessor} not found or horario is invalid`
+        );
       }
     }
   }, [selectedProfessor, professorsList]);
 
-  const onSubmit = async (values: AdditionalInfoFormValues) => {
+  const onSubmit = async (
+    values: AdditionalInfoFormValues & { plan: number }
+  ) => {
     const userId = window.localStorage.getItem("userId");
-    console.log(userId)
+    console.log("Values:", values);
+    console.log(userId);
     if (!userId) {
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudo encontrar el ID del usuario',
+        icon: "error",
+        title: "Error",
+        text: "No se pudo encontrar el ID del usuario",
       });
       return;
     }
-    
+
     try {
+      values.plan = values.diasSeleccionados.length;
+      console.log("Values:", values);
       const response = await fetch(`http://localhost:3001/users/${userId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(values),
       });
 
       if (!response.ok) {
-        throw new Error('Error al actualizar la información del usuario');
+        throw new Error("Error al actualizar la información del usuario");
       }
 
       const updatedUser = await response.json();
-      console.log('Usuario actualizado:', updatedUser);
+      console.log("Usuario actualizado:", updatedUser);
 
       Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: 'La información se ha actualizado correctamente',
+        icon: "success",
+        title: "¡Éxito!",
+        text: "La información se ha actualizado correctamente",
       });
 
       // Redirigir al usuario a la página principal o de perfil
-      router.push('/dashboard');
+      router.push("/dashboard");
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Hubo un problema al actualizar la información',
+        icon: "error",
+        title: "Error",
+        text: "Hubo un problema al actualizar la información",
       });
     }
   };
@@ -126,30 +145,39 @@ const AdditionalInfoForm = () => {
     >
       <div className="w-full max-w-4xl p-4 bg-black border border-gray-800 rounded-lg shadow sm:p-6 md:p-8">
         <div className="mb-6 text-center">
-          <h4 className="text-2xl font-bold text-red-600 mb-2">¡Último paso!</h4>
+          <h4 className="text-2xl font-bold text-red-600 mb-2">
+            ¡Último paso!
+          </h4>
           <p className="text-white text-sm">
-            Estás a punto de desbloquear tu potencial. Completa estos detalles finales y prepárate para iniciar tu viaje hacia una mejor versión de ti mismo.
+            Estás a punto de desbloquear tu potencial. Completa estos detalles
+            finales y prepárate para iniciar tu viaje hacia una mejor versión de
+            ti mismo.
           </p>
         </div>
         <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-2 gap-4">
+          <form
+            className="space-y-6"
+            onSubmit={form.handleSubmit((values) =>
+              onSubmit({ ...values, plan: 1 })
+            )}
+          >
+            <div className="grid grid-cols-3 gap-4">
               <FormField
                 control={form.control}
                 name="altura"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-white">
-                      Altura (cm)
-                    </FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                        required
-                      />
+                      <div className=" h-48 w-max">
+                        <CircularInput
+                          label="Altura (cm)"
+                          maxValue={250}
+                          onChange={(height) => {
+                            form.setValue("altura", height);
+                          }}
+                          value={form.watch("altura") as number}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />
                   </FormItem>
@@ -160,17 +188,18 @@ const AdditionalInfoForm = () => {
                 name="peso"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-white">
-                      Peso (kg)
-                    </FormLabel>
+                    <FormLabel className="block mb-2 text-sm font-medium text-white"></FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                        required
-                      />
+                      <div className=" h-48 w-max">
+                        <CircularInput
+                          label="Peso (kg)"
+                          maxValue={400}
+                          onChange={(height) => {
+                            form.setValue("peso", height);
+                          }}
+                          value={form.watch("peso") as number}
+                        />
+                      </div>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />
                   </FormItem>
@@ -178,78 +207,27 @@ const AdditionalInfoForm = () => {
               />
               <FormField
                 control={form.control}
-                name="plan"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-white">
-                      Plan
-                    </FormLabel>
-                    <FormControl>
-                      <select
-                        {...field}
-                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSelectedPlan(e.target.value);
-                          form.setValue('diasSeleccionados', []); // Reset dias when plan changes
-                        }}
-                        required
-                      >
-                        <option value="">Selecciona un plan</option>
-                        {planes.map((plan) => (
-                          <option key={plan.id} value={plan.id}>
-                            {plan.label}
-                          </option>
-                        ))}
-                      </select>
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
-              <Controller
                 name="diasSeleccionados"
-                control={form.control}
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-white">
-                      Días
-                    </FormLabel>
-                    <SelectNoSSR
-                      isMulti
-                      options={diasSemana}
-                      className="bg-gray-900 text-white"
-                      classNamePrefix="select"
-                      onChange={(selected: any) => {
-                        const maxDias = parseInt(selectedPlan);
-                        if (selected.length <= maxDias) {
-                          field.onChange(selected.map((item: any) => item.value));
-                        }
-                      }}
-                      value={diasSemana.filter(dia => field.value.includes(dia.value as "Lunes" | "Martes" | "Miércoles" | "Jueves" | "Viernes"))}
-                      isDisabled={!selectedPlan}
-                      maxMenuHeight={200}
-                      styles={{
-                        control: (provided) => ({
-                          ...provided,
-                          backgroundColor: '#1f2937',
-                          borderColor: '#374151',
-                        }),
-                        menu: (provided) => ({
-                          ...provided,
-                          backgroundColor: '#1f2937',
-                        }),
-                        option: (provided, state) => ({
-                          ...provided,
-                          backgroundColor: state.isFocused ? '#374151' : '#1f2937',
-                          color: 'white',
-                        }),
-                      }}
-                    />
-                    <FormMessage className="text-red-500 text-xs mt-1" />
+                  <FormItem className="relative">
+                    <FormControl>
+                      <div className="flex flex-col justify-center h-full w-full  items-center flex-wrap -ml-10">
+                        <h2 className="text-white text-sm font-medium mb-2">
+                          Selecciona los dias de tu plan
+                        </h2>
+                        <WeekdayPicker
+                          onchange={(days) => {
+                            form.setValue("diasSeleccionados", days);
+                            console.log("Dias seleccionados:", days);
+                          }}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs  absolute top-36 w-full text-center -ml-4" />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="profesor"
@@ -259,55 +237,49 @@ const AdditionalInfoForm = () => {
                       Elegir profesor
                     </FormLabel>
                     <FormControl>
-                      <select
-                        {...field}
-                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSelectedProfessor(e.target.value);
-                          form.setValue('horario', ''); // Reset horario when professor changes
-                        }}
-                        required
-                      >
-                        <option value="">Selecciona un profesor</option>
-                        {professorsList.map((profesor) => (
-                          <option key={profesor.id} value={profesor.id}>
-                            {profesor.nombre} ({profesor.horario[0]})
-                          </option>
-                        ))}
-                      </select>
+                      <Card className="w-max flex flex-col gap-2">
+                        <select
+                          value={selectedProfessorId}
+                          onChange={(e) => {
+                            form.setValue("profesor", e.target.value);
+                            setSelectedProfessorId(e.target.value);
+                          }}
+                          required
+                        >
+                          <option value="">Selecciona un profesor</option>
+                          {professorsList.map((profesor) => (
+                            <option key={profesor.id} value={profesor.id}>
+                              {profesor.nombre}
+                            </option>
+                          ))}
+                        </select>
+
+                        {selectedProfessorId && (
+                          <select
+                            value={selectedHorario}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLSelectElement>
+                            ) => {
+                              handleHorarioChange(e);
+                              form.setValue("horario", e.target.value);
+                            }}
+                            required
+                          >
+                            <option value="">Selecciona un horario</option>
+                            {selectedProfessor?.horario.map((horario) => (
+                              <option key={horario} value={horario}>
+                                {horario}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </Card>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="horario"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-white">
-                      Horario
-                    </FormLabel>
-                    <FormControl>
-                      <select
-                        {...field}
-                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                        disabled={!selectedProfessor}
-                        required
-                      >
-                        <option value="">Selecciona un horario</option>
-                        {availableHours.map((hour) => (
-                          <option key={hour} value={hour}>
-                            {hour}
-                          </option>
-                        ))}
-                      </select>
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
+
               <FormField
                 control={form.control}
                 name="nivelActividad"
@@ -362,7 +334,10 @@ const AdditionalInfoForm = () => {
               />
             </div>
             <div className="flex justify-between">
-              <Link href="/previous-step" className="text-red-500 hover:text-red-700">
+              <Link
+                href="/previous-step"
+                className="text-red-500 hover:text-red-700"
+              >
                 Volver
               </Link>
               <button

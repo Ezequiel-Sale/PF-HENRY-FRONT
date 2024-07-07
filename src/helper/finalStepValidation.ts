@@ -1,10 +1,16 @@
 import { z } from "zod";
 
 export const additionalInfoSchema = z.object({
-  altura: z.number().min(1, "La altura debe ser mayor a 0"),
-  peso: z.number().min(1, "El peso debe ser mayor a 0"),
-  plan: z.string().nonempty("Selecciona un plan"),
-  diasSeleccionados: z.array(z.string().nonempty("Selecciona al menos un día")),
+  altura: z.number().min(20, "La altura debe ser mayor a 20 cm"),
+  peso: z.number().min(30, "El peso debe ser mayor a 30"),
+  diasSeleccionados: z
+    .array(z.string())
+    .refine(
+      (dias) => dias.length === 2 || dias.length === 3 || dias.length === 5,
+      {
+        message: "Selecciona 2, 3 o 5 días",
+      }
+    ),
   horario: z.string().nonempty("Selecciona un horario"),
   nivelActividad: z.string().optional(),
   objetivo: z.string().nonempty("Selecciona un objetivo"),
@@ -14,7 +20,7 @@ export const additionalInfoSchema = z.object({
 export const diasSemana = [
   { label: "Lunes", value: "Lunes" },
   { label: "Martes", value: "Martes" },
-  { label: "Miércoles", value: "Miércoles" },
+  { label: "Miercoles", value: "Miercoles" },
   { label: "Jueves", value: "Jueves" },
   { label: "Viernes", value: "Viernes" },
 ];
@@ -29,13 +35,18 @@ export const nivelesActividad = [
 
 export const objetivos = [
   { label: "Estético", value: "Estético" },
-  { label: "Deportivo", value: "Deportivo"},
+  { label: "Deportivo", value: "Deportivo" },
   { label: "Salud", value: "Salud" },
 ];
 
-export const planes = [
-  { label: "2 veces por semana", value: "2", id:"" },
-  { label: "3 veces por semana", value: "3", id: "54015bef-8fda-4099-a89e-55a401919fcb" },
-  { label: "5 veces por semana", value: "5" },
-];
 
+
+export const defaultValues = {
+  altura: 20,
+  peso: 50,
+  diasSeleccionados: [],
+  horario: "",
+  nivelActividad: undefined,
+  objetivo: undefined,
+  profesor: "",
+};
