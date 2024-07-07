@@ -1,12 +1,13 @@
 // Navbar.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import NotificationsDropdown from "../NotificationsDropdown/NotificationsDropdown";
 import { useNotification } from "../NotificationContext/NotificationContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useUser } from "../UserContext/UserContext";
+import { io } from "socket.io-client";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,7 @@ const Navbar = () => {
   const { addNotification, unreadCount } = useNotification();
   const path = usePathname();
 
+  
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -32,11 +34,22 @@ const Navbar = () => {
     window.location.href = "/dashboard";
   };
 
-  const handleButtonClick = () => {
-    const newNotification = { message: "Tu profesor subió tu rutina" };
-    addNotification(newNotification);
-  };
-  console.log("Rendering Navbar with userData: ", userData); // Log added
+
+  useEffect(() => {
+    if (userData) {
+      const socket = io("http://localhost:3001");
+
+      socket.emit("register", userData.id);
+
+      socket.on("newNotification", (notification) => {
+        addNotification({ message: notification.message });
+      });
+
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [userData, addNotification]);
 
   return (
     <nav className="text-white bg-transparent p-0 md:p-2 w-[250px] md:w-screen flex justify-center">
@@ -47,7 +60,6 @@ const Navbar = () => {
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           {userData ? (
             <>
-              <button onClick={handleButtonClick} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-5">agregar notificacion</button>
               <div className="flex justify-center items-center">
                 <Popover>
                   <PopoverTrigger>
