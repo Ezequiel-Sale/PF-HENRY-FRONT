@@ -12,6 +12,7 @@ export type User = {
   estado: boolean;
   horario?: string;
   peso?: string;
+  role: string;
 };
 
 const UsersPage = () => {

@@ -1,49 +1,112 @@
 "use client";
-import React, { createContext, useContext, useState, FC } from 'react';
+import { User } from "@/app/dashboard/users/page";
+import { getUsers } from "@/helper/petitions";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  FC,
+} from "react";
+import io from "socket.io-client";
 
 export interface Notification {
   id: number;
   message: string;
-  read: boolean; // Añadimos esta propiedad
+  read: boolean;
 }
 
 interface NotificationContextType {
   notifications: Notification[];
-  addNotification: (newNotification: Omit<Notification, 'id' | 'read'>) => void;
+  addNotification: (newNotification: Omit<Notification, "id" | "read">) => void;
   markAsRead: (id: number) => void;
-  unreadCount: number; // Añadimos esta propiedad
+  unreadCount: number;
   removeNotification: (id: number) => void;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
+const NotificationContext = createContext<NotificationContextType | undefined>(
+  undefined
+);
 
-export const NotificationProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+export const NotificationProvider: FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [notifications, setNotifications] = useState<Notification[]>(() => {
+    const storedNotifications = localStorage.getItem('notifications');
+    return storedNotifications ? JSON.parse(storedNotifications) : [];
+  });
+  const [user, serUser] = useState<User[]>([]) 
+  console.log(user)
 
-  const addNotification = (newNotification: Omit<Notification, 'id' | 'read'>) => {
+  useEffect(() => {
+    const fetchUsers = async ()=>{
+      const data = await getUsers();
+      serUser(data)
+    }
+    fetchUsers()
+  },[])
+
+  useEffect(() => {
+    const socket = io("http://localhost:3001", {
+      withCredentials: true,
+    });
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server");
+      socket.emit("register", user.filter((user) => user.id === "userId")); // Reemplaza 'userId' con el ID real del usuario
+    });
+
+    socket.on("newNotification", (notification) => {
+      addNotification({ message: notification.message });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const addNotification = (
+    newNotification: Omit<Notification, "id" | "read">
+  ) => {
     const notification: Notification = {
       ...newNotification,
       id: Date.now(),
       read: false,
     };
-    setNotifications(prev => [...prev, notification]);
+    setNotifications((prev) => [...prev, notification]);
+    const updatedNotifications = [...notifications, notification];
+    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
   };
 
   const removeNotification = (id: number) => {
-    setNotifications(notifications.filter(notification => notification.id !== id));
-  };
-  const markAsRead = (id: number) => {
-    setNotifications(prev =>
-      prev.map(notif =>
-        notif.id === id ? { ...notif, read: true } : notif
-      )
-    );
+    const updatedNotifications = notifications.filter(notification => notification.id !== id);
+  setNotifications(updatedNotifications);
+
+  // Guarda en localStorage
+  localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
   };
 
-  const unreadCount = notifications.filter(notif => !notif.read).length;
+  const markAsRead = (id: number) => {
+    const updatedNotifications = notifications.map(notif =>
+      notif.id === id ? { ...notif, read: true } : notif
+    );
+    setNotifications(updatedNotifications);
+  
+    // Guarda en localStorage
+    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
+  };
+
+  const unreadCount = notifications.filter((notif) => !notif.read).length;
 
   return (
-    <NotificationContext.Provider value={{ notifications, addNotification, markAsRead, unreadCount, removeNotification }}>
+    <NotificationContext.Provider
+      value={{
+        notifications,
+        addNotification,
+        markAsRead,
+        unreadCount,
+        removeNotification,
+      }}
+    >
       {children}
     </NotificationContext.Provider>
   );
@@ -52,7 +115,9 @@ export const NotificationProvider: FC<{ children: React.ReactNode }> = ({ childr
 export const useNotification = (): NotificationContextType => {
   const context = useContext(NotificationContext);
   if (!context) {
-    throw new Error('useNotification debe ser usado dentro de un NotificationProvider');
+    throw new Error(
+      "useNotification debe ser usado dentro de un NotificationProvider"
+    );
   }
   return context;
 };
