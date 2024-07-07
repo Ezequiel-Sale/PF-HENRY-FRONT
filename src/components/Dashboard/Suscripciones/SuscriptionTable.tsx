@@ -71,7 +71,7 @@ const SuscriptionTable = ({ limit, title }: SuscriptionTableProps) => {
             <TableRow className="bg-blue-100">
               <TableHead className="text-center py-3 px-4 font-semibold text-gray-700">Nombre</TableHead>
               <TableHead className="text-center py-3 px-4 font-semibold text-gray-700 hidden md:table-cell">Edad</TableHead>
-              <TableHead className="text-center py-3 px-4 font-semibold text-gray-700 hidden md:table-cell">Fecha</TableHead>
+              <TableHead className="text-center py-3 px-4 font-semibold text-gray-700 hidden md:table-cell">Fecha de nacimiento</TableHead>
               <TableHead className="text-center py-3 px-4 font-semibold text-gray-700">Ver</TableHead>
             </TableRow>
           </TableHeader>
