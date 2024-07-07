@@ -1,4 +1,6 @@
 "use client";
+import { User } from "@/app/dashboard/users/page";
+import { getUsers } from "@/helper/petitions";
 import React, {
   createContext,
   useContext,
@@ -33,6 +35,16 @@ export const NotificationProvider: FC<{ children: React.ReactNode }> = ({
     const storedNotifications = localStorage.getItem('notifications');
     return storedNotifications ? JSON.parse(storedNotifications) : [];
   });
+  const [user, serUser] = useState<User[]>([]) 
+  console.log(user)
+
+  useEffect(() => {
+    const fetchUsers = async ()=>{
+      const data = await getUsers();
+      serUser(data)
+    }
+    fetchUsers()
+  },[])
 
   useEffect(() => {
     const socket = io("http://localhost:3001", {
@@ -40,7 +52,7 @@ export const NotificationProvider: FC<{ children: React.ReactNode }> = ({
     });
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
-      socket.emit("register", "userId"); // Reemplaza 'userId' con el ID real del usuario
+      socket.emit("register", user.filter((user) => user.id === "userId")); // Reemplaza 'userId' con el ID real del usuario
     });
 
     socket.on("newNotification", (notification) => {

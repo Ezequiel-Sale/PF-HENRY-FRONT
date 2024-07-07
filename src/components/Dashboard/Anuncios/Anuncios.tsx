@@ -17,9 +17,10 @@ const Anuncios = () => {
           message: "",
         }}
         validateOnChange
-        onSubmit={async (values) => {
+        onSubmit={async (values, { resetForm }) => {
           console.log(values)
           crearAnuncio(values);
+          resetForm();
         }}
       >
         {() => (

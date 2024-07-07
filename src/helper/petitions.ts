@@ -4,28 +4,21 @@ import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
 
 function getTokenFromLocalStorage() {
-  // Obtener la cadena JSON del localStorage
   const userSessionString = localStorage.getItem('userSession');
 
   if (userSessionString) {
     try {
-      // Parsear la cadena JSON a un objeto
       const userSession = JSON.parse(userSessionString);
-      
-      // Extraer el token del objeto
       const token = userSession.token;
-
       return token;
     } catch (error) {
       console.error('Error al parsear userSession:', error);
       return null;
     }
   }
-
   return null;
 }
 const token = getTokenFromLocalStorage();
-
 if (token) {
   console.log('Token obtenido:', token);
 } else {
@@ -175,7 +168,7 @@ export async function updateProfesorStatus(id: string) {
 
 export const crearAnuncio = async ({message}: Anuncios) => {
   try {
-      const response = await fetch(`http://localhost:3001/notifications/rutinaSubida`, {
+      const response = await fetch(`http://localhost:3001/notifications/sendToAll`, {
         method: "POST",
         headers: {
           Authorization : `Bearer ${token}`,
