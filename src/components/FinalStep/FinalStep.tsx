@@ -20,17 +20,39 @@ import { defaultValues } from "@/helper/finalStepValidation";
 import CircularInput from "@/components/CircularInput/CircularInput";
 import WeekdayPicker from "../WeekDayPeeker/WeekDayPeeker";
 import { Card } from "../ui/card";
+import { getHorariosCupos } from "@/services/cupos";
+import { ICupos, IHorariosProfesor } from "@/types/FinalStepInterfaces";
+import { getProfessors } from "@/services/professor";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 
 type AdditionalInfoFormValues = z.infer<typeof additionalInfoSchema>;
 
 const AdditionalInfoForm = () => {
-  const [professorsList, setProfessorsList] = useState<
-    { nombre: string; horario: string[]; id: string; email: string; edad: 35 }[]
-  >([]);
-  const router = useRouter();
-
-  const [selectedProfessorId, setSelectedProfessorId] = useState("");
   const [selectedHorario, setSelectedHorario] = useState("");
+  const [professorsList, setProfessorsList] = useState<ICupos[]>([]);
+  const [selectedProfessorId, setSelectedProfessorId] = useState("");
+  const [horariosProfesor, setHorariosProfesor] = useState<IHorariosProfesor[]>(
+    []
+  );
+
+  const router = useRouter();
+  const form = useForm<AdditionalInfoFormValues>({
+    resolver: zodResolver(additionalInfoSchema),
+    defaultValues,
+  });
 
   const handleHorarioChange = (e: {
     target: { value: React.SetStateAction<string> };
@@ -42,50 +64,44 @@ const AdditionalInfoForm = () => {
     (profesor) => profesor.id === selectedProfessorId
   );
 
-  const form = useForm<AdditionalInfoFormValues>({
-    resolver: zodResolver(additionalInfoSchema),
-    defaultValues,
-  });
+  const fetchProfessors = async () => {
+    try {
+      const professors = await getProfessors();
+      setProfessorsList(professors);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un problema al obtener los profesores",
+      });
+    }
+  };
 
   useEffect(() => {
-    fetch("http://localhost:3001/profesor/profesores")
-      .then((response) => response.json())
-      .then((data) => {
-        setProfessorsList(data);
-        console.log("Profesores:", data);
-      })
-      .catch((error) => {
-        console.error("Error fetching professors:", error);
-      });
+    initMercadoPago("TEST-35ca7b57-da90-412b-b501-03fb27a3dcd8", {
+      locale: "es-AR",
+    });
+    fetchProfessors();
   }, []);
 
   useEffect(() => {
     if (selectedProfessor) {
-      const profesor = professorsList.find(
-        (p) => p.id === selectedProfessor.id
-      );
-      if (
-        profesor &&
-        Array.isArray(profesor.horario) &&
-        profesor.horario.length > 0
-      ) {
-        const horarioString = profesor.horario[0];
-        const [start, end] = horarioString
-          .split(" a ")
-          .map((time: string) => parseInt(time.split(":")[0]));
-        const horasDisponibles = Array.from({ length: end - start }, (_, i) => {
-          const hora = start + i;
-          return `${hora.toString().padStart(2, "0")}:00 - ${(hora + 1)
-            .toString()
-            .padStart(2, "0")}:00`;
-        });
-      } else {
-        console.error(
-          `Profesor ${selectedProfessor} not found or horario is invalid`
-        );
-      }
+      fetchHorarios(selectedProfessor.id);
     }
   }, [selectedProfessor, professorsList]);
+
+  async function fetchHorarios(idProfesor: string) {
+    try {
+      const horariosCuposDb = await getHorariosCupos(idProfesor);
+      setHorariosProfesor(horariosCuposDb);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hubo un problema al obtener los horarios de los profesores",
+      });
+    }
+  }
 
   const onSubmit = async (
     values: AdditionalInfoFormValues & { plan: number }
@@ -266,9 +282,12 @@ const AdditionalInfoForm = () => {
                             required
                           >
                             <option value="">Selecciona un horario</option>
-                            {selectedProfessor?.horario.map((horario) => (
-                              <option key={horario} value={horario}>
-                                {horario}
+                            {horariosProfesor.map((horario) => (
+                              <option
+                                key={horario.horario}
+                                value={horario.horario}
+                              >
+                                {horario.horario} - Cupos: {horario.cupos}
                               </option>
                             ))}
                           </select>
@@ -340,12 +359,60 @@ const AdditionalInfoForm = () => {
               >
                 Volver
               </Link>
-              <button
-                type="submit"
-                className="w-full sm:w-auto bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-              >
-                Confirmar
-              </button>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  >
+                    Confirmar
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="bg-black text-white">
+                  <SheetHeader>
+                    <SheetTitle className="text-white">
+                      Resumen plan seleccionado
+                    </SheetTitle>
+                    <SheetDescription className="text-gray-300">
+                      Por favor, confirma que la información es correcta y
+                      continua con la subcripcion.
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="bg-gray-100 p-4 rounded-lg shadow text-black">
+                      <h3 className="text-lg font-semibold mb-2">
+                        Resumen del Plan
+                      </h3>
+                      <p>
+                        <strong>Peso:</strong>
+                        {form.watch("peso") as number} kg
+                      </p>
+                      <p>
+                        <strong>Altura:</strong>
+                        {form.watch("altura") as number} cm
+                      </p>
+                      <p>
+                        <strong>Profesor:</strong> {selectedProfessor?.nombre}
+                      </p>
+                      <p>
+                        <strong>Días seleccionados:</strong>{" "}
+                        {form.watch("diasSeleccionados").join(", ")}
+                      </p>
+                      <p>
+                        <strong>Precio Total:</strong> $1000
+                      </p>
+                    </div>
+                  </div>
+                  <SheetFooter>
+                    <SheetClose asChild>
+                      <Wallet
+                        initialization={{ preferenceId: "<PREFERENCE_ID>" }}
+                        customization={{ texts: { valueProp: "smart_option" } }}
+                      />
+                    </SheetClose>
+                  </SheetFooter>
+                </SheetContent>
+              </Sheet>
             </div>
           </form>
         </Form>
