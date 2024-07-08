@@ -69,9 +69,10 @@ const Profesor = () => {
     return <p>Cargando...</p>; 
   }
 
+
   return (
     <>
-      <h1 className="text-3xl font-bold text-center text-white">Profesor `nombre del profesor`</h1>
+      <h1 className="text-3xl font-bold text-center text-white mt-2">Dashboard de Profesor</h1>
       <div className="flex justify-center mt-4 h-[100%] pb-10">
         <Tabs defaultValue={currentDay} className="bg-white rounded-md">
           <TabsList className="w-[80vw] flex justify-around">
