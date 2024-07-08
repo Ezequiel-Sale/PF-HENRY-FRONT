@@ -136,14 +136,21 @@ const AdditionalInfoForm = () => {
       const updatedUser = await response.json();
       console.log("Usuario actualizado:", updatedUser);
 
-      Swal.fire({
-        icon: "success",
-        title: "¡Éxito!",
-        text: "La información se ha actualizado correctamente",
-      });
-
-      // Redirigir al usuario a la página principal o de perfil
-      router.push("/dashboard");
+      if (values.metodoPago === "efectivo") {
+        await Swal.fire({
+          icon: "success",
+          title: "¡Usuario confirmado!",
+          text: "Recuerda coordinar el pago con el administrador",
+        });
+        router.push("/userdashboard");
+      } else {
+        Swal.fire({
+          icon: "success",
+          title: "¡Éxito!",
+          text: "La información se ha actualizado correctamente",
+        });
+        router.push("/dashboard");
+      }
     } catch (error) {
       console.error("Error:", error);
       Swal.fire({
@@ -177,73 +184,71 @@ const AdditionalInfoForm = () => {
               onSubmit({ ...values, plan: 1 })
             )}
           >
-            <div className="grid grid-cols-3 gap-4">
-              <FormField
-                control={form.control}
-                name="altura"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <div className=" h-48 w-max">
-                        <CircularInput
-                          label="Altura (cm)"
-                          maxValue={250}
-                          onChange={(height) => {
-                            form.setValue("altura", height);
-                          }}
-                          value={form.watch("altura") as number}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="peso"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block mb-2 text-sm font-medium text-white"></FormLabel>
-                    <FormControl>
-                      <div className=" h-48 w-max">
-                        <CircularInput
-                          label="Peso (kg)"
-                          maxValue={400}
-                          onChange={(height) => {
-                            form.setValue("peso", height);
-                          }}
-                          value={form.watch("peso") as number}
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage className="text-red-500 text-xs mt-1" />
-                  </FormItem>
-                )}
-              />
+            <div className="grid grid-cols-2 gap-6">
+              <div className="col-span-2 grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="altura"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-center">
+                      <FormControl>
+                        <div className="h-48 w-48">
+                          <CircularInput
+                            label="Altura (cm)"
+                            maxValue={210}
+                            onChange={(height) => {
+                              form.setValue("altura", height);
+                            }}
+                            value={form.watch("altura") as number}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-red-500 text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="peso"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-center">
+                      <FormControl>
+                        <div className="h-48 w-48">
+                          <CircularInput
+                            label="Peso (kg)"
+                            maxValue={200}
+                            onChange={(weight) => {
+                              form.setValue("peso", weight);
+                            }}
+                            value={form.watch("peso") as number}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-red-500 text-xs mt-1" />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
                 name="diasSeleccionados"
                 render={({ field }) => (
-                  <FormItem className="relative">
+                  <FormItem>
+                    <FormLabel className="block mb-2 text-sm font-medium text-white">
+                      Selecciona los dias de tu plan
+                    </FormLabel>
                     <FormControl>
-                      <div className="flex flex-col justify-center h-full w-full  items-center flex-wrap -ml-10">
-                        <h2 className="text-white text-sm font-medium mb-2">
-                          Selecciona los dias de tu plan
-                        </h2>
-                        <WeekdayPicker
-                          onchange={(days) => {
-                            form.setValue("diasSeleccionados", days);
-                            console.log("Dias seleccionados:", days);
-                          }}
-                        />
-                      </div>
+                      <WeekdayPicker
+                        onchange={(days) => {
+                          form.setValue("diasSeleccionados", days);
+                          console.log("Dias seleccionados:", days);
+                        }}
+                      />
                     </FormControl>
-                    <FormMessage className="text-red-500 text-xs  absolute top-36 w-full text-center -ml-4" />
+                    <FormMessage className="text-red-500 text-xs mt-1" />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="profesor"
@@ -253,70 +258,44 @@ const AdditionalInfoForm = () => {
                       Elegir profesor
                     </FormLabel>
                     <FormControl>
-                      <Card className="w-max flex flex-col gap-2">
-                        <select
-                          value={selectedProfessorId}
-                          onChange={(e) => {
-                            form.setValue("profesor", e.target.value);
-                            setSelectedProfessorId(e.target.value);
-                          }}
-                          required
-                        >
-                          <option value="">Selecciona un profesor</option>
-                          {professorsList.map((profesor) => (
-                            <option key={profesor.id} value={profesor.id}>
-                              {profesor.nombre}
-                            </option>
-                          ))}
-                        </select>
-
-                        {selectedProfessorId && (
-                          <select
-                            value={selectedHorario}
-                            onChange={(
-                              e: React.ChangeEvent<HTMLSelectElement>
-                            ) => {
-                              handleHorarioChange(e);
-                              form.setValue("horario", e.target.value);
-                            }}
-                            required
-                          >
-                            <option value="">Selecciona un horario</option>
-                            {horariosProfesor.map((horario) => (
-                              <option
-                                key={horario.horario}
-                                value={horario.horario}
-                              >
-                                {horario.horario} - Cupos: {horario.cupos}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-                      </Card>
+                      <select
+                        {...field}
+                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSelectedProfessorId(e.target.value);
+                        }}
+                      >
+                        <option value="">Selecciona un profesor</option>
+                        {professorsList.map((profesor) => (
+                          <option key={profesor.id} value={profesor.id}>
+                            {profesor.nombre}
+                          </option>
+                        ))}
+                      </select>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
-                name="nivelActividad"
+                name="horario"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="block mb-2 text-sm font-medium text-white">
-                      Nivel de actividad física
+                      Seleccionar cupo disponible
                     </FormLabel>
                     <FormControl>
                       <select
                         {...field}
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                        required
+                        disabled={!selectedProfessorId}
                       >
-                        <option value="">Selecciona un nivel</option>
-                        {nivelesActividad.map((nivel) => (
-                          <option key={nivel.value} value={nivel.value}>
-                            {nivel.label}
+                        <option value="">Selecciona un horario</option>
+                        {selectedProfessor?.horario.map((horario) => (
+                          <option key={horario} value={horario}>
+                            {horario}
                           </option>
                         ))}
                       </select>
@@ -337,7 +316,6 @@ const AdditionalInfoForm = () => {
                       <select
                         {...field}
                         className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
-                        required
                       >
                         <option value="">Selecciona un objetivo</option>
                         {objetivos.map((objetivo) => (
@@ -345,6 +323,53 @@ const AdditionalInfoForm = () => {
                             {objetivo.label}
                           </option>
                         ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs mt-1" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="nivelActividad"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block mb-2 text-sm font-medium text-white">
+                      Nivel de actividad física
+                    </FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                      >
+                        <option value="">Selecciona un nivel</option>
+                        {nivelesActividad.map((nivel) => (
+                          <option key={nivel.value} value={nivel.value}>
+                            {nivel.label}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-xs mt-1" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="metodoPago"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block mb-2 text-sm font-medium text-white">
+                      Método de pago
+                    </FormLabel>
+                    <FormControl>
+                      <select
+                        {...field}
+                        className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
+                      >
+                        <option value="">Selecciona un método de pago</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="mercadopago">MercadoPago</option>
                       </select>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />

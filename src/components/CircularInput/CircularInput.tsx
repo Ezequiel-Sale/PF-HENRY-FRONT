@@ -26,12 +26,11 @@ const CircularInput = ({
     setPosition({ x, y });
   }, [value, normalizedRadius, radius, maxValue]);
 
-
   const bind = useDrag(({ offset: [ox, oy] }) => {
     const angle = Math.atan2(oy - radius, ox - radius) + Math.PI / 2;
     const newValue =
       (((angle + Math.PI * 2) % (Math.PI * 2)) / (Math.PI * 2)) * maxValue;
-    onChange(newValue);
+    onChange(Math.round(newValue));  // Redondea el valor a un número entero
   });
 
   const strokeDashoffset = circumference - (value / maxValue) * circumference;
@@ -69,11 +68,10 @@ const CircularInput = ({
       </svg>
       <div className="text-white -my-24 z-0 flex flex-col items-center justify-center">
         <h2>{label}</h2>
-        <p>{value.toFixed(2)}</p>
+        <p>{Math.round(value)}</p>
       </div>
     </div>
   );
 };
-
 
 export default CircularInput;

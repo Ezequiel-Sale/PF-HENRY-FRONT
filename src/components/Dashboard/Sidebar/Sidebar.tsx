@@ -17,7 +17,8 @@ import {
     Settings, 
     User, 
     GraduationCap,
-    UsersRound
+    UsersRound,
+    Bell
 } from 'lucide-react'  
 import Link from 'next/link'
 
@@ -58,6 +59,10 @@ const Sidebar = () => {
                 <CommandItem>
                     <Settings className='mr-2 h4 w4' />
                     <Link href="/dashboard/settings"><span>Crear Profesores</span></Link>
+                </CommandItem>
+                <CommandItem>
+                    <Bell className='mr-2 h4 w4' />
+                    <Link href="/dashboard/anuncios"><span>Crear Anuncios</span></Link>
                 </CommandItem>
             </CommandGroup>
         </CommandList>

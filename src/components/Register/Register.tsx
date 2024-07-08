@@ -68,15 +68,6 @@ const Register: React.FC = () => {
       // Send email (assuming it's part of your flow)
       sendEmail();
 
-      // Show success message
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Usuario registrado correctamente",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-
       // Reset form
       resetForm();
 
