@@ -58,7 +58,7 @@ const Navbar = () => {
               <a href="/" className={`hover:text-red-500 transition duration-300 ${path === "/" ? "text-red-500" : "text-white"}`}>Inicio</a>
             </li>
             <li>
-              <a href="/objetivos" className={`hover:text-red-500 transition duration-300 ${path === "/objetivos" ? "text-red-500" : "text-white"}`}>Objetivos</a>
+              <a href="/services" className={`hover:text-red-500 transition duration-300 ${path === "/services" ? "text-red-500" : "text-white"}`}>Objetivos</a>
             </li>
             <li>
               <a href="/about" className={`hover:text-red-500 transition duration-300 ${path === "/about" ? "text-red-500" : "text-white"}`}>Sobre Nosotros</a>
@@ -132,7 +132,7 @@ const Navbar = () => {
               <a href="/" className={`block px-3 py-2 rounded-md text-base font-medium ${path === "/" ? "text-red-500" : "text-white hover:bg-gray-700 hover:text-white"}`}>Inicio</a>
             </li>
             <li>
-              <a href="/objetivos" className={`block px-3 py-2 rounded-md text-base font-medium ${path === "/objetivos" ? "text-red-500" : "text-white hover:bg-gray-700 hover:text-white"}`}>Objetivos</a>
+              <a href="/services" className={`block px-3 py-2 rounded-md text-base font-medium ${path === "/services" ? "text-red-500" : "text-white hover:bg-gray-700 hover:text-white"}`}>Objetivos</a>
             </li>
             <li>
               <a href="/about" className={`block px-3 py-2 rounded-md text-base font-medium ${path === "/about" ? "text-red-500" : "text-white hover:bg-gray-700 hover:text-white"}`}>Sobre Nosotros</a>
