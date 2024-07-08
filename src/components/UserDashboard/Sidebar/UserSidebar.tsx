@@ -10,15 +10,9 @@ import {
     CommandSeparator,
 } from "@/components/ui/command"
 import { 
-    LayoutDashboard, 
-    Newspaper, 
-    Folders, 
-    CreditCard, 
-    Settings, 
     User, 
-    GraduationCap,
-    UsersRound,
-    Dumbbell,
+    Dumbbell, 
+    CreditCard, 
     LineChart,
     QrCode
 } from 'lucide-react'  
@@ -26,12 +20,12 @@ import Link from 'next/link'
 
 const UserSidebar = () => {
   return (
-    <Command className="bg-secondary rounded-none h-screen w-full">
-        <CommandInput placeholder="Type a command or search..." />
-        <CommandList>
+    <Command className="bg-secondary rounded-none h-screen w-64 flex-shrink-0">
+        <CommandInput placeholder="Buscar..." className="w-full" />
+        <CommandList className="overflow-y-auto h-full">
             <CommandEmpty>No se encontraron resultados.</CommandEmpty>
             <CommandSeparator />
-            <CommandGroup heading="Settings">
+            <CommandGroup heading="Configuración">
                 <CommandItem>
                     <User className='mr-2 h-4 w-4' />
                     <span>Mis datos</span>
