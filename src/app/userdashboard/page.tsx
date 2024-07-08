@@ -22,7 +22,7 @@ const UserDashboard = () => {
             <FeatureCard 
               icon={<Clock className="h-8 w-8 text-blue-400" />}
               title="Próximamente"
-              description="Podrás ver y modificar tus datos personales, gestionar tu rutina de entrenamiento y realizar pagos de forma segura."
+              description="Podrás ver y modificar tus datos personales, revisar tu rutina de entrenamiento y controlar tus pagos de forma segura."
             />
             
             <FeatureCard 

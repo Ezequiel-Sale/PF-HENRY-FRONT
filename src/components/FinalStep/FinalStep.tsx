@@ -99,7 +99,7 @@ const AdditionalInfoForm = () => {
       });
       return;
     }
-
+  
     try {
       values.plan = values.diasSeleccionados.length;
       console.log("Values:", values);
@@ -110,21 +110,31 @@ const AdditionalInfoForm = () => {
         },
         body: JSON.stringify(values),
       });
-
+  
       if (!response.ok) {
         throw new Error("Error al actualizar la información del usuario");
       }
-
+  
       const updatedUser = await response.json();
       console.log("Usuario actualizado:", updatedUser);
-
+  
       if (values.metodoPago === "efectivo") {
         await Swal.fire({
           icon: "success",
           title: "¡Usuario confirmado!",
           text: "Recuerda coordinar el pago con el administrador",
         });
-        router.push("/userdashboard");
+        router.push("/login");
+      } else if (values.metodoPago === "mercadopago") {
+        await Swal.fire({
+          icon: "success",
+          title: "¡Usuario confirmado!",
+          text: "Serás redirigido a la página de pago",
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false
+        });
+        router.push("/pago");
       } else {
         Swal.fire({
           icon: "success",
