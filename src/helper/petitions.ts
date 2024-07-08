@@ -1,10 +1,35 @@
+import { Anuncios } from "@/components/Dashboard/Anuncios/Anuncios";
 import { ICredential } from "@/types/credentialInterface";
 import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
+const apiUri = process.env.NEXT_PUBLIC_API
 
+// function getTokenFromLocalStorage() {
+//   if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+//     const userSessionString = localStorage.getItem('userSession');
+
+//     if (userSessionString) {
+//       try {
+//         return JSON.parse(userSessionString);
+//       } catch (error) {
+//         console.error('Error parsing user session from localStorage:', error);
+//       }
+//     }
+//   } else {
+//     console.warn('localStorage is not available peticiones');
+//   }
+// return undefined;
+// }
+// const token = getTokenFromLocalStorage();
+// console.log("token petitions", token);
+// if (token) {
+//   console.log('Token obtenido:', token);
+// } else {
+//   console.log('No se encontró un token válido peticiones');
+// }
 export const registerUser = async (user: IFormValues) => {
     try {
-      const response = await fetch("http://localhost:3001/users/register", {
+      const response = await fetch(`${apiUri}/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,7 +48,7 @@ export const registerUser = async (user: IFormValues) => {
 
 export async function getUsers() {
     try {
-      const response = await fetch('http://localhost:3001/profesor/users');
+      const response = await fetch(`${apiUri}/users`);
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
@@ -42,7 +67,7 @@ export async function getUsers() {
         horario: Array.isArray(profesor.horario) ? profesor.horario : [profesor.horario]
       };
   
-      const response = await fetch('http://localhost:3001/profesor/create', {
+      const response = await fetch(`${apiUri}/profesor/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,7 +91,7 @@ export async function getUsers() {
 
 export async function getProfesors() {
   try {
-    const response = await fetch('http://localhost:3001/profesor/profesores');
+    const response = await fetch(`${apiUri}/profesor/profesores`);
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
@@ -79,7 +104,7 @@ export async function getProfesors() {
 
 export async function updateUserStatus(id: string) {
   try {
-    const response = await fetch(`http://localhost:3001/profesor/users/${id}`, {
+    const response = await fetch(`${apiUri}/profesor/users/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -98,14 +123,15 @@ export async function updateUserStatus(id: string) {
   }
 }
 
+
 export async function loginUser({email, password}: ICredential) {
   try {
-    const response = await fetch('http://localhost:3001/auth/signin', {
+    const response = await fetch(`${apiUri}/auth/signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({email , password, type: "user" }),
+      body: JSON.stringify({email , password, type: "user" ||  "profesor"}),
     });
 
     if (!response.ok) {
@@ -122,7 +148,7 @@ export async function loginUser({email, password}: ICredential) {
 export async function updateProfesorStatus(id: string) {
   console.log("Hola")
   try {
-    const response = await fetch(`http://localhost:3001/profesor/${id}`, {
+    const response = await fetch(`${apiUri}/profesor/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -140,3 +166,35 @@ export async function updateProfesorStatus(id: string) {
     console.error('Error updating user status:', error);
   }
 }
+
+export const crearAnuncio = async ({message}: Anuncios) => {
+  try {
+      const response = await fetch(`${apiUri}/notifications/sendToAll`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({message}),
+      });
+      if (!response.ok) {
+        throw new Error(`Error al enviar la notificación: ${response.statusText}`);
+      }
+      const result = await response.json();
+      console.log("Notificación enviada exitosamente:", result);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+}
+
+// export async function getNotifications() {
+//   try {
+//     const response = await fetch('http://localhost:3001/notifications/rutinaSubida');
+//     if (!response.ok) {
+//       throw new Error(`Error: ${response.status} ${response.statusText}`);
+//     }
+//     const notifications = await response.json();
+//     return notifications;
+//   } catch (error) {
+//     console.error('Error fetching notifications:', error);
+//   }
+// }

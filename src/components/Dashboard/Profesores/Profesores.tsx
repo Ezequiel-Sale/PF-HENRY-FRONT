@@ -1,6 +1,6 @@
 "use client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getProfesors, updateProfesorStatus } from "@/helper/petitions"; // Asegúrate de importar la función updateUserStatus
+import { getProfesors, updateProfesorStatus } from "@/helper/petitions";
 import { IProfesor } from "@/types/profesorInterface";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -17,11 +17,11 @@ const Profesores: React.FC = () => {
           setProfesores(profesors);
         } else {
           console.error('getProfesors no devolvió un arreglo');
-          setProfesores([]); // Asegura que profesores sea un arreglo incluso si la respuesta no lo es
+          setProfesores([]);
         }
       } catch (error) {
         console.error('Error fetching profesors:', error);
-        setProfesores([]); // Asegura que profesores sea un arreglo en caso de error
+        setProfesores([]);
       } finally {
         setLoading(false);
       }
@@ -32,12 +32,22 @@ const Profesores: React.FC = () => {
 
   const handleStatusChange = async (id: string) => {
     try {
+      console.log("prueba")
       await updateProfesorStatus(id);
       setProfesores(prevProfesores => prevProfesores.map(profesor =>
         profesor.id === id ? { ...profesor, estado: !profesor.estado } : profesor
       ));
     } catch (error) {
       console.error('Error updating user status:', error);
+    }
+  };
+
+  const formatHorario = (horario: string | string[]) => {
+    if (Array.isArray(horario)) {
+      return horario.join(', ');
+    } else {
+      const bloques = horario.match(/\d{2}:\d{2} a \d{2}:\d{2}/g);
+      return bloques ? bloques.join(', ') : horario;
     }
   };
 
@@ -71,8 +81,10 @@ const Profesores: React.FC = () => {
                   <td className="px-2 py-2 lg:px-4 lg:py-3 font-medium text-gray-900">{profesor.nombre}</td>
                   <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">{profesor.edad}</td>
                   <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">{profesor.email}</td>
-                  <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">{profesor.horario}</td>
-                  <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">{profesor.dia}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">{formatHorario(profesor.horario)}</td>
+                  <td className="px-2 py-2 lg:px-4 lg:py-3 hidden md:table-cell">
+                    {Array.isArray(profesor.dia) ? profesor.dia.join(', ') : profesor.dia}
+                  </td>
                   <td className="px-2 py-2 lg:px-4 lg:py-3">
                     <span className={`inline-block w-24 text-center px-2 py-1 rounded-full text-sm font-semibold ${
                       profesor.estado ? 'bg-green-200 text-green-800 border-2 border-green-400' : 'bg-red-200 text-red-800 border-2 border-red-400'

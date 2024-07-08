@@ -17,23 +17,22 @@ import { IUser } from "@/types/profesorInterface";
 
 const Dashboard = () => {
    const [profesorNumber, setProfesorNumber] = useState([]);
-   const [users, setUsers] = useState([]);
-   const [activeUser, setActiveUser] = useState(0);
- console.log(activeUser)
-  useEffect(() => {
+   const [users, setUsers] = useState<IUser[]>([]);
+   const [inactiveUser, setInactiveUser] = useState(0);
+
+   useEffect(() => {
     const fetchProfesors = async () =>{
       const profesors = await getProfesors();
       setProfesorNumber(profesors);
-      const user = await getUsers()
-      console.log(user)
-      setUsers(user)
+      const user = await getUsers();
+      setUsers(user);
 
-      const activeUsers = user.filter((u: IUser) => u.estado === 'active');
-      setActiveUser(activeUsers.length);
-    }
+      const inactiveUsers = user.filter((u: IUser) => !u.estado);
+      setInactiveUser(inactiveUsers.length);
+    };
 
     fetchProfesors();
-  },[]);
+  }, [users]);
 
   return (
     <>
@@ -46,13 +45,13 @@ const Dashboard = () => {
 
         <DashboardCard
           title="Activos"
-          count={activeUser}
+          count={users.filter((u) => u.estado).length}
           icon={<ShieldCheck size={72} className="text-slate-500" />}
         />
 
         <DashboardCard
           title="Inactivos"
-          count={users.length - activeUser}
+          count={inactiveUser}
           icon={<ShieldOff size={72} className="text-slate-500" />}
         />
 
