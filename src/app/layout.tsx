@@ -4,8 +4,7 @@ import "./globals.css";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import Head from "next/head";
-import { NotificationProvider } from "@/components/NotificationContext/NotificationContext";
-import { UserProvider } from "@/components/UserContext/UserContext";
+import { CombinedProvider } from "@/components/ContextUserNotifications/ContextUserNotifications";
 
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
@@ -26,13 +25,11 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-black z-10 ,md:max-w-screen-md overflow-x-hidden`}
       >
-        <UserProvider>
-          <NotificationProvider>
+        <CombinedProvider>
             <Navbar />
             {children}
             <Footer />
-          </NotificationProvider>
-        </UserProvider>
+        </CombinedProvider>
       </body>
     </html>
   );

@@ -3,34 +3,35 @@ import { ICredential } from "@/types/credentialInterface";
 import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
 
-function getTokenFromLocalStorage() {
-  const userSessionString = localStorage.getItem('userSession');
+// function getTokenFromLocalStorage() {
+//   if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+//     const userSessionString = localStorage.getItem('userSession');
 
-  if (userSessionString) {
-    try {
-      const userSession = JSON.parse(userSessionString);
-      const token = userSession.token;
-      return token;
-    } catch (error) {
-      console.error('Error al parsear userSession:', error);
-      return null;
-    }
-  }
-  return null;
-}
-const token = getTokenFromLocalStorage();
-if (token) {
-  console.log('Token obtenido:', token);
-} else {
-  console.log('No se encontró un token válido');
-}
+//     if (userSessionString) {
+//       try {
+//         return JSON.parse(userSessionString);
+//       } catch (error) {
+//         console.error('Error parsing user session from localStorage:', error);
+//       }
+//     }
+//   } else {
+//     console.warn('localStorage is not available peticiones');
+//   }
+// return undefined;
+// }
+// const token = getTokenFromLocalStorage();
+// console.log("token petitions", token);
+// if (token) {
+//   console.log('Token obtenido:', token);
+// } else {
+//   console.log('No se encontró un token válido peticiones');
+// }
 export const registerUser = async (user: IFormValues) => {
     try {
       const response = await fetch("http://localhost:3001/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization : `Bearer ${token}`,
         },
         body: JSON.stringify(user),
       })
@@ -69,7 +70,6 @@ export async function getUsers() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization : `Bearer ${token}`,
         },
         body: JSON.stringify(profesorData),
       });
@@ -171,7 +171,6 @@ export const crearAnuncio = async ({message}: Anuncios) => {
       const response = await fetch(`http://localhost:3001/notifications/sendToAll`, {
         method: "POST",
         headers: {
-          Authorization : `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({message}),
@@ -181,10 +180,8 @@ export const crearAnuncio = async ({message}: Anuncios) => {
       }
       const result = await response.json();
       console.log("Notificación enviada exitosamente:", result);
-      alert("Notificación enviada exitosamente");
     } catch (error) {
       console.error("Error:", error);
-      alert("Error al enviar la notificación");
     }
 }
 

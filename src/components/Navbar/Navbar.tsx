@@ -4,16 +4,16 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import NotificationsDropdown from "../NotificationsDropdown/NotificationsDropdown";
-import { useNotification } from "../NotificationContext/NotificationContext";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useUser } from "../UserContext/UserContext";
 import { io } from "socket.io-client";
+import { useContextCombined } from "../ContextUserNotifications/ContextUserNotifications";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { userData, setUserData } = useUser();
-  const { addNotification, unreadCount } = useNotification();
+  const { userData, setUserData } = useContextCombined();
+  const { addNotification, unreadCount } = useContextCombined();
   const path = usePathname();
+  console.log("userData en navBar",userData)
 
   
   const toggleMenu = () => {
@@ -50,6 +50,7 @@ const Navbar = () => {
       };
     }
   }, [userData, addNotification]);
+
 
   return (
     <nav className="text-white bg-transparent p-0 md:p-2 w-[250px] md:w-screen flex justify-center">
