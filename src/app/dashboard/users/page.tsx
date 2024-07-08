@@ -13,6 +13,8 @@ export type User = {
   horario?: string;
   peso?: string;
   role: string;
+  objetivo?: string;
+  altura?: string;
 };
 
 const UsersPage = () => {

@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useNotification, Notification } from '../NotificationContext/NotificationContext';
+import { Notification, useContextCombined } from '../ContextUserNotifications/ContextUserNotifications';
 // import { getNotifications } from '@/helper/petitions';
 
 const NotificationsDropdown: FC = () => {
-  const { notifications, markAsRead, removeNotification } = useNotification();
+  const { notifications, markAsRead, removeNotification } = useContextCombined();
   const [Notificaciones, setNotificaciones] = useState<Notification[]>([]);
 
 

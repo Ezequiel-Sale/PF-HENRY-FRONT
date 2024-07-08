@@ -2,6 +2,7 @@
 import { crearAnuncio } from "@/helper/petitions";
 import { Field, Form, Formik } from "formik";
 import React from "react";
+import Swal from "sweetalert2";
 
 export interface Anuncios {
   message: string;
@@ -19,8 +20,28 @@ const Anuncios = () => {
         validateOnChange
         onSubmit={async (values, { resetForm }) => {
           console.log(values)
-          crearAnuncio(values);
-          resetForm();
+          crearAnuncio(values)
+          .then(() => {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Anuncio enviado exitosamente",
+              showConfirmButton: false,
+              timer: 1500,
+            })
+            resetForm();
+          }
+        )
+        .catch((error) => {
+          console.log(error)
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error al enviar el anuncio",
+            showConfirmButton: false,
+            timer: 1500,
+          })
+        })
         }}
       >
         {() => (
