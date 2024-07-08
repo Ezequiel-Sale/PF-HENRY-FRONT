@@ -39,8 +39,6 @@ export const objetivos = [
   { label: "Salud", value: "Salud" },
 ];
 
-
-
 export const defaultValues = {
   altura: 20,
   peso: 50,
