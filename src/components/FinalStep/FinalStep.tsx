@@ -285,9 +285,9 @@ const AdditionalInfoForm = () => {
                         disabled={!selectedProfessorId}
                       >
                         <option value="">Selecciona un horario</option>
-                        {selectedProfessor?.horario.map((horario) => (
+                        {selectedProfessor?.horario.map((horario, index) => (
                           <option key={horario} value={horario}>
-                            {horario}
+                            {horario}{" "}{index % 2 === 0 ? 3 : 2} cupos
                           </option>
                         ))}
                       </select>
