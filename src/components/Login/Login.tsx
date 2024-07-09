@@ -42,7 +42,7 @@ const Login = () => {
       } else if (userRole === "profesor") {
         router.push("/dashboard-profesor");
       } else if (userRole === "user") {
-        router.push("/dashboard/users");
+        router.push("/userdashboard");
       }
     }
   }, [userRole, router]);
@@ -108,7 +108,7 @@ const Login = () => {
           resultFullProps.user.email ?? "",
           resultFullProps.user.accessToken
         );
-        router.push("/dashboard/usuarios");
+        router.push("/userdashboard");
       } catch (error) {
         window.localStorage.setItem(
           "token",

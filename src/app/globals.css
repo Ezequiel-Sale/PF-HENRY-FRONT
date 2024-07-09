@@ -67,8 +67,8 @@
 }
 
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
+  @tailwind components;
+  @tailwind utilities;
 
 @layer base {
   :root {
@@ -278,3 +278,4 @@
   width: 1.25rem;
   height: 1.25rem;
 }
+

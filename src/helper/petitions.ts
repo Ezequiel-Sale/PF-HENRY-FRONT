@@ -2,6 +2,7 @@ import { Anuncios } from "@/components/Dashboard/Anuncios/Anuncios";
 import { ICredential } from "@/types/credentialInterface";
 import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
+const apiUri = process.env.NEXT_PUBLIC_API
 
 // function getTokenFromLocalStorage() {
 //   if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
@@ -28,7 +29,7 @@ import { IFormValues } from "@/types/registerInterface";
 // }
 export const registerUser = async (user: IFormValues) => {
     try {
-      const response = await fetch("http://localhost:3001/users/register", {
+      const response = await fetch(`http://localhost:3001/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -47,7 +48,7 @@ export const registerUser = async (user: IFormValues) => {
 
 export async function getUsers() {
     try {
-      const response = await fetch('http://localhost:3001/profesor/users');
+      const response = await fetch(`http://localhost:3001/users`);
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
@@ -66,7 +67,7 @@ export async function getUsers() {
         horario: Array.isArray(profesor.horario) ? profesor.horario : [profesor.horario]
       };
   
-      const response = await fetch('http://localhost:3001/profesor/create', {
+      const response = await fetch(`http://localhost:3001/profesor/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ export async function getUsers() {
 
 export async function getProfesors() {
   try {
-    const response = await fetch('http://localhost:3001/profesor/profesores');
+    const response = await fetch(`http://localhost:3001/profesor/profesores`);
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
@@ -125,7 +126,7 @@ export async function updateUserStatus(id: string) {
 
 export async function loginUser({email, password}: ICredential) {
   try {
-    const response = await fetch('http://localhost:3001/auth/signin', {
+    const response = await fetch(`http://localhost:3001/auth/signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -168,7 +169,7 @@ export async function updateProfesorStatus(id: string) {
 
 export const crearAnuncio = async ({message}: Anuncios) => {
   try {
-      const response = await fetch(`http://localhost:3001/notifications/sendToAll`, {
+      const response = await fetch(`${apiUri}/notifications/sendToAll`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -197,3 +198,16 @@ export const crearAnuncio = async ({message}: Anuncios) => {
 //     console.error('Error fetching notifications:', error);
 //   }
 // }
+
+export async function getUserData(userId: string) {
+  try {
+    const response = await fetch(`http://localhost:3001/users/${userId}`);
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+    const userData = await response.json();
+    return userData;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+}

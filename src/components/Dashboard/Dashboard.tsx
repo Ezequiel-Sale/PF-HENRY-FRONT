@@ -18,7 +18,7 @@ import { IUser } from "@/types/profesorInterface";
 const Dashboard = () => {
    const [profesorNumber, setProfesorNumber] = useState([]);
    const [users, setUsers] = useState<IUser[]>([]);
-   const [activeUser, setActiveUser] = useState(0);
+   const [inactiveUser, setInactiveUser] = useState(0);
 
    useEffect(() => {
     const fetchProfesors = async () =>{
@@ -27,31 +27,31 @@ const Dashboard = () => {
       const user = await getUsers();
       setUsers(user);
 
-      const activeUsers = users.filter((u: IUser) => u.estado === 'active');
-      setActiveUser(activeUsers.length);
+      const inactiveUsers = user.filter((u: IUser) => !u.estado);
+      setInactiveUser(inactiveUsers.length);
     };
 
     fetchProfesors();
-  }, []);
+  }, [users]);
 
   return (
     <>
       <div className="flex flex-col md:flex-row justift-betweeen gap-5 mb-5">
         <DashboardCard
           title="Usuarios"
-          count={users ? users.length : 0}
+          count={users.length}
           icon={<User size={72} className="text-slate-500" />}
         />
 
         <DashboardCard
           title="Activos"
-          count={activeUser}
+          count={users.filter((u) => u.estado).length}
           icon={<ShieldCheck size={72} className="text-slate-500" />}
         />
 
         <DashboardCard
           title="Inactivos"
-          count={users ? users.length - activeUser : 0}
+          count={inactiveUser}
           icon={<ShieldOff size={72} className="text-slate-500" />}
         />
 

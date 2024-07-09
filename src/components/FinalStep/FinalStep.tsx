@@ -122,7 +122,7 @@ const AdditionalInfoForm = () => {
       });
       return;
     }
-
+  
     try {
       fetchPlans();
       values.plan = values.diasSeleccionados.length;
@@ -134,11 +134,11 @@ const AdditionalInfoForm = () => {
         },
         body: JSON.stringify(values),
       });
-
+  
       if (!response.ok) {
         throw new Error("Error al actualizar la información del usuario");
       }
-
+  
       const updatedUser = await response.json();
       console.log("Usuario actualizado:", updatedUser);
       setIsOpen(true);
