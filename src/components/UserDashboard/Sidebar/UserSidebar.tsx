@@ -29,6 +29,7 @@ const UserSidebar = () => {
                 <CommandItem>
                     <User className='mr-2 h-4 w-4' />
                     <span>Mis datos</span>
+                    <Link href="/userdashboard/misdatos"></Link>
                 </CommandItem>
                 <CommandItem>
                     <Dumbbell className='mr-2 h-4 w-4' />
