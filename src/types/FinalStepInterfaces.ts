@@ -11,3 +11,9 @@ export interface IHorariosProfesor {
   horario: string;
   cupos: number;
 }
+
+export interface IPlan {
+  id: number;
+  name: string;
+  price: number;
+}
