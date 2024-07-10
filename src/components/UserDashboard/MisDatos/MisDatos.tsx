@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Pencil, Check, X } from 'lucide-react';
+import { Pencil, Check, X, Info } from 'lucide-react';
 import { getUserData } from "../../../helper/petitions";
 import Swal from 'sweetalert2';
 
@@ -151,6 +151,16 @@ const MisDatos = () => {
     }
   };
 
+  const showInfoMessage = () => {
+    Swal.fire({
+      title: 'Información',
+      text: 'Para modificar este campo comuníquese con el administrador',
+      icon: 'info',
+      confirmButtonText: 'Entendido',
+      confirmButtonColor: '#3085d6'
+    });
+  };
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Mis Datos</h1>
@@ -189,13 +199,21 @@ const MisDatos = () => {
                   ) : (
                     <div className="flex items-center justify-between">
                       <span>{Array.isArray(value) ? value.join(', ') : value}</span>
-                      {editableFields.includes(key) && (
+                      {editableFields.includes(key) ? (
                         <button
                           type="button"
                           onClick={() => handleEdit(key, Array.isArray(value) ? value.join(', ') : value)}
                           className="ml-2 text-gray-400 hover:text-gray-600"
                         >
                           <Pencil size={18} />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={showInfoMessage}
+                          className="ml-2 text-blue-500 hover:text-blue-600"
+                        >
+                          <Info size={18} />
                         </button>
                       )}
                     </div>
