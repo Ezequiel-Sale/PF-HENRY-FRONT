@@ -28,12 +28,11 @@ const UserSidebar = () => {
             <CommandGroup heading="Configuración">
                 <CommandItem>
                     <User className='mr-2 h-4 w-4' />
-                    <span>Mis datos</span>
-                    <Link href="/userdashboard/misdatos"></Link>
+                    <Link href="/userdashboard/misdatos"><span>Mis datos</span></Link>
                 </CommandItem>
                 <CommandItem>
                     <Dumbbell className='mr-2 h-4 w-4' />
-                    <span>Mi rutina</span>
+                    <Link href="/userdashboard/rutina"><span>Mi Rutina</span></Link>
                 </CommandItem>
                 <CommandItem>
                     <CreditCard className='mr-2 h-4 w-4' />
