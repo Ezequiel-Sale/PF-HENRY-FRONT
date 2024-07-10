@@ -169,7 +169,7 @@ export async function updateProfesorStatus(id: string) {
 
 export const crearAviso = async ({message}: Anuncios) => {
   try {
-      const response = await fetch(`${apiUri}/notifications/sendToAll`, {
+      const response = await fetch(`${apiUri}/avisos/sendToAll`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

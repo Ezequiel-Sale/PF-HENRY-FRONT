@@ -1,5 +1,6 @@
 "use client";
 import { useContextCombined } from "@/components/ContextUserNotifications/ContextUserNotifications";
+import { crearAviso } from "@/helper/petitions";
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import Swal from "sweetalert2";
@@ -18,7 +19,7 @@ const Anuncios = () => {
         validateOnChange
         onSubmit={async (values, { resetForm }) => {
           try {
-            addAnuncio(values);
+            crearAviso(values);
             Swal.fire({
               position: "center",
               icon: "success",

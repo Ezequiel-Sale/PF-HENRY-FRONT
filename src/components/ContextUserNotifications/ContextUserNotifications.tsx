@@ -61,13 +61,23 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
   useEffect(() => {
     if (typeof window !== "undefined") {
       const userDataString = localStorage.getItem("userSession");
-        setUser(JSON.parse(userDataString!));
-      }
+      setUser(JSON.parse(userDataString!));
+    }
   }, []);
 
-  useEffect(() => {
+  const addNotification = (newNotification: Omit<Notification, "id" | "read">) => {
+    const notification: Notification = {
+      ...newNotification,
+      id: Date.now(),
+      read: false,
+    };
+    const updatedNotifications = [...notifications, notification];
+    setNotifications(updatedNotifications);
+    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+  };
 
-    if (!userId) return; 
+  useEffect(() => {
+    if (!userId) return;
 
     const socket = io('http://localhost:3001', {
       query: { userId },
@@ -93,19 +103,10 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
       console.error('WebSocket error:', error);
     });
 
-    return
-  }, [userId]);
-
-  const addNotification = (newNotification: Omit<Notification, "id" | "read">) => {
-    const notification: Notification = {
-      ...newNotification,
-      id: Date.now(),
-      read: false,
+    return () => {
+      socket.disconnect();
     };
-    const updatedNotifications = [...notifications, notification];
-    setNotifications(updatedNotifications);
-    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
-  };
+  }, [userId]);
 
   const addAnuncio = (newAnuncio: Omit<Anuncio, "id">) => {
     const anuncioObj: Anuncio = {
