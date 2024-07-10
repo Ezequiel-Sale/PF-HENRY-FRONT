@@ -45,7 +45,7 @@ const MisDatos = () => {
             fecha_de_nacimiento: data.fecha_nacimiento || '',
             altura: data.altura || '',
             peso: data.peso || '',
-            plan: data.plan ? data.plan.nombre : '',
+            plan: data.plan ? data.plan.name : '',
             profesor: data.profesor ? data.profesor.nombre : '',
             horario: data.horario || [],
             objetivo: data.objetivo || [],
