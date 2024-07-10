@@ -78,6 +78,41 @@ const AdditionalInfoForm = () => {
     }
   };
 
+  async function handleOnPay() {
+    if (selectedPaymentMethod === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Por favor selecciona un método de pago",
+      });
+    } else {
+      if (selectedPaymentMethod === "efectivo") {
+        Swal.fire({
+          icon: "success",
+          title: "¡Usuario confirmado!",
+          text: "Recuerda coordinar el pago con el administrador",
+        });
+        router.push("/userdashboard");
+      } else {
+        Swal.fire({
+          icon: "success",
+          title: "¡Éxito!",
+          text: "La información se ha actualizado correctamente",
+        });
+        const payment = await pay({
+          metodoPago: selectedPaymentMethod,
+          userEmail: user?.email ?? "",
+          id_plan: form.watch("diasSeleccionados").length,
+        });
+
+        const urlPasarelaPago = payment.init_point;
+        window.location.href = urlPasarelaPago;
+
+        // router.push("/dashboard");
+      }
+    }
+  }
+
   useEffect(() => {
     initMercadoPago("TEST-35ca7b57-da90-412b-b501-03fb27a3dcd8", {
       locale: "es-AR",
@@ -508,37 +543,7 @@ const AdditionalInfoForm = () => {
                     </div>
                     <div className="flex justify-center mt-8">
                       <Button
-                        onClick={() => {
-                          if (selectedPaymentMethod === "") {
-                            Swal.fire({
-                              icon: "error",
-                              title: "Error",
-                              text: "Por favor selecciona un método de pago",
-                            });
-                          } else {
-                            if (selectedPaymentMethod === "efectivo") {
-                              Swal.fire({
-                                icon: "success",
-                                title: "¡Usuario confirmado!",
-                                text: "Recuerda coordinar el pago con el administrador",
-                              });
-                              router.push("/userdashboard");
-                            } else {
-                              Swal.fire({
-                                icon: "success",
-                                title: "¡Éxito!",
-                                text: "La información se ha actualizado correctamente",
-                              });
-                              pay({
-                                metodoPago: selectedPaymentMethod,
-                                userEmail: user?.email ?? "",
-                                id_plan: form.watch("diasSeleccionados").length,
-                              });
-                              console.log("Usuario actualizado", user);
-                              // router.push("/dashboard");
-                            }
-                          }
-                        }}
+                        onClick={handleOnPay}
                         className="bg-red-500 px-10 hover:bg-red-700"
                       >
                         Pagar
