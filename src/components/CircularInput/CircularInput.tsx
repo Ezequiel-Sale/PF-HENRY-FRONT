@@ -30,7 +30,7 @@ const CircularInput = ({
     const angle = Math.atan2(oy - radius, ox - radius) + Math.PI / 2;
     const newValue =
       (((angle + Math.PI * 2) % (Math.PI * 2)) / (Math.PI * 2)) * maxValue;
-    onChange(Math.round(newValue));  // Redondea el valor a un número entero
+    onChange(Math.round(newValue)); // Redondea el valor a un número entero
   });
 
   const strokeDashoffset = circumference - (value / maxValue) * circumference;
@@ -68,7 +68,15 @@ const CircularInput = ({
       </svg>
       <div className="text-white -my-24 z-0 flex flex-col items-center justify-center">
         <h2>{label}</h2>
-        <p>{Math.round(value)}</p>
+        <input
+          type="number"
+          value={value}
+          className="bg-transparent w-10 mx-auto"
+          onChange={(e) => {
+            const newValue = parseInt(e.target.value);
+            onChange(isNaN(newValue) ? 0 : newValue);
+          }}
+        />
       </div>
     </div>
   );

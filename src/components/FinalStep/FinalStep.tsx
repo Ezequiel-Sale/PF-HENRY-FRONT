@@ -35,6 +35,7 @@ import { initMercadoPago } from "@mercadopago/sdk-react";
 import { getPlans } from "@/services/plan";
 import { IoIosCash } from "react-icons/io";
 import { SiMercadopago } from "react-icons/si";
+import { pay } from "@/services/pay";
 
 type AdditionalInfoFormValues = z.infer<typeof additionalInfoSchema>;
 
@@ -49,6 +50,10 @@ const AdditionalInfoForm = () => {
   const [planSeleccionado, setPlanSeleccionado] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+  const [user, setUser] = useState<{
+    email: string;
+    id: string;
+  }>();
 
   const router = useRouter();
   const form = useForm<AdditionalInfoFormValues>({
@@ -78,6 +83,12 @@ const AdditionalInfoForm = () => {
       locale: "es-AR",
     });
     fetchProfessors();
+    const token = window.localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+    const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+    setUser(decodedToken);
   }, []);
 
   useEffect(() => {
@@ -122,7 +133,7 @@ const AdditionalInfoForm = () => {
       });
       return;
     }
-  
+
     try {
       fetchPlans();
       values.plan = values.diasSeleccionados.length;
@@ -134,11 +145,11 @@ const AdditionalInfoForm = () => {
         },
         body: JSON.stringify(values),
       });
-  
+
       if (!response.ok) {
         throw new Error("Error al actualizar la información del usuario");
       }
-  
+
       const updatedUser = await response.json();
       console.log("Usuario actualizado:", updatedUser);
       setIsOpen(true);
@@ -462,18 +473,18 @@ const AdditionalInfoForm = () => {
                         <div className="flex flex-col items-center">
                           <input
                             type="radio"
-                            name="metodoPago"
-                            id="mercadoPago"
+                            name="MercadoPago"
+                            id="MercadoPago"
                             className="hidden"
-                            value="mercadoPago"
-                            checked={selectedPaymentMethod === "mercadoPago"}
+                            value="MercadoPago"
+                            checked={selectedPaymentMethod === "MercadoPago"}
                             onChange={handlePaymentMethodChange}
                           />
                           <label
-                            htmlFor="mercadoPago"
+                            htmlFor="MercadoPago"
                             className={`flex flex-col rounded-md border p-2 items-center cursor-pointer space-x-2 w-28
                               ${
-                                selectedPaymentMethod === "mercadoPago" &&
+                                selectedPaymentMethod === "MercadoPago" &&
                                 "border-red-500"
                               }`}
                           >
@@ -518,7 +529,13 @@ const AdditionalInfoForm = () => {
                                 title: "¡Éxito!",
                                 text: "La información se ha actualizado correctamente",
                               });
-                              router.push("/dashboard");
+                              pay({
+                                metodoPago: selectedPaymentMethod,
+                                userEmail: user?.email ?? "",
+                                id_plan: form.watch("diasSeleccionados").length,
+                              });
+                              console.log("Usuario actualizado", user);
+                              // router.push("/dashboard");
                             }
                           }
                         }}
