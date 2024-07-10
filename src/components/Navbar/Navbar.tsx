@@ -7,13 +7,24 @@ import NotificationsDropdown from "../NotificationsDropdown/NotificationsDropdow
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { io } from "socket.io-client";
 import { useContextCombined } from "../ContextUserNotifications/ContextUserNotifications";
+import Anuncio from "../Dashboard/Anuncios/Anuncio";
+import { userSession } from "@/types/profesorInterface";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { userData, setUserData } = useContextCombined();
   const { addNotification, unreadCount } = useContextCombined();
   const path = usePathname();
+  const [userData, setUserData] = useState<userSession>();
+  const pathName = usePathname();
+
   console.log("userData en navBar",userData)
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userData = localStorage.getItem("userSession");
+      setUserData(JSON.parse(userData!));
+    }
+  }, [pathName]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -69,7 +80,7 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="flex items-center space-x-4">
-          {userData ? (
+          {userData?.token ? (
             <>
               <Popover>
                 <PopoverTrigger>
@@ -143,6 +154,7 @@ const Navbar = () => {
           </ul>
         </div>
       )}
+      <Anuncio />
     </nav>
   );
 };

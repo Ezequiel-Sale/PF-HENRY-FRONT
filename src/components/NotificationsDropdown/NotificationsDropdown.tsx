@@ -1,27 +1,30 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Notification, useContextCombined } from '../ContextUserNotifications/ContextUserNotifications';
-// import { getNotifications } from '@/helper/petitions';
+import useSocket from '@/helper/hookSocket';
 
 const NotificationsDropdown: FC = () => {
-  const { notifications, markAsRead, removeNotification } = useContextCombined();
-  const [Notificaciones, setNotificaciones] = useState<Notification[]>([]);
-
-
-  // useEffect(() => {
-  //   const fetchNotifications = async () => {
-  //     try {
-  //       const data = await getNotifications();
-  //       setNotificaciones(data);
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-
-  //   fetchNotifications();
-  // },[])
+  const { notifications: contextNotifications, markAsRead, removeNotification } = useContextCombined();
+  const [notifications, setNotifications] = useState<Notification[]>(contextNotifications);
+  const socket = useSocket('http://localhost:3000');
 
   useEffect(() => {
-    notifications.forEach(notif => {
+    if (socket) {
+      socket.on('newRoutine', (message: Notification) => {
+        setNotifications((prev) => [...prev, message]);
+      });
+    }
+
+    // Cleanup the socket connection on component unmount
+    return () => {
+      if (socket) {
+        socket.off('newRoutine');
+      }
+    };
+  }, [socket]);
+
+  // Mark notifications as read
+  useEffect(() => {
+    notifications.forEach((notif) => {
       if (!notif.read) {
         markAsRead(notif.id);
       }
@@ -35,12 +38,12 @@ const NotificationsDropdown: FC = () => {
         {notifications.length === 0 ? (
           <p className="p-3 text-gray-500">No tienes notificaciones</p>
         ) : (
-          notifications.map((notification: Notification) => (
-            <div 
-              key={notification.id} 
+          notifications.map((notification) => (
+            <div
+              key={notification.id}
               className={`notification relative p-3 border-b ${notification.read ? 'bg-gray-300' : 'bg-white'}`}
             >
-                <button onClick={() => removeNotification(notification.id)} className="absolute top-0 right-3">x</button>
+              <button onClick={() => removeNotification(notification.id)} className="absolute top-0 right-3">x</button>
               <p className="text-black font-sans">{notification.message}</p>
             </div>
           ))

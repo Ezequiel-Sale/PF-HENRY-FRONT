@@ -143,6 +143,15 @@
   }
 }
 
+@layer utilities {
+  .marquee-container {
+    @apply relative overflow-hidden w-full h-8 bg-red-500;
+  }
+  .marquee-content {
+    @apply absolute whitespace-nowrap animate-marquee;
+  }
+}
+
 .card-aboutUs {
   width: 190px;
   height: 250px;

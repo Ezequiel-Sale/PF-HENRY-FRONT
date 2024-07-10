@@ -1,14 +1,17 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect, FC } from "react";
 import io from "socket.io-client";
-import { getUsers } from "@/helper/petitions";
-import { User } from "@/app/dashboard/users/page";
 import { userSession } from "@/types/profesorInterface";
 
 export interface Notification {
   id: number;
   message: string;
   read: boolean;
+}
+
+export interface Anuncio {
+  id: number;
+  message: string;
 }
 
 interface CombinedContextType {
@@ -19,16 +22,17 @@ interface CombinedContextType {
   removeNotification: (id: number) => void;
   userData: userSession | null;
   setUserData: (user: userSession | null) => void;
+  addAnuncio: (newAnuncio: Omit<Anuncio, "id">) => void;
+  anuncio: Anuncio | null;
 }
 
 const CombinedContext = createContext<CombinedContextType | undefined>(undefined);
 
 export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [anuncio, setAnuncio] = useState<Anuncio | null>(null);
   const [userData, setUserData] = useState<userSession | null>(null);
-  console.log("userData en context",userData)
 
-  //   Load userData from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
       const userDataString = localStorage.getItem("userSession");
@@ -42,12 +46,15 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
       if (storedNotifications) {
         setNotifications(JSON.parse(storedNotifications));
       }
+      const storedAnuncio = localStorage.getItem('anuncio');
+      if (storedAnuncio) {
+        setAnuncio(JSON.parse(storedAnuncio));
+      }
     } else {
       console.warn('localStorage is not available');
     }
   }, []);
 
-  // WebSocket connection
   useEffect(() => {
     const socket = io("http://localhost:3001", {
       withCredentials: true,
@@ -55,7 +62,7 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
     socket.on("connect", () => {
       console.log("Connected to WebSocket server");
       if (userData) {
-        socket.emit("register", userData.id); // Ajuste para usar userData.id
+        socket.emit("register", userData.id);
       }
     });
 
@@ -66,9 +73,8 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
     return () => {
       socket.disconnect();
     };
-  }, [userData]); // Ajuste para depender de userData
+  }, [userData]);
 
-  // Handle notifications
   const addNotification = (newNotification: Omit<Notification, "id" | "read">) => {
     const notification: Notification = {
       ...newNotification,
@@ -78,6 +84,15 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
     const updatedNotifications = [...notifications, notification];
     setNotifications(updatedNotifications);
     localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+  };
+
+  const addAnuncio = (newAnuncio: Omit<Anuncio, "id">) => {
+    const anuncioObj: Anuncio = {
+      ...newAnuncio,
+      id: Date.now(),
+    };
+    setAnuncio(anuncioObj);
+    localStorage.setItem("anuncio", JSON.stringify(anuncioObj));
   };
 
   const removeNotification = (id: number) => {
@@ -96,32 +111,28 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
 
   const unreadCount = notifications.filter((notif) => !notif.read).length;
 
-
-
-  // Listen for changes in localStorage to update userData
-//   useEffect(() => {
-//     const handleStorageChange = () => {
-//       const userDataString = localStorage.getItem("userSession");
-//       setUserData(JSON.parse(userDataString as string));
-//     };
-
-//     window.addEventListener("storage", handleStorageChange);
-
-//     return () => {
-//       window.removeEventListener("storage", handleStorageChange);
-//     };
-//   }, []);
+  useEffect(() => {
+    if (anuncio) {
+      const timeoutId = setTimeout(() => {
+        setAnuncio(null);
+        localStorage.removeItem("anuncio");
+      }, 5000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [anuncio]);
 
   return (
     <CombinedContext.Provider
       value={{
         notifications,
         addNotification,
+        addAnuncio,
         markAsRead,
         unreadCount,
         removeNotification,
         userData,
         setUserData,
+        anuncio,
       }}
     >
       {children}

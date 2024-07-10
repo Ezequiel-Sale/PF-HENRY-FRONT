@@ -167,7 +167,7 @@ export async function updateProfesorStatus(id: string) {
   }
 }
 
-export const crearAnuncio = async ({message}: Anuncios) => {
+export const crearAviso = async ({message}: Anuncios) => {
   try {
       const response = await fetch(`${apiUri}/notifications/sendToAll`, {
         method: "POST",
@@ -201,7 +201,7 @@ export const crearAnuncio = async ({message}: Anuncios) => {
 
 export async function getUserData(userId: string) {
   try {
-    const response = await fetch(`http://localhost:3001/users/${userId}`);
+    const response = await fetch(`${apiUri}/users/${userId}`);
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
