@@ -6,7 +6,6 @@ import { Rocket, Clock, HammerIcon } from 'lucide-react'
 const UserDashboard = () => {
   return (
     <div className="flex h-screen bg-gray-100">
-      <UserSidebar />
       <div className="flex-1 flex flex-col justify-center items-center p-8 bg-gradient-to-br from-gray-800 to-black text-white overflow-y-auto">
         <div className="max-w-2xl w-full bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-2xl p-8 transform transition-all duration-300 hover:scale-105">
           <h1 className="text-4xl font-bold mb-6 text-center flex items-center justify-center">
