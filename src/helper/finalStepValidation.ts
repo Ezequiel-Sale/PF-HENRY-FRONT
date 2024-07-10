@@ -15,7 +15,6 @@ export const additionalInfoSchema = z.object({
   nivelActividad: z.string().optional(),
   objetivo: z.string().nonempty("Selecciona un objetivo"),
   profesor: z.string().nonempty("Selecciona un profesor"),
-  metodoPago: z.string().nonempty("Selecciona un método de pago"), // Nuevo campo
 });
 
 export const diasSemana = [
@@ -53,5 +52,4 @@ export const defaultValues = {
   nivelActividad: undefined,
   objetivo: undefined,
   profesor: "",
-  metodoPago: "", // Nuevo campo
 };
