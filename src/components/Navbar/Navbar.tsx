@@ -17,7 +17,6 @@ const Navbar = () => {
   const [userData, setUserData] = useState<userSession>();
   const pathName = usePathname();
 
-  console.log("userData en navBar",userData)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -94,7 +93,7 @@ const Navbar = () => {
                   </div>
                 </PopoverTrigger>
                 <PopoverContent className="w-72 p-0">
-                  <NotificationsDropdown />
+                  <NotificationsDropdown  />
                 </PopoverContent>
               </Popover>
               <button

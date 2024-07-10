@@ -55,25 +55,46 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
     }
   }, []);
 
+  const [user, setUser] = useState<userSession>();   
+  const userId = user?.id;
+  
   useEffect(() => {
-    const socket = io("http://localhost:3001", {
+    if (typeof window !== "undefined") {
+      const userDataString = localStorage.getItem("userSession");
+        setUser(JSON.parse(userDataString!));
+      }
+  }, []);
+
+  useEffect(() => {
+
+    if (!userId) return; 
+
+    const socket = io('http://localhost:3001', {
+      query: { userId },
       withCredentials: true,
     });
-    socket.on("connect", () => {
-      console.log("Connected to WebSocket server");
-      if (userData) {
-        socket.emit("register", userData.id);
-      }
+
+    socket.on('Tu profe ha subido tu rutina', (message: string) => {
+      setNotifications(prevNotifications => [
+        ...prevNotifications, 
+        { id: Date.now(), message, read: false }
+      ]);
     });
 
-    socket.on("newNotification", (notification) => {
-      addNotification({ message: notification.message });
+    socket.on('connect', () => {
+      console.log('Connected to WebSocket server context');
     });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, [userData]);
+    socket.on('disconnect', () => {
+      console.log('Disconnected from WebSocket server');
+    });
+
+    socket.on('error', (error) => {
+      console.error('WebSocket error:', error);
+    });
+
+    return
+  }, [userId]);
 
   const addNotification = (newNotification: Omit<Notification, "id" | "read">) => {
     const notification: Notification = {
