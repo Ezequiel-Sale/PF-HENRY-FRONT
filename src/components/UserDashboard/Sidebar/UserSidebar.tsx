@@ -32,7 +32,7 @@ const UserSidebar = () => {
                 </CommandItem>
                 <CommandItem>
                     <Dumbbell className='mr-2 h-4 w-4' />
-                    <span>Descargar rutina</span>
+                    <Link href="/userdashboard/rutina"><span>Mi Rutina</span></Link>
                 </CommandItem>
                 <CommandItem>
                     <CreditCard className='mr-2 h-4 w-4' />

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Pencil, Check, X } from 'lucide-react';
 import { getUserData } from "../../../helper/petitions";
+import Swal from 'sweetalert2';
 
 const MisDatos = () => {
   const [userData, setUserData] = useState({
@@ -25,6 +26,23 @@ const MisDatos = () => {
   const [tempValue, setTempValue] = useState('');
 
   const editableFields = ['email', 'telefono', 'contraseña'];
+
+  const fieldLabels = {
+    nombre: 'Nombre',
+    email: 'Email',
+    telefono: 'Teléfono',
+    dni: 'DNI',
+    fecha_de_nacimiento: 'Fecha de nacimiento',
+    altura: 'Altura',
+    peso: 'Peso',
+    plan: 'Plan',
+    profesor: 'Profesor',
+    horario: 'Horario',
+    objetivo: 'Objetivo',
+    nivelActividad: 'Nivel de actividad',
+    metodoPago: 'Método de pago',
+    contraseña: 'Contraseña'
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -89,7 +107,7 @@ const MisDatos = () => {
       console.error('No se encontró el ID del usuario en el localStorage');
       return;
     }
-
+  
     try {
       const response = await fetch(`http://localhost:3001/users/${userId}`, {
         method: 'PUT',
@@ -102,17 +120,34 @@ const MisDatos = () => {
           password: userData.contraseña !== '••••••' ? userData.contraseña : undefined
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Error al actualizar la información del usuario');
       }
-
+  
       const updatedUser = await response.json();
       console.log('Usuario actualizado:', updatedUser);
-      // Aquí podrías mostrar un mensaje de éxito al usuario
+      
+      // Alerta de éxito
+      await Swal.fire({
+        title: '¡Éxito!',
+        text: 'Los datos del usuario se han actualizado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#28a745'
+      });
+  
     } catch (error) {
       console.error('Error al actualizar los datos:', error);
-      // Aquí podrías mostrar un mensaje de error al usuario
+      
+      // Alerta de error
+      await Swal.fire({
+        title: 'Error',
+        text: 'Ha ocurrido un error al actualizar los datos del usuario.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#dc3545'
+      });
     }
   };
 
@@ -125,7 +160,7 @@ const MisDatos = () => {
             {Object.entries(userData).map(([key, value]) => (
               <tr key={key} className="border-b border-gray-200 hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                  {fieldLabels[key as keyof typeof fieldLabels]}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {editingField === key ? (
