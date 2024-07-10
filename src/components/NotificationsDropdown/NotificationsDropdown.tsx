@@ -1,32 +1,44 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Notification, useContextCombined } from '../ContextUserNotifications/ContextUserNotifications';
-// import { getNotifications } from '@/helper/petitions';
+import React, { useEffect } from 'react';
+import { io } from 'socket.io-client';
+import { useContextCombined } from '../ContextUserNotifications/ContextUserNotifications';
 
-const NotificationsDropdown: FC = () => {
-  const { notifications, markAsRead, removeNotification } = useContextCombined();
-  const [Notificaciones, setNotificaciones] = useState<Notification[]>([]);
-
-
-  // useEffect(() => {
-  //   const fetchNotifications = async () => {
-  //     try {
-  //       const data = await getNotifications();
-  //       setNotificaciones(data);
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-
-  //   fetchNotifications();
-  // },[])
+const NotificationsDropdown = () => {
+  const { 
+    notifications, 
+    addNotification, 
+    markAsRead, 
+    removeNotification,
+    userData 
+  } = useContextCombined();
 
   useEffect(() => {
-    notifications.forEach(notif => {
-      if (!notif.read) {
-        markAsRead(notif.id);
-      }
+    if (!userData?.id) return;
+
+    const socket = io('http://localhost:3001', {
+      query: { userId: userData.id },
+      withCredentials: true,
     });
-  }, [notifications, markAsRead]);
+
+    socket.on('Tu profe ha subido tu rutina', (message: string) => {
+      addNotification({ message });
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected to WebSocket server notifications');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from WebSocket server');
+    });
+
+    socket.on('error', (error: any) => {
+      console.error('WebSocket error:', error);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [userData?.id, addNotification]);
 
   return (
     <div className="notifications-dropdown bg-white rounded-md shadow-lg">
@@ -35,13 +47,26 @@ const NotificationsDropdown: FC = () => {
         {notifications.length === 0 ? (
           <p className="p-3 text-gray-500">No tienes notificaciones</p>
         ) : (
-          notifications.map((notification: Notification) => (
-            <div 
-              key={notification.id} 
-              className={`notification relative p-3 border-b ${notification.read ? 'bg-gray-300' : 'bg-white'}`}
+          notifications.map((notification) => (
+            <div
+              key={notification.id}
+              className={`notification relative p-3 border-b ${notification.read ? 'bg-gray-100' : ''}`}
             >
-                <button onClick={() => removeNotification(notification.id)} className="absolute top-0 right-3">x</button>
               <p className="text-black font-sans">{notification.message}</p>
+              {!notification.read && (
+                <button 
+                  onClick={() => markAsRead(notification.id)}
+                  className="text-blue-500 text-sm"
+                >
+                  Marcar como leída
+                </button>
+              )}
+              <button 
+                onClick={() => removeNotification(notification.id)}
+                className="text-red-500 text-sm ml-2"
+              >
+                Eliminar
+              </button>
             </div>
           ))
         )}

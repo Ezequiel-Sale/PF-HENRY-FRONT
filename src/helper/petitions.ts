@@ -29,7 +29,7 @@ const apiUri = process.env.NEXT_PUBLIC_API
 // }
 export const registerUser = async (user: IFormValues) => {
     try {
-      const response = await fetch(`${apiUri}/users/register`, {
+      const response = await fetch(`http://localhost:3001/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export const registerUser = async (user: IFormValues) => {
 
 export async function getUsers() {
     try {
-      const response = await fetch(`${apiUri}/users`);
+      const response = await fetch(`http://localhost:3001/users`);
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
@@ -67,7 +67,7 @@ export async function getUsers() {
         horario: Array.isArray(profesor.horario) ? profesor.horario : [profesor.horario]
       };
   
-      const response = await fetch(`${apiUri}/profesor/create`, {
+      const response = await fetch(`http://localhost:3001/profesor/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export async function getUsers() {
 
 export async function getProfesors() {
   try {
-    const response = await fetch(`${apiUri}/profesor/profesores`);
+    const response = await fetch(`http://localhost:3001/profesor/profesores`);
     if (!response.ok) {
       throw new Error(`Error: ${response.status} ${response.statusText}`);
     }
@@ -104,7 +104,7 @@ export async function getProfesors() {
 
 export async function updateUserStatus(id: string) {
   try {
-    const response = await fetch(`${apiUri}/profesor/users/${id}`, {
+    const response = await fetch(`http://localhost:3001/profesor/users/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ export async function updateUserStatus(id: string) {
 
 export async function loginUser({email, password}: ICredential) {
   try {
-    const response = await fetch(`${apiUri}/auth/signin`, {
+    const response = await fetch(`http://localhost:3001/auth/signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ export async function loginUser({email, password}: ICredential) {
 export async function updateProfesorStatus(id: string) {
   console.log("Hola")
   try {
-    const response = await fetch(`${apiUri}/profesor/${id}`, {
+    const response = await fetch(`http://localhost:3001/profesor/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ export async function updateProfesorStatus(id: string) {
   }
 }
 
-export const crearAnuncio = async ({message}: Anuncios) => {
+export const crearAviso = async ({message}: Anuncios) => {
   try {
       const response = await fetch(`${apiUri}/notifications/sendToAll`, {
         method: "POST",
@@ -198,3 +198,16 @@ export const crearAnuncio = async ({message}: Anuncios) => {
 //     console.error('Error fetching notifications:', error);
 //   }
 // }
+
+export async function getUserData(userId: string) {
+  try {
+    const response = await fetch(`${apiUri}/users/${userId}`);
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+    const userData = await response.json();
+    return userData;
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+  }
+}

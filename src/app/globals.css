@@ -13,6 +13,9 @@
   color: transparent;
 }
 
+
+
+
 .text-black-unfill {
   -webkit-text-stroke: 5px black;
   color: transparent;
@@ -137,6 +140,15 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .marquee-container {
+    @apply relative overflow-hidden w-full h-8 bg-red-500;
+  }
+  .marquee-content {
+    @apply absolute whitespace-nowrap animate-marquee;
   }
 }
 
@@ -275,3 +287,4 @@
   width: 1.25rem;
   height: 1.25rem;
 }
+
