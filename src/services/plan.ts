@@ -17,3 +17,8 @@ export const createPlan = async (data: IPlanToCreate) => {
   const response = await axios.post(`${urlApi}/createplan`, data);
   return response.data.response;
 };
+
+export const deletePlan = async (id: number) => {
+  const response = await axios.delete(`${urlApi}/${id}`);
+  return response.data.response;
+};

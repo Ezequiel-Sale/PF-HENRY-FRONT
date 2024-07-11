@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import Head from "next/head";
 import { CombinedProvider } from "@/components/ContextUserNotifications/ContextUserNotifications";
+import ChatBot from "@/components/ChatBot/ChaBot";
 
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
@@ -20,15 +20,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    return (
+  return (
     <html lang="en">
       <body
-        className={`${inter.className} bg-black z-10 ,md:max-w-screen-md overflow-x-hidden`}
+        className={`${inter.className} bg-black z-10 ,md:max-w-screen-md overflow-x-hidden relative`}
       >
         <CombinedProvider>
-            <Navbar />
-            {children}
-            <Footer />
+          <Navbar />
+          {children}
+          <Footer />
+          <ChatBot />
         </CombinedProvider>
       </body>
     </html>
