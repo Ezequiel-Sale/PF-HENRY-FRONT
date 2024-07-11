@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Pencil, Check, X, Info } from 'lucide-react';
 import { getUserData } from "../../../helper/petitions";
 import Swal from 'sweetalert2';
+import { userSession } from '@/types/profesorInterface';
 
 const MisDatos = () => {
   const [userData, setUserData] = useState({
@@ -21,9 +22,12 @@ const MisDatos = () => {
     metodoPago: '',
     contraseña: '••••••'
   });
+  console.log("Prueba de userData", userData)
 
   const [editingField, setEditingField] = useState<string | null>(null);
   const [tempValue, setTempValue] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const editableFields = ['email', 'telefono', 'contraseña'];
 
@@ -44,41 +48,60 @@ const MisDatos = () => {
     contraseña: 'Contraseña'
   };
 
+  const [userId, setUserId] = useState<string | null>(null);
+
   useEffect(() => {
-    const fetchUserData = async () => {
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        console.error('No se encontró el ID del usuario en el localStorage');
-        return;
-      }
-
-      try {
-        const data = await getUserData(userId);
-        if (data) {
-          setUserData({
-            nombre: data.name || '',
-            email: data.email || '',
-            telefono: data.phone || '',
-            dni: data.numero_dni || '',
-            fecha_de_nacimiento: data.fecha_nacimiento || '',
-            altura: data.altura || '',
-            peso: data.peso || '',
-            plan: data.plan ? data.plan.name : '',
-            profesor: data.profesor ? data.profesor.nombre : '',
-            horario: data.horario || [],
-            objetivo: data.objetivo || [],
-            nivelActividad: data.nivelActividad || '',
-            metodoPago: data.metodoPago || '',
-            contraseña: '••••••'
-          });
-        }
-      } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
-      }
-    };
-
-    fetchUserData();
+    const userSession = JSON.parse(localStorage.getItem("userSession") || "{}");
+    const id = userSession.id;
+    if (id) {
+      setUserId(id);
+    } else {
+      console.error("No se encontró el ID del usuario en el localStorage");
+      setError("No se pudo obtener el ID del usuario");
+    }
   }, []);
+  
+  useEffect(() => {
+    if (userId) {
+      fetchUserData();
+    }
+  }, [userId]);
+  
+  const fetchUserData = async () => {
+    if (!userId) {
+      console.error('El ID del usuario no está disponible');
+      setError("No se pudo obtener el ID del usuario");
+      setIsLoading(false);
+      return;
+    }
+  
+    try {
+      setIsLoading(true);
+      const data = await getUserData(userId);
+      console.log("Datos recibidos del backend:", data);
+      setUserData({
+        nombre: data.name || '',
+        email: data.email || '',
+        telefono: data.phone || '',
+        dni: data.numero_dni || '',
+        fecha_de_nacimiento: data.fecha_nacimiento || '',
+        altura: data.altura || '',
+        peso: data.peso || '',
+        plan: data.plan?.name || '',
+        profesor: data.profesor?.name || '',
+        horario: data.horario || [],
+        objetivo: data.objetivo || [],
+        nivelActividad: data.nivelActividad || '',
+        metodoPago: data.metodoPago || '',
+        contraseña: '••••••'
+      });
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+      setError("Error al cargar los datos del usuario");
+      setIsLoading(false);
+    }
+  };
 
   const handleEdit = (field: string, value: string) => {
     if (editableFields.includes(field)) {
@@ -102,7 +125,7 @@ const MisDatos = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('id');
     if (!userId) {
       console.error('No se encontró el ID del usuario en el localStorage');
       return;
@@ -128,7 +151,6 @@ const MisDatos = () => {
       const updatedUser = await response.json();
       console.log('Usuario actualizado:', updatedUser);
       
-      // Alerta de éxito
       await Swal.fire({
         title: '¡Éxito!',
         text: 'Los datos del usuario se han actualizado correctamente.',
@@ -140,7 +162,6 @@ const MisDatos = () => {
     } catch (error) {
       console.error('Error al actualizar los datos:', error);
       
-      // Alerta de error
       await Swal.fire({
         title: 'Error',
         text: 'Ha ocurrido un error al actualizar los datos del usuario.',
@@ -160,6 +181,14 @@ const MisDatos = () => {
       confirmButtonColor: '#3085d6'
     });
   };
+
+  if (isLoading) {
+    return <div>Cargando datos del usuario...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="p-8">

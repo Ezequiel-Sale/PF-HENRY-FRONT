@@ -53,11 +53,12 @@ const Login = () => {
       console.log("User session from localStorage:", JSON.parse(userSession));
     }
   }, []);
+  
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     try {
       const response = await loginUser(values);
       console.log("Login response:", response); // Verifica la respuesta de login
-      if (response && response.token && response.user) {
+      if (response && response.token && response.user && response.id) {
         const { token, user, id } = response;
         const userSession = { token, role: user, id };
         console.log("Setting user session:", userSession); // Log para verificar el valor que se está guardando
