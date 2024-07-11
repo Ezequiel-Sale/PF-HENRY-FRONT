@@ -208,15 +208,28 @@ export async function getUserData(userId: string) {
   }
 
   try {
-    const response = await fetch(`${apiUri}/users/${userId}`);
+    const response = await fetch(`http://localhost:3001/users/${userId}`);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`¡Error HTTP! estado: ${response.status}, mensaje: ${errorText}`);
     }
-    const userData = await response.json();
-    return userData;
+    return await response.json();
   } catch (error) {
     console.error('Error al obtener los datos del usuario:', error);
     throw error;
   }
 }
+
+//export const getUserData = async (userId) => {
+//   try {
+//     const response = await fetch(`/api/user/${userId}`);
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     }
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error('Error fetching user data:', error);
+//     return null;
+//   }
+// };

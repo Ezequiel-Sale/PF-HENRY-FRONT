@@ -88,7 +88,7 @@ const MisDatos = () => {
         altura: data.altura || '',
         peso: data.peso || '',
         plan: data.plan?.name || '',
-        profesor: data.profesor?.name || '',
+        profesor: data.profesor?.nombre || '',
         horario: data.horario || [],
         objetivo: data.objetivo || [],
         nivelActividad: data.nivelActividad || '',
