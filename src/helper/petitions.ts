@@ -169,12 +169,15 @@ export async function updateProfesorStatus(id: string) {
 
 export const crearAviso = async ({message}: Anuncios) => {
   try {
-      const response = await fetch(`${apiUri}/avisos/sendToAll`, {
+      const response = await fetch(`${apiUri}/avisos/enviarAtodos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({message}),
+        body: JSON.stringify({
+          message: message,
+          durationInHours: 24
+        }),
       });
       if (!response.ok) {
         throw new Error(`Error al enviar la notificación: ${response.statusText}`);

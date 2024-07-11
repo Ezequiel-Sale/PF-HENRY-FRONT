@@ -1,28 +1,29 @@
-"use client";
+"use client"
 import React, { createContext, useContext, useState, useEffect, FC } from "react";
 import io from "socket.io-client";
 import { userSession } from "@/types/profesorInterface";
+import axios from "axios";
 
 export interface Notification {
-  id: number;
+  id: string;
   message: string;
   read: boolean;
 }
 
 export interface Anuncio {
-  id: number;
+  id: string;
   message: string;
 }
 
 interface CombinedContextType {
   notifications: Notification[];
-  addNotification: (newNotification: Omit<Notification, "id" | "read">) => void;
-  markAsRead: (id: number) => void;
+  addNotification: (newNotification: Omit<Notification, 'id' | 'read'>) => void;
+  markAsRead: (id: string) => Promise<void>;
   unreadCount: number;
-  removeNotification: (id: number) => void;
+  removeNotification: (id: string) => void;
   userData: userSession | null;
   setUserData: (user: userSession | null) => void;
-  addAnuncio: (newAnuncio: Omit<Anuncio, "id">) => void;
+  addAnuncio: (newAnuncio: Omit<Anuncio, 'id'>) => void;
   anuncio: Anuncio | null;
 }
 
@@ -46,34 +47,40 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
       if (storedNotifications) {
         setNotifications(JSON.parse(storedNotifications));
       }
-      const storedAnuncio = localStorage.getItem('anuncio');
-      if (storedAnuncio) {
-        setAnuncio(JSON.parse(storedAnuncio));
-      }
-    } else {
-      console.warn('localStorage is not available');
+    //   const storedAnuncio = localStorage.getItem('anuncio');
+    //   if (storedAnuncio) {
+    //     setAnuncio(JSON.parse(storedAnuncio));
+    //   }
+    // } else {
+    //   console.warn('localStorage is not available');
+    // }
     }
   }, []);
 
-  const [user, setUser] = useState<userSession>();   
-  const userId = user?.id;
-  
+  const userId = userData?.id;
+
+  // Recuperar notificaciones del backend
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const userDataString = localStorage.getItem("userSession");
-      setUser(JSON.parse(userDataString!));
+    if (userId) {
+      axios.get(`http://localhost:3001/notifications/${userId}`)
+        .then(response => {
+          setNotifications(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching notifications:', error);
+        });
     }
-  }, []);
+  }, [userId]);
 
-  const addNotification = (newNotification: Omit<Notification, "id" | "read">) => {
+  const addNotification = (newNotification: Omit<Notification, 'id' | 'read'>) => {
     const notification: Notification = {
       ...newNotification,
-      id: Date.now(),
+      id: Date.now().toString(), // Convertimos el id a string
       read: false,
     };
     const updatedNotifications = [...notifications, notification];
     setNotifications(updatedNotifications);
-    localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
   };
 
   useEffect(() => {
@@ -87,8 +94,17 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
     socket.on('Tu profe ha subido tu rutina', (message: string) => {
       setNotifications(prevNotifications => [
         ...prevNotifications, 
-        { id: Date.now(), message, read: false }
+        { id: Date.now().toString(), message, read: false }
       ]);
+    });
+
+    socket.on('newAnnouncement', (message: string) => {
+      const anuncioObj: Anuncio = {
+        id: Date.now().toString(),
+        message,
+      };
+      setAnuncio(anuncioObj);
+      localStorage.setItem('anuncio', JSON.stringify(anuncioObj));
     });
 
     socket.on('connect', () => {
@@ -111,34 +127,53 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
   const addAnuncio = (newAnuncio: Omit<Anuncio, "id">) => {
     const anuncioObj: Anuncio = {
       ...newAnuncio,
-      id: Date.now(),
+      id: Date.now().toString(),
     };
     setAnuncio(anuncioObj);
     localStorage.setItem("anuncio", JSON.stringify(anuncioObj));
   };
 
-  const removeNotification = (id: number) => {
+  const removeNotification = (id: string) => {
     const updatedNotifications = notifications.filter(notification => notification.id !== id);
     setNotifications(updatedNotifications);
     localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
   };
 
-  const markAsRead = (id: number) => {
-    const updatedNotifications = notifications.map(notif =>
-      notif.id === id ? { ...notif, read: true } : notif
-    );
-    setNotifications(updatedNotifications);
-    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
+  const markAsRead = async (id: string) => {
+    try {
+      await axios.patch(`http://localhost:3001/notifications/${id}/read`);
+      const updatedNotifications = notifications.map(notif =>
+        notif.id === id ? { ...notif, read: true } : notif
+      );
+      setNotifications(updatedNotifications);
+      localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
   };
 
   const unreadCount = notifications.filter((notif) => !notif.read).length;
+
+  useEffect(() => {
+    if (userId) {
+      axios.get(`http://localhost:3001/avisos`)
+        .then(response => {
+          const lastAnuncio = response.data[response.data.length - 1];
+          setAnuncio(lastAnuncio);
+          localStorage.setItem('anuncio', JSON.stringify(lastAnuncio));
+        })
+        .catch(error => {
+          console.error('Error fetching announcements:', error);
+        });
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (anuncio) {
       const timeoutId = setTimeout(() => {
         setAnuncio(null);
         localStorage.removeItem("anuncio");
-      }, 5000);
+      }, 86400000);
       return () => clearTimeout(timeoutId);
     }
   }, [anuncio]);
