@@ -167,14 +167,17 @@ export async function updateProfesorStatus(id: string) {
   }
 }
 
-export const crearAnuncio = async ({message}: Anuncios) => {
+export const crearAviso = async ({message}: Anuncios) => {
   try {
-      const response = await fetch(`${apiUri}/notifications/sendToAll`, {
+      const response = await fetch(`${apiUri}/avisos/enviarAtodos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({message}),
+        body: JSON.stringify({
+          message: message,
+          durationInHours: 24
+        }),
       });
       if (!response.ok) {
         throw new Error(`Error al enviar la notificación: ${response.statusText}`);
@@ -205,7 +208,7 @@ export async function getUserData(userId: string) {
   }
 
   try {
-    const response = await fetch(`http://localhost:3001/users/${userId}`);
+    const response = await fetch(`${apiUri}/users/${userId}`);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`¡Error HTTP! estado: ${response.status}, mensaje: ${errorText}`);
