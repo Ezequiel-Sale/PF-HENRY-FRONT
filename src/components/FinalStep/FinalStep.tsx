@@ -331,7 +331,7 @@ const AdditionalInfoForm = () => {
                       >
                         <option value="">Selecciona un horario</option>
                         {horariosProfesor
-                          .filter((horario) => horario.cupos > 0)
+                          .filter((horario) => horario.cupos >= 0)
                           .map((horario) => (
                             <option
                               key={horario.horario}

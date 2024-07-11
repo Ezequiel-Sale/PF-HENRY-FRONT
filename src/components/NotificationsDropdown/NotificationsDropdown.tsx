@@ -1,53 +1,66 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Notification, useContextCombined } from '../ContextUserNotifications/ContextUserNotifications';
-// import { getNotifications } from '@/helper/petitions';
+import React from 'react';
+import { useContextCombined } from '../ContextUserNotifications/ContextUserNotifications';
 
-const NotificationsDropdown: FC = () => {
-  const { notifications, markAsRead, removeNotification } = useContextCombined();
-  const [Notificaciones, setNotificaciones] = useState<Notification[]>([]);
-
-
-  // useEffect(() => {
-  //   const fetchNotifications = async () => {
-  //     try {
-  //       const data = await getNotifications();
-  //       setNotificaciones(data);
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-
-  //   fetchNotifications();
-  // },[])
-
-  useEffect(() => {
-    notifications.forEach(notif => {
-      if (!notif.read) {
-        markAsRead(notif.id);
-      }
-    });
-  }, [notifications, markAsRead]);
+const NotificationsDropdown = () => {
+  const { 
+    notifications, 
+    markAsRead, 
+    removeNotification,
+    unreadCount 
+  } = useContextCombined();
 
   return (
-    <div className="notifications-dropdown bg-white rounded-md shadow-lg">
-      <h3 className="text-lg font-semibold p-3 border-b">Notificaciones</h3>
-      <div className="overflow-y-auto max-h-[300px]">
-        {notifications.length === 0 ? (
-          <p className="p-3 text-gray-500">No tienes notificaciones</p>
-        ) : (
-          notifications.map((notification: Notification) => (
-            <div 
-              key={notification.id} 
-              className={`notification relative p-3 border-b ${notification.read ? 'bg-gray-300' : 'bg-white'}`}
-            >
-                <button onClick={() => removeNotification(notification.id)} className="absolute top-0 right-3">x</button>
-              <p className="text-black font-sans">{notification.message}</p>
+    <div className="notifications-dropdown">
+      <h4>Notifications ({unreadCount})</h4>
+      <ul>
+        {notifications.map(notification => (
+          <li key={notification.id}>
+            <div>
+              <p>{notification.message}</p>
+              {!notification.read && (
+                <button onClick={() => markAsRead(notification.id)}>
+                  Mark as Read
+                </button>
+              )}
+              <button onClick={() => removeNotification(notification.id)}>
+                Remove
+              </button>
             </div>
-          ))
-        )}
-      </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
 export default NotificationsDropdown;
+
+
+  // useEffect(() => {
+  //   if (!userData?.id) return;
+
+  //   const socket = io('http://localhost:3001', {
+  //     query: { userId: userData.id },
+  //     withCredentials: true,
+  //   });
+
+  //   socket.on('Tu profe ha subido tu rutina', (message: string) => {
+  //     addNotification({ message });
+  //   });
+
+  //   socket.on('connect', () => {
+  //     console.log('Connected to WebSocket server notifications');
+  //   });
+
+  //   socket.on('disconnect', () => {
+  //     console.log('Disconnected from WebSocket server');
+  //   });
+
+  //   socket.on('error', (error: any) => {
+  //     console.error('WebSocket error:', error);
+  //   });
+
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, [userData?.id, addNotification]);
