@@ -4,29 +4,6 @@ import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
 const apiUri = process.env.NEXT_PUBLIC_API
 
-// function getTokenFromLocalStorage() {
-//   if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-//     const userSessionString = localStorage.getItem('userSession');
-
-//     if (userSessionString) {
-//       try {
-//         return JSON.parse(userSessionString);
-//       } catch (error) {
-//         console.error('Error parsing user session from localStorage:', error);
-//       }
-//     }
-//   } else {
-//     console.warn('localStorage is not available peticiones');
-//   }
-// return undefined;
-// }
-// const token = getTokenFromLocalStorage();
-// console.log("token petitions", token);
-// if (token) {
-//   console.log('Token obtenido:', token);
-// } else {
-//   console.log('No se encontró un token válido peticiones');
-// }
 export const registerUser = async (user: IFormValues) => {
     try {
       const response = await fetch(`http://localhost:3001/users/register`, {
