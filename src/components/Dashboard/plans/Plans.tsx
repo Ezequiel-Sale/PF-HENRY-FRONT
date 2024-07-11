@@ -11,12 +11,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createPlan, getPlans } from "@/services/plan";
+import { createPlan, deletePlan, getPlans } from "@/services/plan";
 import { IPlan } from "@/types/FinalStepInterfaces";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import { FaTrashAlt } from "react-icons/fa";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -89,6 +90,33 @@ const PlansForm = () => {
       }
     });
     setDisponiblePlans(newDisponiblePlans);
+  };
+
+  const handleOnDeletePlan = async (planId: number) => {
+    Swal.fire({
+      title: "¿Estas seguro?",
+      text: "No podrás revertir esta acción.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, borrar",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deletePlan(planId);
+          plans.splice(
+            plans.findIndex((plan) => plan.id === planId),
+            1
+          );
+          Swal.fire("Borrado", "El plan ha sido borrado", "success");
+          fecthPlans();
+        } catch (error) {
+          Swal.fire("Error", "No se ha podido borrar el plan", "error");
+        }
+      }
+    });
   };
 
   return (
@@ -191,8 +219,12 @@ const PlansForm = () => {
         <div className="flex gap-4">
           {plans.map((plan) => (
             <Card key={plan.id}>
-              <CardHeader>
+              <CardHeader className="relative">
                 <CardTitle>{plan.name}</CardTitle>
+                <FaTrashAlt
+                  className="text-red-500 text-2xl absolute right-0 top-0 hover:text-red-700 hover:cursor-pointer"
+                  onClick={() => handleOnDeletePlan(plan.id)}
+                />
               </CardHeader>
               <CardContent>
                 <p>Precio: ${plan.price}</p>
