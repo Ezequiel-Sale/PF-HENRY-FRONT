@@ -200,14 +200,20 @@ export const crearAnuncio = async ({message}: Anuncios) => {
 // }
 
 export async function getUserData(userId: string) {
+  if (!userId) {
+    throw new Error('El ID del usuario es undefined');
+  }
+
   try {
     const response = await fetch(`http://localhost:3001/users/${userId}`);
     if (!response.ok) {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`¡Error HTTP! estado: ${response.status}, mensaje: ${errorText}`);
     }
     const userData = await response.json();
     return userData;
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error('Error al obtener los datos del usuario:', error);
+    throw error;
   }
 }
