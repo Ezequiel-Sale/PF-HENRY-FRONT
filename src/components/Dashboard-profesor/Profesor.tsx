@@ -13,52 +13,11 @@ import Miercoles from './Miercoles';
 import Jueves from './Jueves';
 import Viernes from './Viernes';
 
-export const arrayUser = [
-  {
-    id: 1,
-    name: "Ezequiel",
-    horario: "08:00 - 10:00",
-    peso: "80kg",
-  },
-  {
-    id: 2,
-    name: "Jorge",
-    horario: "08:00 - 10:00",
-    peso: "80kg",
-  },
-  {
-    id: 3,
-    name: "Jorge",
-    horario: "08:00 - 10:00",
-    peso: "80kg",
-  },
-];
-export const arrayUser2 = [
-  {
-    id: 1,
-    name: "Jorge",
-    horario: "10:00 - 12:00",
-    peso: "80kg",
-  },
-  {
-    id: 2,
-    name: "Juan",
-    horario: "10:00 - 12:00",
-    peso: "80kg",
-  },
-  {
-    id: 3,
-    name: "Julieta",
-    horario: "10:00 - 12:00",
-    peso: "80kg",
-  },
-];
-
 const Profesor = () => {
   const [currentDay, setCurrentDay] = useState('');
 
   useEffect(() => {
-    const daysOfWeek = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
+    const daysOfWeek = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sabado'];
     const today = new Date();
     const currentDayName = daysOfWeek[today.getDay()];
     setCurrentDay(currentDayName);
@@ -78,13 +37,13 @@ const Profesor = () => {
           <TabsList className="w-[80vw] flex justify-around">
             <TabsTrigger value="lunes">Lunes</TabsTrigger>
             <TabsTrigger value="martes">Martes</TabsTrigger>
-            <TabsTrigger value="miercoles">Miércoles</TabsTrigger>
+            <TabsTrigger value="miércoles">Miércoles</TabsTrigger>
             <TabsTrigger value="jueves">Jueves</TabsTrigger>
             <TabsTrigger value="viernes">Viernes</TabsTrigger>
           </TabsList>
           <TabsContent value="lunes"><Lunes /></TabsContent>
           <TabsContent value="martes"><Martes /></TabsContent>
-          <TabsContent value="miercoles"><Miercoles /></TabsContent>
+          <TabsContent value="miércoles"><Miercoles /></TabsContent>
           <TabsContent value="jueves"><Jueves /></TabsContent>
           <TabsContent value="viernes"><Viernes /></TabsContent>
         </Tabs>

@@ -3,7 +3,20 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 import { getUsers } from "@/helper/petitions";
 import ButtonFile from "./ButtonFile";
-import { User } from "@/app/dashboard/users/page";
+
+interface User {
+  id: string;
+  name: string;
+  phone: string;
+  fecha_nacimiento: string;
+  peso: string;
+  altura: string;
+  objetivo: string;
+  horario: string;
+  profesor: {
+    dia: string[];
+  };
+}
 
 const Lunes = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -14,13 +27,12 @@ const Lunes = () => {
     let edad = hoy.getFullYear() - nacimiento.getFullYear();
     const mes = hoy.getMonth() - nacimiento.getMonth();
 
-    // Ajustar la edad si el cumpleaños no ha ocurrido aún este año
     if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
-        edad--;
+      edad--;
     }
 
     return edad;
-}
+  }
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -30,21 +42,30 @@ const Lunes = () => {
     fetchUsers();
   }, []);
 
+  const timeSlots = [
+    "08:00 a 10:00",
+    "10:00 a 12:00",
+    "12:00 a 14:00",
+    "14:00 a 16:00",
+    "16:00 a 18:00",
+    "18:00 a 20:00",
+    "20:00 a 22:00",
+    "22:00 a 00:00"
+  ];
+
+  const getUsersForTimeSlot = (slot: string) => {
+    return users.filter(user => 
+      user.horario === slot && 
+      user.profesor.dia.includes('Lunes')
+    );
+  };
+
   return (
     <div className="px-2 flex flex-col items-center">
-      {[
-        { time: "08:00 - 10:00am" },
-        { time: "10:00 - 12:00pm" },
-        { time: "12:00 - 14:00pm" },
-        { time: "14:00 - 16:00pm" },
-        { time: "16:00 - 18:00pm" },
-        { time: "18:00 - 20:00pm" },
-        { time: "20:00 - 22:00pm" },
-        { time: "22:00 - 00:00am" },
-      ].map((slot, index) => (
+      {timeSlots.map((slot, index) => (
         <Accordion key={index} type="single" collapsible className="w-full max-w-6xl my-2">
           <AccordionItem value={`item-${index}`}>
-            <AccordionTrigger className="text-center">{slot.time}</AccordionTrigger>
+            <AccordionTrigger className="text-center">{slot}</AccordionTrigger>
             <AccordionContent>
               <TabsContent value="lunes">
                 <TabsList className="flex justify-around mb-4">
@@ -56,22 +77,28 @@ const Lunes = () => {
                   <div className="w-20 text-center font-bold">Objetivo</div>
                   <div className="w-20 text-center font-bold">Rutina</div>
                 </TabsList>
-                {users.map((user) => (
-                  <div
-                    key={user.id}
-                    className="flex justify-around items-center bg-black my-1 py-2"
-                  >
-                    <div className="w-20 text-center text-white">{user.name}</div>
-                    <div className="w-20 text-center text-white">{user.phone}</div>
-                    <div className="w-20 text-center text-white">{calcularEdad(user.fecha_nacimiento)}</div>
-                    <div className="w-20 text-center text-white">{user.peso}</div>
-                    <div className="w-20 text-center text-white">{user.altura}</div>
-                    <div className="w-20 text-center text-white">{user.objetivo}</div>
-                    <div className="w-20 text-center">
-                      <ButtonFile id={user.id.toString()} />
+                {getUsersForTimeSlot(slot).length > 0 ? (
+                  getUsersForTimeSlot(slot).map((user) => (
+                    <div
+                      key={user.id}
+                      className="flex justify-around items-center bg-black my-1 py-2"
+                    >
+                      <div className="w-20 text-center text-white">{user.name}</div>
+                      <div className="w-20 text-center text-white">{user.phone}</div>
+                      <div className="w-20 text-center text-white">{calcularEdad(user.fecha_nacimiento)}</div>
+                      <div className="w-20 text-center text-white">{user.peso}</div>
+                      <div className="w-20 text-center text-white">{user.altura}</div>
+                      <div className="w-20 text-center text-white">{user.objetivo}</div>
+                      <div className="w-20 text-center">
+                        <ButtonFile id={user.id} />
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="text-center py-4 text-gray-500">
+                    No hay usuarios programados para este horario.
                   </div>
-                ))}
+                )}
               </TabsContent>
             </AccordionContent>
           </AccordionItem>
