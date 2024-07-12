@@ -36,7 +36,7 @@ const UserSidebar = () => {
                 </CommandItem>
                 <CommandItem>
                     <CreditCard className='mr-2 h-4 w-4' />
-                    <span>Pagos</span>
+                    <Link href="/userdashboard/pagos"><span>Pagos</span></Link>
                 </CommandItem>
                 <CommandItem>
                     <LineChart className='mr-2 h-4 w-4' />
