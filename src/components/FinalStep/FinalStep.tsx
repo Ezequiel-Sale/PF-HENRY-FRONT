@@ -92,7 +92,7 @@ const AdditionalInfoForm = () => {
           title: "¡Usuario confirmado!",
           text: "Recuerda coordinar el pago con el administrador",
         });
-        router.push("/userdashboard");
+        router.push("/login");
       } else {
         Swal.fire({
           icon: "success",
@@ -114,16 +114,16 @@ const AdditionalInfoForm = () => {
   }
 
   useEffect(() => {
-    initMercadoPago("TEST-35ca7b57-da90-412b-b501-03fb27a3dcd8", {
+    initMercadoPago("APP_USR-6388226938088227-070410-84089c51e198a5281fed512e8c8f653e-1884641309", {
       locale: "es-AR",
     });
     fetchProfessors();
-    const token = window.localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    }
-    const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
-    setUser(decodedToken);
+    const token = window.localStorage.getItem("userId");
+    // if (!token) {
+    //   router.push("/login");
+    // }
+    // const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
+    // setUser(decodedToken);
   }, []);
 
   useEffect(() => {
@@ -186,6 +186,7 @@ const AdditionalInfoForm = () => {
       }
 
       const updatedUser = await response.json();
+      setUser(updatedUser);
       console.log("Usuario actualizado:", updatedUser);
       setIsOpen(true);
     } catch (error) {
