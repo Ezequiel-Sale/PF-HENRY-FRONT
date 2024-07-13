@@ -18,7 +18,7 @@ interface User {
   };
 }
 
-const Viernes = () => {
+const Sabado = () => {
   const [users, setUsers] = useState<User[]>([]);
 
   function calcularEdad(fechaNacimiento: string): number {
@@ -56,7 +56,7 @@ const Viernes = () => {
   const getUsersForTimeSlot = (slot: string) => {
     return users.filter(user => 
       user.horario === slot && 
-      user.profesor.dia.includes('Viernes')
+      user.profesor.dia.includes('Sabado')
     );
   };
 
@@ -67,7 +67,7 @@ const Viernes = () => {
           <AccordionItem value={`item-${index}`}>
             <AccordionTrigger className="text-center">{slot}</AccordionTrigger>
             <AccordionContent>
-              <TabsContent value="viernes">
+              <TabsContent value="sabado">
                 <TabsList className="flex justify-around mb-4">
                   <div className="w-20 text-center font-bold">Nombre</div>
                   <div className="w-20 text-center font-bold">Teléfono</div>
@@ -108,4 +108,4 @@ const Viernes = () => {
   );
 };
 
-export default Viernes;
+export default Sabado;
