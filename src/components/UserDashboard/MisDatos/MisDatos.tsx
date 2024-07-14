@@ -1,7 +1,9 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Pencil, Check, X } from 'lucide-react';
+import { Pencil, Check, X, Info } from 'lucide-react';
 import { getUserData } from "../../../helper/petitions";
+import Swal from 'sweetalert2';
+import { userSession } from '@/types/profesorInterface';
 
 const MisDatos = () => {
   const [userData, setUserData] = useState({
@@ -20,47 +22,86 @@ const MisDatos = () => {
     metodoPago: '',
     contraseña: '••••••'
   });
+  console.log("Prueba de userData", userData)
 
   const [editingField, setEditingField] = useState<string | null>(null);
   const [tempValue, setTempValue] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const editableFields = ['email', 'telefono', 'contraseña'];
 
+  const fieldLabels = {
+    nombre: 'Nombre',
+    email: 'Email',
+    telefono: 'Teléfono',
+    dni: 'DNI',
+    fecha_de_nacimiento: 'Fecha de nacimiento',
+    altura: 'Altura',
+    peso: 'Peso',
+    plan: 'Plan',
+    profesor: 'Profesor',
+    horario: 'Horario',
+    objetivo: 'Objetivo',
+    nivelActividad: 'Nivel de actividad',
+    metodoPago: 'Método de pago',
+    contraseña: 'Contraseña'
+  };
+
+  const [userId, setUserId] = useState<string | null>(null);
+
   useEffect(() => {
-    const fetchUserData = async () => {
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        console.error('No se encontró el ID del usuario en el localStorage');
-        return;
-      }
-
-      try {
-        const data = await getUserData(userId);
-        if (data) {
-          setUserData({
-            nombre: data.name || '',
-            email: data.email || '',
-            telefono: data.phone || '',
-            dni: data.numero_dni || '',
-            fecha_de_nacimiento: data.fecha_nacimiento || '',
-            altura: data.altura || '',
-            peso: data.peso || '',
-            plan: data.plan ? data.plan.nombre : '',
-            profesor: data.profesor ? data.profesor.nombre : '',
-            horario: data.horario || [],
-            objetivo: data.objetivo || [],
-            nivelActividad: data.nivelActividad || '',
-            metodoPago: data.metodoPago || '',
-            contraseña: '••••••'
-          });
-        }
-      } catch (error) {
-        console.error('Error al obtener los datos del usuario:', error);
-      }
-    };
-
-    fetchUserData();
+    const userSession = JSON.parse(localStorage.getItem("userSession") || "{}");
+    const id = userSession.id;
+    if (id) {
+      setUserId(id);
+    } else {
+      console.error("No se encontró el ID del usuario en el localStorage");
+      setError("No se pudo obtener el ID del usuario");
+    }
   }, []);
+  
+  useEffect(() => {
+    if (userId) {
+      fetchUserData();
+    }
+  }, [userId]);
+  
+  const fetchUserData = async () => {
+    if (!userId) {
+      console.error('El ID del usuario no está disponible');
+      setError("No se pudo obtener el ID del usuario");
+      setIsLoading(false);
+      return;
+    }
+  
+    try {
+      setIsLoading(true);
+      const data = await getUserData(userId);
+      console.log("Datos recibidos del backend:", data);
+      setUserData({
+        nombre: data.name || '',
+        email: data.email || '',
+        telefono: data.phone || '',
+        dni: data.numero_dni || '',
+        fecha_de_nacimiento: data.fecha_nacimiento || '',
+        altura: data.altura || '',
+        peso: data.peso || '',
+        plan: data.plan?.name || '',
+        profesor: data.profesor?.nombre || '',
+        horario: data.horario || [],
+        objetivo: data.objetivo || [],
+        nivelActividad: data.nivelActividad || '',
+        metodoPago: data.metodoPago || '',
+        contraseña: '••••••'
+      });
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+      setError("Error al cargar los datos del usuario");
+      setIsLoading(false);
+    }
+  };
 
   const handleEdit = (field: string, value: string) => {
     if (editableFields.includes(field)) {
@@ -84,12 +125,12 @@ const MisDatos = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const userId = localStorage.getItem('userId');
+    const userId = localStorage.getItem('id');
     if (!userId) {
       console.error('No se encontró el ID del usuario en el localStorage');
       return;
     }
-
+  
     try {
       const response = await fetch(`http://localhost:3001/users/${userId}`, {
         method: 'PUT',
@@ -102,19 +143,52 @@ const MisDatos = () => {
           password: userData.contraseña !== '••••••' ? userData.contraseña : undefined
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Error al actualizar la información del usuario');
       }
-
+  
       const updatedUser = await response.json();
       console.log('Usuario actualizado:', updatedUser);
-      // Aquí podrías mostrar un mensaje de éxito al usuario
+      
+      await Swal.fire({
+        title: '¡Éxito!',
+        text: 'Los datos del usuario se han actualizado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#28a745'
+      });
+  
     } catch (error) {
       console.error('Error al actualizar los datos:', error);
-      // Aquí podrías mostrar un mensaje de error al usuario
+      
+      await Swal.fire({
+        title: 'Error',
+        text: 'Ha ocurrido un error al actualizar los datos del usuario.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#dc3545'
+      });
     }
   };
+
+  const showInfoMessage = () => {
+    Swal.fire({
+      title: 'Información',
+      text: 'Para modificar este campo comuníquese con el administrador',
+      icon: 'info',
+      confirmButtonText: 'Entendido',
+      confirmButtonColor: '#3085d6'
+    });
+  };
+
+  if (isLoading) {
+    return <div>Cargando datos del usuario...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="p-8">
@@ -125,7 +199,7 @@ const MisDatos = () => {
             {Object.entries(userData).map(([key, value]) => (
               <tr key={key} className="border-b border-gray-200 hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                  {fieldLabels[key as keyof typeof fieldLabels]}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {editingField === key ? (
@@ -154,13 +228,21 @@ const MisDatos = () => {
                   ) : (
                     <div className="flex items-center justify-between">
                       <span>{Array.isArray(value) ? value.join(', ') : value}</span>
-                      {editableFields.includes(key) && (
+                      {editableFields.includes(key) ? (
                         <button
                           type="button"
                           onClick={() => handleEdit(key, Array.isArray(value) ? value.join(', ') : value)}
                           className="ml-2 text-gray-400 hover:text-gray-600"
                         >
                           <Pencil size={18} />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={showInfoMessage}
+                          className="ml-2 text-blue-500 hover:text-blue-600"
+                        >
+                          <Info size={18} />
                         </button>
                       )}
                     </div>

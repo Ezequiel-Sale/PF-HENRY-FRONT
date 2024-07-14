@@ -2,31 +2,9 @@ import { Anuncios } from "@/components/Dashboard/Anuncios/Anuncios";
 import { ICredential } from "@/types/credentialInterface";
 import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
+import Swal from "sweetalert2";
 const apiUri = process.env.NEXT_PUBLIC_API
 
-// function getTokenFromLocalStorage() {
-//   if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-//     const userSessionString = localStorage.getItem('userSession');
-
-//     if (userSessionString) {
-//       try {
-//         return JSON.parse(userSessionString);
-//       } catch (error) {
-//         console.error('Error parsing user session from localStorage:', error);
-//       }
-//     }
-//   } else {
-//     console.warn('localStorage is not available peticiones');
-//   }
-// return undefined;
-// }
-// const token = getTokenFromLocalStorage();
-// console.log("token petitions", token);
-// if (token) {
-//   console.log('Token obtenido:', token);
-// } else {
-//   console.log('No se encontró un token válido peticiones');
-// }
 export const registerUser = async (user: IFormValues) => {
     try {
       const response = await fetch(`http://localhost:3001/users/register`, {
@@ -82,8 +60,12 @@ export async function getUsers() {
   
       const createdProfesor = await response.json();
       return createdProfesor;
-    } catch (error) {
-      console.error('Error en la creación del profesor:', error);
+    } catch (error: any) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error.message,
+      })
       throw error;
     }
   }
@@ -146,7 +128,6 @@ export async function loginUser({email, password}: ICredential) {
 }
 
 export async function updateProfesorStatus(id: string) {
-  console.log("Hola")
   try {
     const response = await fetch(`http://localhost:3001/profesor/${id}`, {
       method: 'PUT',
@@ -169,12 +150,15 @@ export async function updateProfesorStatus(id: string) {
 
 export const crearAviso = async ({message}: Anuncios) => {
   try {
-      const response = await fetch(`${apiUri}/notifications/sendToAll`, {
+      const response = await fetch(`${apiUri}/avisos/enviarAtodos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({message}),
+        body: JSON.stringify({
+          message: message,
+          durationInHours: 24
+        }),
       });
       if (!response.ok) {
         throw new Error(`Error al enviar la notificación: ${response.statusText}`);
@@ -200,14 +184,33 @@ export const crearAviso = async ({message}: Anuncios) => {
 // }
 
 export async function getUserData(userId: string) {
+  if (!userId) {
+    throw new Error('El ID del usuario es undefined');
+  }
+
   try {
-    const response = await fetch(`${apiUri}/users/${userId}`);
+    const response = await fetch(`http://localhost:3001/users/${userId}`);
     if (!response.ok) {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      throw new Error(`¡Error HTTP! estado: ${response.status}, mensaje: ${errorText}`);
     }
-    const userData = await response.json();
-    return userData;
+    return await response.json();
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error('Error al obtener los datos del usuario:', error);
+    throw error;
   }
 }
+
+//export const getUserData = async (userId) => {
+//   try {
+//     const response = await fetch(`/api/user/${userId}`);
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     }
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     console.error('Error fetching user data:', error);
+//     return null;
+//   }
+// };
