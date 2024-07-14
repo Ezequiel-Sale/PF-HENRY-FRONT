@@ -2,6 +2,7 @@ import { Anuncios } from "@/components/Dashboard/Anuncios/Anuncios";
 import { ICredential } from "@/types/credentialInterface";
 import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
+import Swal from "sweetalert2";
 const apiUri = process.env.NEXT_PUBLIC_API
 
 export const registerUser = async (user: IFormValues) => {
@@ -59,8 +60,12 @@ export async function getUsers() {
   
       const createdProfesor = await response.json();
       return createdProfesor;
-    } catch (error) {
-      console.error('Error en la creación del profesor:', error);
+    } catch (error: any) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error.message,
+      })
       throw error;
     }
   }
@@ -123,7 +128,6 @@ export async function loginUser({email, password}: ICredential) {
 }
 
 export async function updateProfesorStatus(id: string) {
-  console.log("Hola")
   try {
     const response = await fetch(`http://localhost:3001/profesor/${id}`, {
       method: 'PUT',

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
+import { TabsContent, TabsList } from "@/components/ui/tabs";
 import { getUsers } from "@/helper/petitions";
 import ButtonFile from "./ButtonFile";
 
@@ -13,12 +13,17 @@ interface User {
   altura: string;
   objetivo: string;
   horario: string;
+  diasSeleccionados: string; // Assuming this is a string representation of days like '{"Lunes","Martes","Miercoles"}'
   profesor: {
-    dia: string[];
+    id: string;
   };
 }
 
-const Lunes = () => {
+interface LunesProps {
+  profesorId: string;
+}
+
+const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
   const [users, setUsers] = useState<User[]>([]);
 
   function calcularEdad(fechaNacimiento: string): number {
@@ -56,7 +61,8 @@ const Lunes = () => {
   const getUsersForTimeSlot = (slot: string) => {
     return users.filter(user => 
       user.horario === slot && 
-      user.profesor.dia.includes('Lunes')
+      user.profesor.id === profesorId && 
+      user.diasSeleccionados.includes('Lunes') // Check user's selected days
     );
   };
 

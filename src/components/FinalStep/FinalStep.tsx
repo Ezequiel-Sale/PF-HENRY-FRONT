@@ -400,7 +400,7 @@ const AdditionalInfoForm = () => {
             </div>
             <div className="flex justify-between">
               <Link
-                href="/previous-step"
+                href="/register"
                 className="text-red-500 hover:text-red-700"
               >
                 Volver
