@@ -43,18 +43,18 @@ const Login = () => {
   };
 
   // Hook para manejar la redirección basada en el rol
-  useEffect(() => {
-    if (userRole) {
-      console.log("User role updated:", userRole); // Log para verificar cuando userRole cambia
-      if (userRole === "admin") {
-        router.push("/dashboard");
-      } else if (userRole === "profesor") {
-        router.push("/dashboard-profesor");
-      } else if (userRole === "user") {
-        router.push("/userdashboard");
-      }
-    }
-  }, [userRole, router]);
+  // useEffect(() => {
+  //   if (userRole) {
+  //     console.log("User role updated:", userRole); // Log para verificar cuando userRole cambia
+  //     if (userRole === "admin") {
+  //       router.push("/dashboard");
+  //     } else if (userRole === "profesor") {
+  //       router.push("/dashboard-profesor");
+  //     } else if (userRole === "user") {
+  //       router.push("/userdashboard");
+  //     }
+  //   }
+  // }, [userRole, router]);
 
   useEffect(() => {
     const userSession = localStorage.getItem("userSession");
@@ -72,6 +72,8 @@ const Login = () => {
         const userSession = { token, role: user, id };
         console.log("Setting user session:", userSession); // Log para verificar el valor que se está guardando
         localStorage.setItem("userSession", JSON.stringify(userSession));
+        // Configurar la cookie
+        document.cookie = `userSession=${token}; path=/; max-age=86400; SameSite=Strict;`;
         Swal.fire({
           position: "center",
           icon: "success",
@@ -81,6 +83,13 @@ const Login = () => {
         });
         setUserRole(user); // Establecer el rol del usuario para la redirección
         console.log("Setting user role:", user); // Verifica que el rol se está estableciendo
+        if (user === "admin") {
+          router.push("/dashboard");
+        } else if (user === "profesor") {
+          router.push("/dashboard-profesor");
+        } else if (user === "user") {
+          router.push("/userdashboard");
+        }
       } else {
         console.error("Invalid response structure:", response);
         Swal.fire({

@@ -1,24 +1,19 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import Lunes from "./Lunes";
 import Martes from './Martes';
 import Miercoles from './Miercoles';
 import Jueves from './Jueves';
 import Viernes from './Viernes';
+import Sabado from './Sabado';
+import Domingo from './Domingo';
 import { userSession } from '@/types/profesorInterface';
 import { usePathname } from 'next/navigation';
 
 interface ProfesorProps {
   id: string;
   nombre: string;
-  // Agrega aquí otras propiedades que pueda tener un profesor
 }
 
 const Profesor = () => {
@@ -52,7 +47,6 @@ const Profesor = () => {
         const profesoresData: ProfesorProps[] = await response.json();
         setProfesores(profesoresData);
         
-        // Buscar el profesor correspondiente al ID del login
         if (loginData && loginData.id) {
           const profesorEncontrado = profesoresData.find(prof => prof.id === loginData.id);
           if (profesorEncontrado) {
@@ -70,14 +64,14 @@ const Profesor = () => {
   }, [loginData]);
 
   useEffect(() => {
-    const daysOfWeek = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sabado'];
+    const daysOfWeek = ['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'];
     const today = new Date();
     const currentDayName = daysOfWeek[today.getDay()];
     setCurrentDay(currentDayName);
   }, []);
 
   if (!currentDay || !profesorActual) {
-    return <p>Cargando...</p>; 
+    return <p className="text-3xl font-bold text-center text-white my-[20vh]">Cargando...</p>; 
   }
 
   return (
@@ -90,15 +84,19 @@ const Profesor = () => {
           <TabsList className="w-[80vw] flex justify-around">
             <TabsTrigger value="lunes">Lunes</TabsTrigger>
             <TabsTrigger value="martes">Martes</TabsTrigger>
-            <TabsTrigger value="miércoles">Miércoles</TabsTrigger>
+            <TabsTrigger value="miercoles">Miércoles</TabsTrigger>
             <TabsTrigger value="jueves">Jueves</TabsTrigger>
             <TabsTrigger value="viernes">Viernes</TabsTrigger>
+            <TabsTrigger value="sabado">Sábado</TabsTrigger>
+            <TabsTrigger value="domingo">Domingo</TabsTrigger>
           </TabsList>
-          <TabsContent value="lunes"><Lunes /></TabsContent>
-          <TabsContent value="martes"><Martes /></TabsContent>
-          <TabsContent value="miércoles"><Miercoles /></TabsContent>
-          <TabsContent value="jueves"><Jueves /></TabsContent>
-          <TabsContent value="viernes"><Viernes /></TabsContent>
+          <TabsContent value="lunes"><Lunes profesorId={profesorActual.id} /></TabsContent>
+          <TabsContent value="martes"><Martes profesorId={profesorActual.id} /></TabsContent>
+          <TabsContent value="miercoles"><Miercoles profesorId={profesorActual.id} /></TabsContent>
+          <TabsContent value="jueves"><Jueves profesorId={profesorActual.id} /></TabsContent>
+          <TabsContent value="viernes"><Viernes profesorId={profesorActual.id} /></TabsContent>
+          <TabsContent value="sabado"><Sabado profesorId={profesorActual.id} /></TabsContent>
+          <TabsContent value="domingo"><Domingo profesorId={profesorActual.id} /></TabsContent>
         </Tabs>
       </div>
     </>

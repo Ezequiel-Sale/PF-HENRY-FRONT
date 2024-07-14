@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
+import { TabsContent, TabsList } from "@/components/ui/tabs";
 import { getUsers } from "@/helper/petitions";
 import ButtonFile from "./ButtonFile";
 
@@ -13,13 +13,19 @@ interface User {
   altura: string;
   objetivo: string;
   horario: string;
+  diasSeleccionados: string;
   profesor: {
-    dia: string[];
+    id: string;
   };
 }
 
-const Miercoles = () => {
+interface MiercolesProps {
+  profesorId: string;
+}
+
+const Miercoles: React.FC<MiercolesProps> = ({ profesorId }) => {
   const [users, setUsers] = useState<User[]>([]);
+  console.log(users)
 
   function calcularEdad(fechaNacimiento: string): number {
     const hoy = new Date();
@@ -56,7 +62,8 @@ const Miercoles = () => {
   const getUsersForTimeSlot = (slot: string) => {
     return users.filter(user => 
       user.horario === slot && 
-      user.profesor.dia.includes('Miércoles')
+      user.profesor.id === profesorId && 
+      user.diasSeleccionados.includes('Miercoles')
     );
   };
 
@@ -67,7 +74,7 @@ const Miercoles = () => {
           <AccordionItem value={`item-${index}`}>
             <AccordionTrigger className="text-center">{slot}</AccordionTrigger>
             <AccordionContent>
-              <TabsContent value="miércoles">
+              <TabsContent value="miercoles">
                 <TabsList className="flex justify-around mb-4">
                   <div className="w-20 text-center font-bold">Nombre</div>
                   <div className="w-20 text-center font-bold">Teléfono</div>

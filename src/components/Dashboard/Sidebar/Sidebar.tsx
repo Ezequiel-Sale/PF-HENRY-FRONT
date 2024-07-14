@@ -76,6 +76,12 @@ const Sidebar = () => {
               <span>Gestionar planes</span>
             </Link>
           </CommandItem>
+          <CommandItem>
+            <CreditCard className="mr-2 h4 w4" />
+            <Link href="/dashboard/registrarpago">
+            <span>Registrar Pago</span>
+            </Link>
+          </CommandItem>
         </CommandGroup>
       </CommandList>
     </Command>
