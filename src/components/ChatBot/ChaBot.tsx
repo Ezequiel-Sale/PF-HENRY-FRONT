@@ -92,7 +92,10 @@ const ChatBot = () => {
                     className="flex gap-2 my-4 min-w-full text-gray-600 text-sm flex-1 text-right px-4"
                     key={index}
                   >
-                    <p className="leading-relaxed bg-gray-300 text-righ  h-full  w-full p-2 rounded-md">
+                    <p
+                      className="leading-relaxed bg-gray-300 text-right h-full w-full p-2 rounded-md"
+                      style={{ whiteSpace: "pre-wrap" }}
+                    >
                       {message.content}
                     </p>
                   </div>
@@ -118,7 +121,10 @@ const ChatBot = () => {
                         </svg>
                       </div>
                     </span>
-                    <p className="leading-relaxed">
+                    <p
+                      className="leading-relaxed"
+                      style={{ whiteSpace: "pre-wrap" }}
+                    >
                       <span className="block font-bold text-gray-700">AI </span>
                       {message.content}
                     </p>
