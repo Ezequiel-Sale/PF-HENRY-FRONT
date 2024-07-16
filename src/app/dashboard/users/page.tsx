@@ -21,6 +21,8 @@ const UsersPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ type: '', content: '' });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -81,6 +83,13 @@ const UsersPage = () => {
     return isActive ? 'Activo' : 'Inactivo';
   };
 
+  const filteredUsers = users.filter(user => {
+    const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          user.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = filterStatus === 'all' || (filterStatus === 'active' && user.estado) || (filterStatus === 'inactive' && !user.estado);
+    return matchesSearch && matchesStatus;
+  });
+
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -94,49 +103,74 @@ const UsersPage = () => {
             {message.content}
           </div>
         )}
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs sm:text-sm text-left text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-100 rounded-t-lg">
-              <tr>
-                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Nombre</th>
-                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Email</th>
-                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Fecha de Nac.</th>
-                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Teléfono</th>
-                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">DNI</th>
-                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Estado</th>
-                <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Modificar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map(user => (
-                <tr key={user.id} className="bg-white border-b hover:bg-gray-50 transition duration-150 ease-in-out">
-                  <td className="px-2 py-2 lg:px-4 lg:py-3 font-medium text-gray-900">{user.name}</td>
-                  <td className="px-2 py-2 lg:px-4 lg:py-3">{user.email}</td>
-                  <td className="px-2 py-2 lg:px-4 lg:py-3">{user.fecha_nacimiento}</td>
-                  <td className="px-2 py-2 lg:px-4 lg:py-3">{user.phone}</td>
-                  <td className="px-2 py-2 lg:px-4 lg:py-3">{user.numero_dni}</td>
-                  <td className="px-2 py-2 lg:px-4 lg:py-3">
-                    <span className={`inline-block w-24 text-center px-2 py-1 rounded-full text-sm font-semibold ${
-                      user.estado 
-                        ? 'bg-green-200 text-green-800 border-2 border-green-400' 
-                        : 'bg-red-200 text-red-800 border-2 border-red-400'
-                    }`}>
-                      {getStatusDisplay(user.estado)}
-                    </span>
-                  </td>
-                  <td className="px-2 py-2 lg:px-4 lg:py-3">
-                    <button
-                      className="font-medium text-red-600 hover:text-red-800 transition duration-150 ease-in-out"
-                      onClick={() => handleStatusChange(user.id, user.estado)}
-                    >
-                      Modificar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        
+        {/* Filtros */}
+        <div className="mb-4 flex">
+          <input
+            type="text"
+            placeholder="Buscar por nombre o email"
+            className="px-4 py-2 border rounded-md border-black w-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <select
+            className="px-4 py-2 border border-black rounded-md w-full"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="all">Todos</option>
+            <option value="active">Activos</option>
+            <option value="inactive">Inactivos</option>
+          </select>
         </div>
+        
+        {filteredUsers.length === 0 ? (
+          <div className="text-center text-gray-500">No se encontraron usuarios {filterStatus === 'active' ? 'activos' : filterStatus === 'inactive' ? 'inactivos' : 'con estos criterios'}.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs sm:text-sm text-left text-gray-500">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-100 rounded-t-lg">
+                <tr>
+                  <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Nombre</th>
+                  <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Email</th>
+                  <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Fecha de Nac.</th>
+                  <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Teléfono</th>
+                  <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">DNI</th>
+                  <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Estado</th>
+                  <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Dar de baja</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map(user => (
+                  <tr key={user.id} className="bg-white border-b hover:bg-gray-50 transition duration-150 ease-in-out">
+                    <td className="px-2 py-2 lg:px-4 lg:py-3 font-medium text-gray-900">{user.name}</td>
+                    <td className="px-2 py-2 lg:px-4 lg:py-3">{user.email}</td>
+                    <td className="px-2 py-2 lg:px-4 lg:py-3">{user.fecha_nacimiento}</td>
+                    <td className="px-2 py-2 lg:px-4 lg:py-3">{user.phone}</td>
+                    <td className="px-2 py-2 lg:px-4 lg:py-3">{user.numero_dni}</td>
+                    <td className="px-2 py-2 lg:px-4 lg:py-3">
+                      <span className={`inline-block w-24 text-center px-2 py-1 rounded-full text-sm font-semibold ${
+                        user.estado 
+                          ? 'bg-green-200 text-green-800 border-2 border-green-400' 
+                          : 'bg-red-200 text-red-800 border-2 border-red-400'
+                      }`}>
+                        {getStatusDisplay(user.estado)}
+                      </span>
+                    </td>
+                    <td className="px-2 py-2 lg:px-4 lg:py-3 text-center">
+                      <button
+                        className="font-medium text-red-600 hover:text-red-800 transition duration-150 ease-in-out"
+                        onClick={() => handleStatusChange(user.id, user.estado)}
+                      >
+                        Baja
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
