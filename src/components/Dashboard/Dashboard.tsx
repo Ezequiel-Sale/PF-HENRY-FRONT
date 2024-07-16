@@ -32,7 +32,7 @@ const Dashboard = () => {
     };
 
     fetchProfesors();
-  }, [users]);
+  }, []);
 
   return (
     <>
