@@ -13,7 +13,7 @@ import { io } from "socket.io-client";
 import { useContextCombined } from "../ContextUserNotifications/ContextUserNotifications";
 import Anuncio from "../Dashboard/Anuncios/Anuncio";
 import { IUser, userSession } from "@/types/profesorInterface";
-import { getProfesors, getUsers } from "@/helper/petitions";
+import { getProfesors } from "@/helper/petitions";
 
 
 interface GoogleSession {

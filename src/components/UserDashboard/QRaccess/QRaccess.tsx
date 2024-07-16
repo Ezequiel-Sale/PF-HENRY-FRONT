@@ -26,6 +26,7 @@ import { SiMercadopago } from "react-icons/si";
 import { getProfessors } from "@/services/professor";
 import { getHorariosCupos } from "@/services/cupos";
 import { pay } from "@/services/pay";
+import WeekdayPicker from "@/components/WeekDayPeeker/WeekDayPeeker";
 
 interface UserData {
   id: string;
@@ -42,6 +43,7 @@ const activationSchema = z.object({
   plan: z.coerce.number().min(2).max(5),
   profesor: z.string().nonempty("Debes seleccionar un profesor"),
   horario: z.string().nonempty("Debes seleccionar un horario"),
+  diasSeleccionados: z.array(z.string()).min(2, "Debes seleccionar al menos 2 días").max(5, "No puedes seleccionar más de 5 días"),
 });
 
 type ActivationFormValues = z.infer<typeof activationSchema>;
@@ -55,7 +57,6 @@ const QRaccess: React.FC = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [professorsList, setProfessorsList] = useState<any[]>([]);
   const [horariosProfesor, setHorariosProfesor] = useState<any[]>([]);
-  const [user, setUser] = useState<{email: string, id: string}>()
 
   const form = useForm<ActivationFormValues>({
     resolver: zodResolver(activationSchema),
@@ -63,6 +64,7 @@ const QRaccess: React.FC = () => {
       plan: 2,
       profesor: "",
       horario: "",
+      diasSeleccionados: [],
     },
   });
 
@@ -166,6 +168,9 @@ const QRaccess: React.FC = () => {
           metodoPago: selectedPaymentMethod,
           userEmail: userData?.email || "",
           id_plan: values.plan,
+          id_profesor: values.profesor,
+          diasSeleccionados: values.diasSeleccionados,
+          horarios: [values.horario],
         });
 
         window.location.href = payment.init_point;
@@ -217,148 +222,166 @@ const QRaccess: React.FC = () => {
                 <p className="text-sm text-gray-600">Gracias por tu confianza. ¡Disfruta tu acceso!</p>
               </div>
             </>
-                    ) : (
-                      <>
-                        <div className="bg-red-600 text-white p-4">
-                          <h2 className="text-xl font-semibold">Suscripción Inactiva</h2>
-                        </div>
-                        <div className="p-6">
-                          <p className="text-gray-700 mb-4">Para acceder al establecimiento, necesitas tener una suscripción activa.</p>
-                          <Button onClick={() => setIsOpen(true)} className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
-                            Activar Suscripción
-                          </Button>
-                        </div>
-                        <div className="bg-gray-100 px-6 py-4">
-                          <p className="text-sm text-red-600">Tu suscripción ha vencido. Por favor, renueva para seguir disfrutando de nuestros servicios.</p>
-                        </div>
-                      </>
-                    )}
+          ) : (
+            <>
+              <div className="bg-red-600 text-white p-4">
+                <h2 className="text-xl font-semibold">Suscripción Inactiva</h2>
+              </div>
+              <div className="p-6">
+                <p className="text-gray-700 mb-4">Para acceder al establecimiento, necesitas tener una suscripción activa.</p>
+                <Button onClick={() => setIsOpen(true)} className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition duration-300">
+                  Activar Suscripción
+                </Button>
+              </div>
+              <div className="bg-gray-100 px-6 py-4">
+                <p className="text-sm text-red-600">Tu suscripción ha vencido. Por favor, renueva para seguir disfrutando de nuestros servicios.</p>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetContent className="bg-white text-gray-800 overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle className="text-2xl font-bold text-blue-600">Activar Suscripción</SheetTitle>
+          </SheetHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="plan"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700">Plan (días por semana)</FormLabel>
+                    <FormControl>
+                      <select {...field} className="w-full bg-gray-100 text-gray-800 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="2">2 días</option>
+                        <option value="3">3 días</option>
+                        <option value="5">5 días</option>
+                      </select>
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="diasSeleccionados"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700">Selecciona los días de tu plan</FormLabel>
+                    <FormControl>
+                      <WeekdayPicker
+                        onchange={(days) => {
+                          form.setValue("diasSeleccionados", days);
+                          form.trigger("diasSeleccionados");
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="profesor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700">Profesor</FormLabel>
+                    <FormControl>
+                      <select 
+                        {...field} 
+                        className="w-full bg-gray-100 text-gray-800 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          fetchHorarios(e.target.value);
+                        }}
+                      >
+                        <option value="">Selecciona un profesor</option>
+                        {professorsList.map((profesor) => (
+                          <option key={profesor.id} value={profesor.id}>
+                            {profesor.nombre}
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="horario"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700">Horario</FormLabel>
+                    <FormControl>
+                      <select {...field} className="w-full bg-gray-100 text-gray-800 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Selecciona un horario</option>
+                        {horariosProfesor.map((horario) => (
+                          <option key={horario.id} value={horario.id}>
+                            {horario.horario} - {horario.cupos} cupos
+                          </option>
+                        ))}
+                      </select>
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <div className="space-y-4">
+                <label className="text-xl font-semibold text-gray-700">Selecciona método de pago</label>
+                <div className="flex space-x-4 justify-center">
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      name="metodoPago"
+                      id="efectivo"
+                      className="hidden"
+                      value="efectivo"
+                      checked={selectedPaymentMethod === "efectivo"}
+                      onChange={handlePaymentMethodChange}
+                    />
+                    <label
+                      htmlFor="efectivo"
+                      className={`flex flex-col rounded-md border p-3 items-center cursor-pointer space-y-2 w-32 transition-all
+                        ${selectedPaymentMethod === "efectivo" ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:bg-gray-50"}`}
+                    >
+                      <IoIosCash className="text-yellow-500" size={36} />
+                      <p className="text-sm font-medium">Efectivo</p>
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="radio"
+                      name="MercadoPago"
+                      id="MercadoPago"
+                      className="hidden"
+                      value="MercadoPago"
+                      checked={selectedPaymentMethod === "MercadoPago"}
+                      onChange={handlePaymentMethodChange}
+                    />
+                    <label
+                      htmlFor="MercadoPago"
+                      className={`flex flex-col rounded-md border p-3 items-center cursor-pointer space-y-2 w-32 transition-all
+                        ${selectedPaymentMethod === "MercadoPago" ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:bg-gray-50"}`}
+                    >
+                      <SiMercadopago className="text-blue-500" size={36} />
+                      <p className="text-sm font-medium">MercadoPago</p>
+                    </label>
                   </div>
                 </div>
-          
-                <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                  <SheetContent className="bg-white text-gray-800 overflow-y-auto">
-                    <SheetHeader>
-                      <SheetTitle className="text-2xl font-bold text-blue-600">Activar Suscripción</SheetTitle>
-                    </SheetHeader>
-                    <Form {...form}>
-                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        <FormField
-                          control={form.control}
-                          name="plan"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-gray-700">Plan (días por semana)</FormLabel>
-                              <FormControl>
-                                <select {...field} className="w-full bg-gray-100 text-gray-800 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                  <option value="2">2 días</option>
-                                  <option value="3">3 días</option>
-                                  <option value="5">5 días</option>
-                                </select>
-                              </FormControl>
-                              <FormMessage className="text-red-500" />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="profesor"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-gray-700">Profesor</FormLabel>
-                              <FormControl>
-                                <select 
-                                  {...field} 
-                                  className="w-full bg-gray-100 text-gray-800 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                  onChange={(e) => {
-                                    field.onChange(e);
-                                    fetchHorarios(e.target.value);
-                                  }}
-                                >
-                                  <option value="">Selecciona un profesor</option>
-                                  {professorsList.map((profesor) => (
-                                    <option key={profesor.id} value={profesor.id}>
-                                      {profesor.nombre}
-                                    </option>
-                                  ))}
-                                </select>
-                              </FormControl>
-                              <FormMessage className="text-red-500" />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="horario"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel className="text-gray-700">Horario</FormLabel>
-                              <FormControl>
-                                <select {...field} className="w-full bg-gray-100 text-gray-800 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                  <option value="">Selecciona un horario</option>
-                                  {horariosProfesor.map((horario) => (
-                                    <option key={horario.id} value={horario.id}>
-                                      {horario.horario} - {horario.cupos} cupos
-                                    </option>
-                                  ))}
-                                </select>
-                              </FormControl>
-                              <FormMessage className="text-red-500" />
-                            </FormItem>
-                          )}
-                        />
-                        <div className="space-y-4">
-                          <label className="text-xl font-semibold text-gray-700">Selecciona método de pago</label>
-                          <div className="flex space-x-4 justify-center">
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                name="metodoPago"
-                                id="efectivo"
-                                className="hidden"
-                                value="efectivo"
-                                checked={selectedPaymentMethod === "efectivo"}
-                                onChange={handlePaymentMethodChange}
-                              />
-                              <label
-                                htmlFor="efectivo"
-                                className={`flex flex-col rounded-md border p-3 items-center cursor-pointer space-y-2 w-32 transition-all
-                                  ${selectedPaymentMethod === "efectivo" ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:bg-gray-50"}`}
-                              >
-                                <IoIosCash className="text-yellow-500" size={36} />
-                                <p className="text-sm font-medium">Efectivo</p>
-                              </label>
-                            </div>
-                            <div className="flex items-center">
-                              <input
-                                type="radio"
-                                name="MercadoPago"
-                                id="MercadoPago"
-                                className="hidden"
-                                value="MercadoPago"
-                                checked={selectedPaymentMethod === "MercadoPago"}
-                                onChange={handlePaymentMethodChange}
-                              />
-                              <label
-                                htmlFor="MercadoPago"
-                                className={`flex flex-col rounded-md border p-3 items-center cursor-pointer space-y-2 w-32 transition-all
-                                  ${selectedPaymentMethod === "MercadoPago" ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:bg-gray-50"}`}
-                              >
-                                <SiMercadopago className="text-blue-500" size={36} />
-                                <p className="text-sm font-medium">MercadoPago</p>
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        <Button type="submit" className="w-full bg-green-500 text-white font-bold py-3 px-4 rounded hover:bg-green-600 transition duration-300">
-                          Activar Suscripción
-                        </Button>
-                      </form>
-                    </Form>
-                  </SheetContent>
-                </Sheet>
               </div>
-            );
-          };
-          
-          export default QRaccess;
+              <Button type="submit" className="w-full bg-green-500 text-white font-bold py-3 px-4 rounded hover:bg-green-600 transition duration-300">
+                Activar Suscripción
+              </Button>
+            </form>
+          </Form>
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+};
+
+export default QRaccess;
