@@ -13,7 +13,7 @@ interface User {
   altura: string;
   objetivo: string;
   horario: string;
-  diasSeleccionados: string; // Assuming this is a string representation of days like '{"Lunes","Martes","Miercoles"}'
+  diasSeleccionados: string; 
   profesor: {
     id: string;
   };
@@ -71,7 +71,7 @@ const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
       {timeSlots.map((slot, index) => (
         <Accordion key={index} type="single" collapsible className="w-full max-w-6xl my-2">
           <AccordionItem value={`item-${index}`}>
-            <AccordionTrigger className="text-center">{slot}</AccordionTrigger>
+            <AccordionTrigger className="text-center">{slot} - {getUsersForTimeSlot(slot).length} inscritos</AccordionTrigger>
             <AccordionContent>
               <TabsContent value="lunes">
                 <TabsList className="flex justify-around mb-4">

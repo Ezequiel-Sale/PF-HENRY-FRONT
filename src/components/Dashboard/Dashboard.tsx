@@ -40,6 +40,7 @@ const Dashboard = () => {
     console.log("Metadata", totalUserActives, inactiveUser);
   }, [users.length, inactiveUser, totalUserActives]);
 
+
   return (
     <>
       <div className="flex flex-col md:flex-row justift-betweeen gap-5 mb-5">

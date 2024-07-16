@@ -85,7 +85,8 @@ const UsersPage = () => {
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          user.email.toLowerCase().includes(searchQuery.toLowerCase());
+                          user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          user.numero_dni.toString().includes(searchQuery.toLowerCase());
     const matchesStatus = filterStatus === 'all' || (filterStatus === 'active' && user.estado) || (filterStatus === 'inactive' && !user.estado);
     return matchesSearch && matchesStatus;
   });
@@ -105,11 +106,11 @@ const UsersPage = () => {
         )}
         
         {/* Filtros */}
-        <div className="mb-4 flex">
+        <div className="mb-4 flex gap-1">
           <input
             type="text"
-            placeholder="Buscar por nombre o email"
-            className="px-4 py-2 border rounded-md border-black w-full"
+            placeholder="Buscar por nombre, email o DNI"
+            className="px-4 py-2 border rounded-md border-black w-full "
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -133,7 +134,7 @@ const UsersPage = () => {
                 <tr>
                   <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Nombre</th>
                   <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Email</th>
-                  <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Fecha de Nac.</th>
+                  <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Fecha de Nacimiento</th>
                   <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Teléfono</th>
                   <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">DNI</th>
                   <th scope="col" className="px-2 py-2 lg:px-4 lg:py-3">Estado</th>

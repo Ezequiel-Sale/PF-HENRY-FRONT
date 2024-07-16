@@ -30,6 +30,7 @@ const Navbar = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<userSession>();
   const [userGoogle, setUserGoogle] = useState<GoogleSession>();
+  console.log("navbar userData",userData)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -75,7 +76,13 @@ const Navbar = () => {
 
   useEffect(() => {
     if (userData) {
-      const socket = io("http://localhost:3001");
+      const socket = io("http://localhost:3001",{
+        query: { userId: userData.id },
+      });
+
+      socket.on("connect", () => {
+        console.log("Connected to WebSocket server");
+      });
 
       socket.emit("register", userData.id);
 

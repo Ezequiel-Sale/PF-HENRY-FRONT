@@ -25,7 +25,6 @@ interface MiercolesProps {
 
 const Miercoles: React.FC<MiercolesProps> = ({ profesorId }) => {
   const [users, setUsers] = useState<User[]>([]);
-  console.log(users)
 
   function calcularEdad(fechaNacimiento: string): number {
     const hoy = new Date();
@@ -72,7 +71,7 @@ const Miercoles: React.FC<MiercolesProps> = ({ profesorId }) => {
       {timeSlots.map((slot, index) => (
         <Accordion key={index} type="single" collapsible className="w-full max-w-6xl my-2">
           <AccordionItem value={`item-${index}`}>
-            <AccordionTrigger className="text-center">{slot}</AccordionTrigger>
+            <AccordionTrigger className="text-center">{slot} - {getUsersForTimeSlot(slot).length} inscritos</AccordionTrigger>
             <AccordionContent>
               <TabsContent value="miercoles">
                 <TabsList className="flex justify-around mb-4">

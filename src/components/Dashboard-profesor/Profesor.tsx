@@ -23,9 +23,6 @@ const Profesor = () => {
   const [loginData, setLoginData] = useState<userSession | null>(null);
   const pathName = usePathname();
 
-  console.log("profesores:", profesores);
-  console.log("profesor actual:", profesorActual);
-  console.log("usuario:", loginData);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
