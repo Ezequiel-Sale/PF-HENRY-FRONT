@@ -116,35 +116,49 @@ const Login = () => {
     try {
       const { auth, googleProvider } = getGoogleProvider();
       const result = await signInWithPopup(auth, googleProvider);
-
+  
       const resultFullProps: typeof result & {
         user: {
           accessToken: string;
+          uid: string;
+          email: string;
+          displayName: string;
         };
       } = result as any;
-
+  
+      console.log("Result full props:", resultFullProps);
+  
+      // Crear un objeto con los datos necesarios
+      const googleSession = {
+        token: resultFullProps.user.accessToken ?? "",
+        id: resultFullProps.user.uid ?? "",
+        email: resultFullProps.user.email ?? "",
+        name: resultFullProps.user.displayName ?? "",
+      };
+  
+      // Guardar el objeto en el localStorage
+      window.localStorage.setItem("googleSession", JSON.stringify(googleSession));
+  
+      console.log("Google session saved to localStorage:", window.localStorage.getItem("googleSession"));
+  
       try {
         const alreadyExists = await userAlreadyExists(
           resultFullProps.user.email ?? "",
           resultFullProps.user.accessToken
         );
+        console.log("User already exists, redirecting to dashboard...");
         router.push("/userdashboard");
       } catch (error) {
-        window.localStorage.setItem(
-          "token",
-          resultFullProps.user.accessToken ?? ""
-        );
-        window.localStorage.setItem("email", resultFullProps.user.email ?? "");
-        window.localStorage.setItem(
-          "name",
-          resultFullProps.user.displayName ?? ""
-        );
+        console.log("User does not exist, redirecting to register...");
         router.push("/register");
       }
     } catch (error) {
       console.error(error);
     }
   };
+  
+  
+  
 
   return (
     <div

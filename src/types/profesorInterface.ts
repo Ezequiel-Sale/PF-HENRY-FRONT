@@ -18,11 +18,13 @@ export interface IUser {
     fecha_nacimiento: string;
     numero_dni: string;
     estado?: string;
+    role?: string;
 }
 
 export interface userSession {
     id: string;
     token: string;
+    role: string;
     userData: {
         id: any;
         name: string;
@@ -31,5 +33,6 @@ export interface userSession {
         phone: string;
         fecha_nacimiento: string;
         numero_dni: string;
+        role: string;
     }   
 }
