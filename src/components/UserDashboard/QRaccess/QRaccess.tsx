@@ -94,6 +94,7 @@ const QRaccess: React.FC = () => {
   const fetchUserData = async () => {
     if (!userId) {
       console.error('El ID del usuario no está disponible');
+      console.log("hola")
       setError("No se pudo obtener el ID del usuario");
       setLoading(false);
       return;
