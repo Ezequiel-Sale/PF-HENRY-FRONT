@@ -44,7 +44,7 @@ const UserSidebar = () => {
                 </CommandItem>
                 <CommandItem>
                     <QrCode className='mr-2 h-4 w-4' />
-                    <Link href="/userdashboard/qr-access"><span>Generar acceso</span></Link>
+                    <Link href="/userdashboard/acceso-qr"><span>Generar acceso/pago</span></Link>
                 </CommandItem>
             </CommandGroup>
         </CommandList>
