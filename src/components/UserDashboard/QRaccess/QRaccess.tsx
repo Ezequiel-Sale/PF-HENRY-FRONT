@@ -35,6 +35,7 @@ interface UserData {
   plan: string[];
   fecha_nacimiento: string;
   email: string;
+  horario: string;
 }
 
 const activationSchema = z.object({
@@ -209,7 +210,7 @@ const QRaccess: React.FC = () => {
                   <p className="text-sm text-gray-600">Nombre: {userData.name}</p>
                   <p className="text-sm text-gray-600">DNI: {userData.dni}</p>
                   <p className="text-sm text-gray-600">Días: {userData.plan.join(', ')}</p>
-                  <p className="text-sm text-gray-600">Fecha de nacimiento: {userData.fecha_nacimiento}</p>
+                  <p className="text-sm text-gray-600">Horario: {userData.horario}</p>
                 </div>
               </div>
               <div className="bg-gray-100 px-6 py-4">
