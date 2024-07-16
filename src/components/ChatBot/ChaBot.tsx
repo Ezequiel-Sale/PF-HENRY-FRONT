@@ -25,6 +25,7 @@ const ChatBot = () => {
     e.currentTarget.reset();
     setMessages([...messages]);
     const response = await sendMessage(message);
+    console.log("Response", response);
     setMessages([
       ...messages,
       {
