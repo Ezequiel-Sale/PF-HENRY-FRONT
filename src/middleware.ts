@@ -9,7 +9,6 @@ function decodeToken(token: string): { role: string } | null {
 
     const currentTimestamp = Math.floor(Date.now() / 1000);
     if (payload.exp && payload.exp < currentTimestamp) {
-      console.log("Token expirado");
       return null;
     }
 
@@ -22,13 +21,22 @@ function decodeToken(token: string): { role: string } | null {
 
 export function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get('userSession');
+  const googleSessionCookie = request.cookies.get('googleSession');
+  let decodedToken = null;
 
-  if (!sessionCookie) {
-    return NextResponse.redirect(new URL('/login', request.url));
+
+
+  if (sessionCookie) {
+    decodedToken = decodeToken(sessionCookie.value);
+  } else if (googleSessionCookie) {
+    try {
+      const googleSessionData = JSON.parse(googleSessionCookie.value);
+      decodedToken = { role: googleSessionData.role || 'user' };
+    } catch (error) {
+      console.error("Error parsing Google session data:", error);
+    }
   }
 
-  const decodedToken = decodeToken(sessionCookie.value);
-  console.log("Decoded token:", decodedToken); // Para depuración
 
   if (!decodedToken) {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -36,6 +44,8 @@ export function middleware(request: NextRequest) {
 
   const { role } = decodedToken;
   const path = request.nextUrl.pathname;
+
+
 
   // Ruta del dashboard principal (solo para admin)
   if (path === '/dashboard' && role !== 'admin') {
@@ -47,7 +57,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  // Ruta para usuarios normales
+  // Ruta para usuarios normales (incluyendo usuarios de Google)
   if (path === '/userdashboard' && !['user', 'profesor', 'admin'].includes(role)) {
     return NextResponse.redirect(new URL('/', request.url));
   }
