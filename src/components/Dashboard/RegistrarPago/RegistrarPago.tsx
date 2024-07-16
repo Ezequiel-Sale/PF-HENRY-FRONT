@@ -12,6 +12,8 @@ interface User {
   fecha_nacimiento: string;
   plan?: {
     id: string;
+    name: string;
+    price: number;
     // Otros campos del plan si los hay
   };
 }
@@ -19,6 +21,7 @@ interface User {
 const RegistrarPago = () => {
   const [searchInput, setSearchInput] = useState("");
   const [foundUser, setFoundUser] = useState<User | null>(null);
+  console.log(foundUser);
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
@@ -27,7 +30,7 @@ const RegistrarPago = () => {
   const searchUser = async (email: string): Promise<User | null> => {
     try {
       const response = await fetch(
-        `http://localhost:3001/users?email=${email}`
+        `http://localhost:3001/profesor/users?email=${email}`
       );
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
@@ -39,7 +42,7 @@ const RegistrarPago = () => {
         icon: "error",
         title: "Error",
         text: error.message,
-      })
+      });
       return null;
     }
   };
@@ -137,13 +140,14 @@ const RegistrarPago = () => {
                 <span className="font-bold">Correo: </span>
                 {foundUser.email}
               </p>
+              
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                <span className="font-bold">Celular: </span>
-                {foundUser.phone}
+                <span className="font-bold">Plan: </span>
+                {foundUser.plan?.name}
               </p>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-                <span className="font-bold">Fecha de nacimiento: </span>
-                {foundUser.fecha_nacimiento}
+                <span className="font-bold">Precio: </span>
+                ${foundUser.plan?.price}
               </p>
               <button
                 type="submit"

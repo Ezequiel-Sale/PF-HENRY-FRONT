@@ -13,7 +13,7 @@ import { io } from "socket.io-client";
 import { useContextCombined } from "../ContextUserNotifications/ContextUserNotifications";
 import Anuncio from "../Dashboard/Anuncios/Anuncio";
 import { IUser, userSession } from "@/types/profesorInterface";
-import { getProfesors, getUsers } from "@/helper/petitions";
+import { getProfesors } from "@/helper/petitions";
 
 
 interface GoogleSession {
@@ -21,6 +21,7 @@ interface GoogleSession {
   email: string;
   token: string;
   name: string;
+  role: string;
 }
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,7 +70,7 @@ const Navbar = () => {
       router.push("/dashboard-profesor");
     } else if (userData?.role  === "user") {
       router.push("/userdashboard");
-    }else if (userGoogle?.token){
+    }else if (userGoogle?.role === "user") {
       router.push("/userdashboard");
     }
   };

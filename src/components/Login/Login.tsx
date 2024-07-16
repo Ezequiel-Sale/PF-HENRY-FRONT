@@ -126,34 +126,25 @@ const Login = () => {
         };
       } = result as any;
   
-      console.log("Result full props:", resultFullProps);
-  
       // Crear un objeto con los datos necesarios
       const googleSession = {
-        token: resultFullProps.user.accessToken ?? "",
-        id: resultFullProps.user.uid ?? "",
-        email: resultFullProps.user.email ?? "",
-        name: resultFullProps.user.displayName ?? "",
+        token: resultFullProps.user.accessToken,
+        id: resultFullProps.user.uid,
+        email: resultFullProps.user.email,
+        name: resultFullProps.user.displayName,
+        role: "user" // Asignar un rol por defecto
       };
   
       // Guardar el objeto en el localStorage
       window.localStorage.setItem("googleSession", JSON.stringify(googleSession));
   
-      console.log("Google session saved to localStorage:", window.localStorage.getItem("googleSession"));
+      // Crear una cookie de sesión
+      document.cookie = `googleSession=${JSON.stringify(googleSession)}; path=/; max-age=86400; SameSite=Strict;`;
   
-      try {
-        const alreadyExists = await userAlreadyExists(
-          resultFullProps.user.email ?? "",
-          resultFullProps.user.accessToken
-        );
-        console.log("User already exists, redirecting to dashboard...");
-        router.push("/userdashboard");
-      } catch (error) {
-        console.log("User does not exist, redirecting to register...");
-        router.push("/register");
-      }
+      // Redirigir al usuario al dashboard correspondiente
+      router.push("/userdashboard");
     } catch (error) {
-      console.error(error);
+      console.error("Error en inicio de sesión con Google:", error);
     }
   };
   
