@@ -114,9 +114,12 @@ const AdditionalInfoForm = () => {
   }
 
   useEffect(() => {
-    initMercadoPago("APP_USR-6388226938088227-070410-84089c51e198a5281fed512e8c8f653e-1884641309", {
-      locale: "es-AR",
-    });
+    initMercadoPago(
+      "APP_USR-6388226938088227-070410-84089c51e198a5281fed512e8c8f653e-1884641309",
+      {
+        locale: "es-AR",
+      }
+    );
     fetchProfessors();
     const token = window.localStorage.getItem("userId");
     // if (!token) {
@@ -135,6 +138,7 @@ const AdditionalInfoForm = () => {
   async function fetchHorarios(idProfesor: string) {
     try {
       const horariosCuposDb = await getHorariosCupos(idProfesor);
+      console.log("Horarios:", horariosCuposDb);
       setHorariosProfesor(horariosCuposDb);
     } catch (error) {
       Swal.fire({
@@ -331,16 +335,17 @@ const AdditionalInfoForm = () => {
                         disabled={!selectedProfessorId}
                       >
                         <option value="">Selecciona un horario</option>
-                        {horariosProfesor
-                          .filter((horario) => horario.cupos >= 0)
-                          .map((horario) => (
-                            <option
-                              key={horario.horario}
-                              value={horario.horario}
-                            >
-                              {horario.horario} - {horario.cupos} cupos
-                            </option>
-                          ))}
+                        {horariosProfesor.length &&
+                          horariosProfesor
+                            .filter((horario) => horario.cupos >= 0)
+                            .map((horario) => (
+                              <option
+                                key={horario.horario}
+                                value={horario.horario}
+                              >
+                                {horario.horario} - {horario.cupos} cupos
+                              </option>
+                            ))}
                       </select>
                     </FormControl>
                     <FormMessage className="text-red-500 text-xs mt-1" />

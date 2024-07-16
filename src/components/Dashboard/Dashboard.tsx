@@ -12,40 +12,47 @@ import {
   PersonStanding,
 } from "lucide-react";
 import Link from "next/link";
-import { getProfesors, getUsers } from "@/helper/petitions";
+import { getProfesors } from "@/helper/petitions";
 import { IUser } from "@/types/profesorInterface";
+import { getUsers } from "@/services/users";
+import { metadata } from "@/app/layout";
+import { set } from "zod";
 
 const Dashboard = () => {
-   const [profesorNumber, setProfesorNumber] = useState([]);
-   const [users, setUsers] = useState<IUser[]>([]);
-   const [inactiveUser, setInactiveUser] = useState(0);
+  const [profesorNumber, setProfesorNumber] = useState([]);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [inactiveUser, setInactiveUser] = useState(0);
+  const [totalUserActives, setTotalUserActives] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
 
-   useEffect(() => {
-    const fetchProfesors = async () =>{
+  useEffect(() => {
+    const fetchProfesors = async () => {
       const profesors = await getProfesors();
       setProfesorNumber(profesors);
-      const user = await getUsers();
-      setUsers(user);
-
-      const inactiveUsers = user.filter((u: IUser) => !u.estado);
-      setInactiveUser(inactiveUsers.length);
+      const { users, metadata } = await getUsers(1, 5);
+      setUsers(users);
+      setTotalUserActives(metadata.totalUserActives);
+      setInactiveUser(metadata.totalUserInactives);
+      setTotalUsers(metadata.totalUsers);
     };
 
     fetchProfesors();
-  }, []);
+    console.log("Metadata", totalUserActives, inactiveUser);
+  }, [users.length, inactiveUser, totalUserActives]);
+
 
   return (
     <>
       <div className="flex flex-col md:flex-row justift-betweeen gap-5 mb-5">
         <DashboardCard
           title="Usuarios"
-          count={users.length}
+          count={totalUsers}
           icon={<User size={72} className="text-slate-500" />}
         />
 
         <DashboardCard
           title="Activos"
-          count={users.filter((u) => u.estado).length}
+          count={totalUserActives}
           icon={<ShieldCheck size={72} className="text-slate-500" />}
         />
 
