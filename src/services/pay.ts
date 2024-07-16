@@ -4,6 +4,10 @@ interface IPay {
   metodoPago: string;
   id_plan: number;
   userEmail: string;
+  id_profesor?: string;
+  diasSeleccionados?: string[];
+  horarios?: string[];
+
 }
 
 export const pay = async (data: IPay) => {
