@@ -1,55 +1,52 @@
 "use client"
-import React from 'react'
-import UserSidebar from '@/components/UserDashboard/Sidebar/UserSidebar'
-import { Rocket, Clock, HammerIcon } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { Dumbbell } from 'lucide-react'
 
 const UserDashboard = () => {
+  const [userName, setUserName] = useState("")
+
+  useEffect(() => {
+    const userSession = JSON.parse(localStorage.getItem("userSession") || "{}")
+    setUserName(userSession.name || "Usuario")
+  }, [])
+
   return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="flex-1 flex flex-col justify-center items-center p-8 bg-gradient-to-br from-gray-800 to-black text-white overflow-y-auto">
-        <div className="max-w-2xl w-full bg-white bg-opacity-10 backdrop-blur-lg rounded-xl shadow-2xl p-8 transform transition-all duration-300 hover:scale-105">
-          <h1 className="text-4xl font-bold mb-6 text-center flex items-center justify-center">
-            <Rocket className="mr-4 h-10 w-10 text-yellow-400 animate-bounce" />
-            Dashboard en Construcción
-          </h1>
-          
-          <p className="text-xl mb-8 text-center">
-            Estamos trabajando arduamente para brindarte la mejor experiencia posible.
+    <div className="flex-1 p-8 bg-white">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <Dumbbell className="h-16 w-16 text-red-600 mx-auto mb-4" />
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">Bienvenido a tu Dashboard, {userName}!</h1>
+          <p className="text-xl text-gray-600">
+            Aquí podrás gestionar toda tu información y actividades en el gimnasio.
           </p>
-          
-          <div className="space-y-6">
-            <FeatureCard 
-              icon={<Clock className="h-8 w-8 text-blue-400" />}
-              title="Próximamente"
-              description="Podrás ver y modificar tus datos personales, revisar tu rutina de entrenamiento y controlar tus pagos de forma segura."
-            />
-            
-            <FeatureCard 
-              icon={<HammerIcon className="h-8 w-8 text-green-400" />}
-              title="En Desarrollo"
-              description="Estamos implementando un sistema de seguimiento de progreso y generación de códigos QR para acceso rápido al gimnasio."
-            />
-          </div>
-          
-          <div className="mt-10 text-center">
-            <p className="text-sm opacity-75">
-              Gracias por tu paciencia. ¡Estamos emocionados por mostrarte todas las nuevas funcionalidades pronto!
-            </p>
-          </div>
+        </div>
+
+        <div className="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg mb-8">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">¿Qué puedes hacer aquí?</h2>
+          <ul className="list-disc list-inside text-gray-700 space-y-2">
+            <li>Ver y actualizar tus datos personales</li>
+            <li>Consultar tu rutina de entrenamiento personalizada</li>
+            <li>Revisar el estado de tus pagos</li>
+            <li>Generar tu código QR de acceso al gimnasio</li>
+            <li>Seguir tu progreso y logros</li>
+          </ul>
+        </div>
+
+        <p className="text-gray-600 mb-8">
+          Explora las opciones en la barra lateral para acceder a todas estas funcionalidades. 
+          Estamos aquí para ayudarte a alcanzar tus metas fitness.
+        </p>
+
+        <div className="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">Consejo del día:</h3>
+          <p className="text-gray-700">
+            Recuerda mantenerte hidratado durante tus sesiones de entrenamiento. 
+            Una buena hidratación mejora tu rendimiento y recuperación.
+          </p>
         </div>
       </div>
     </div>
   )
 }
-
-const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
-  <div className="flex items-start space-x-4 bg-white bg-opacity-5 p-4 rounded-lg transform transition-all duration-300 hover:bg-opacity-10 hover:shadow-lg">
-    {icon}
-    <div>
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <p className="text-sm opacity-75">{description}</p>
-    </div>
-  </div>
-)
 
 export default UserDashboard
