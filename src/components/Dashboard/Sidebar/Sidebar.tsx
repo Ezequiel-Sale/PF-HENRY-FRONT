@@ -19,6 +19,7 @@ import {
   GraduationCap,
   UsersRound,
   Bell,
+  QrCode
 } from "lucide-react";
 import Link from "next/link";
 
@@ -80,6 +81,12 @@ const Sidebar = () => {
             <CreditCard className="mr-2 h4 w4" />
             <Link href="/dashboard/registrarpago">
             <span>Registrar Pago</span>
+            </Link>
+          </CommandItem>
+          <CommandItem>
+            <QrCode className="mr-2 h4 w4" />
+            <Link href="/dashboard/qr">
+            <span>Lector Qr</span>
             </Link>
           </CommandItem>
         </CommandGroup>
