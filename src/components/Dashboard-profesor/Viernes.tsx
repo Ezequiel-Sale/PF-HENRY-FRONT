@@ -71,7 +71,7 @@ const Viernes: React.FC<ViernesProps> = ({ profesorId }) => {
       {timeSlots.map((slot, index) => (
         <Accordion key={index} type="single" collapsible className="w-full max-w-6xl my-2">
           <AccordionItem value={`item-${index}`}>
-            <AccordionTrigger className="text-center">{slot}</AccordionTrigger>
+            <AccordionTrigger className="text-center">{slot} - {getUsersForTimeSlot(slot).length} inscritos</AccordionTrigger>
             <AccordionContent>
               <TabsContent value="viernes">
                 <TabsList className="flex justify-around mb-4">
