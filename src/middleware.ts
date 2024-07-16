@@ -9,7 +9,6 @@ function decodeToken(token: string): { role: string } | null {
 
     const currentTimestamp = Math.floor(Date.now() / 1000);
     if (payload.exp && payload.exp < currentTimestamp) {
-      console.log("Token expirado");
       return null;
     }
 
@@ -25,8 +24,7 @@ export function middleware(request: NextRequest) {
   const googleSessionCookie = request.cookies.get('googleSession');
   let decodedToken = null;
 
-  console.log("Session cookie:", sessionCookie); // Debug log
-  console.log("Google session cookie:", googleSessionCookie); // Debug log
+
 
   if (sessionCookie) {
     decodedToken = decodeToken(sessionCookie.value);
@@ -39,7 +37,6 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  console.log("Decoded token:", decodedToken); // Debug log
 
   if (!decodedToken) {
     return NextResponse.redirect(new URL('/login', request.url));
@@ -48,8 +45,7 @@ export function middleware(request: NextRequest) {
   const { role } = decodedToken;
   const path = request.nextUrl.pathname;
 
-  console.log("Current path:", path); // Debug log
-  console.log("User role:", role); // Debug log
+
 
   // Ruta del dashboard principal (solo para admin)
   if (path === '/dashboard' && role !== 'admin') {

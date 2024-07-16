@@ -15,6 +15,7 @@ interface UserData {
   estado: boolean;
   plan: string[];
   fecha_nacimiento: string;
+  horario: string;
 }
 
 const QrScannerComponent: React.FC<QrScannerProps> = ({ delay = 300, style = { height: 240, width: 320 } }) => {
@@ -35,6 +36,7 @@ const QrScannerComponent: React.FC<QrScannerProps> = ({ delay = 300, style = { h
     console.error(error);
   };
 
+
   return (
     <div className="flex flex-col items-center min-h-screen py-2">
       <h1 className="text-2xl font-bold mb-4">QR Code Reader</h1>
@@ -53,6 +55,7 @@ const QrScannerComponent: React.FC<QrScannerProps> = ({ delay = 300, style = { h
           <p className="text-gray-600 mb-2">DNI: {userData.dni}</p>
           <p className="text-gray-600 mb-2">Estado: {userData.estado ? 'Activo' : 'Inactivo'}</p>
           <p className="text-gray-600 mb-2">Plan: {userData.plan.join(', ')}</p>
+          <p className="text-gray-600 mb-2">Horario: {userData.horario}</p>
           <p className="text-gray-600">Fecha de nacimiento: {userData.fecha_nacimiento}</p>
         </div>
       )}

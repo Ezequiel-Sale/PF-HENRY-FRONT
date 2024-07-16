@@ -21,7 +21,6 @@ interface User {
 const RegistrarPago = () => {
   const [searchInput, setSearchInput] = useState("");
   const [foundUser, setFoundUser] = useState<User | null>(null);
-  console.log(foundUser);
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
