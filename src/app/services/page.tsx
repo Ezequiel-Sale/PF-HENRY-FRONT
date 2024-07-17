@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { LuScanFace } from "react-icons/lu";
 import { MdHealthAndSafety, MdOutlineSportsMartialArts } from "react-icons/md";
 import {
@@ -11,61 +12,55 @@ import {
 
 const Services = () => {
   return (
-    <div className="text-white w-full px-20">
-      <div className="w-full flex bg-[url('/power.jpg')]  h-[60vh] items-end bg-cover bg-center">
-        <h2 className="text-8xl font-extrabold text-black-unfill bg-gray-100 bg-opacity-30 rounded-md">
-          Servicios
+    <div className="text-white w-full px-20 bg-black">
+      <div className="w-full flex flex-col items-center justify-center h-[60vh] bg-black relative overflow-hidden">
+        <h2 className="text-8xl font-extrabold text-white mb-4 relative z-10 transition-all duration-300 hover:scale-105">
+          <span className="relative group">
+            Objetivos
+            <span className="absolute -bottom-2 left-0 w-full h-1 bg-red-600 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
+          </span>
         </h2>
+        <p className="text-xl text-white text-center max-w-2xl relative z-10 transition-all duration-300">
+          Descubre cómo nuestros servicios personalizados pueden ayudarte a alcanzar tus metas de salud, deporte y estética.
+        </p>
       </div>
       <div className="w-full bg-transparent text-xl font-bold">
-        <div className="text-white flex gap-6  justify-around py-5">
-          <a
-            className="border border-solid border-white rounded-md p-2 flex-col flex justify-center items-center min-w-36 hover:bg-black hover:text-white hover:cursor-pointer"
-            href="#salud"
-          >
-            <MdHealthAndSafety size={70} />
-            <p>Salud</p>
-          </a>
-          <a
-            className="border border-solid border-gray-900 rounded-md p-2 flex-col flex justify-center items-center min-w-36 hover:bg-black hover:text-white hover:cursor-pointer"
-            href="#sports"
-          >
-            <MdOutlineSportsMartialArts size={70} />
-            <p>Deporte</p>
-          </a>
-
-          <a
-            className="border border-solid border-gray-900 rounded-md p-2 flex-col flex justify-center items-center min-w-36 hover:bg-black hover:text-white hover:cursor-pointer"
-            href="#estetico"
-          >
-            <LuScanFace size={70} />
-            <p>Estetica</p>
-          </a>
+        <div className="text-white flex gap-6 justify-around py-10">
+          {[
+            { icon: MdHealthAndSafety, text: "Salud", href: "#salud", hoverColor: "hover:bg-red-700" },
+            { icon: MdOutlineSportsMartialArts, text: "Deporte", href: "#sports", hoverColor: "hover:bg-red-700" },
+            { icon: LuScanFace, text: "Estética", href: "#estetico", hoverColor: "hover:bg-red-700" },
+          ].map((item, index) => (
+            <a key={index} className={`group border-2 border-gray-600 rounded-md p-4 flex-col flex justify-center items-center min-w-36 ${item.hoverColor} hover:text-white transition-all duration-300 cursor-pointer transform hover:scale-105 hover:shadow-lg hover:shadow-red-500`} href={item.href}>
+              {React.createElement(item.icon, { size: 70, className: "transition-all duration-300 group-hover:text-white" })}
+              <p className="mt-2 group-hover:text-white">{item.text}</p>
+            </a>
+          ))}
         </div>
       </div>
-      <div className="my-10  w-full flex" id="salud">
-        <div className="w-1/2 h-screen mt-10">
-          <h3 className="text-8xl font-extrabold mt-10 ">Salud</h3>
+      <div className="my-20 w-full flex flex-col lg:flex-row" id="salud">
+        <div className="w-full lg:w-1/2 mt-10">
+          <h3 className="text-6xl lg:text-8xl font-extrabold mt-10 text-white">Salud</h3>
           <Accordion
             type="single"
             collapsible
-            className="w-full"
+            className="w-full mt-6"
             defaultValue="rehabilitacion_post_lesion"
           >
             <AccordionItem value="rehabilitacion_post_lesion">
               <AccordionTrigger>
-                <h4 className="text-4xl font-semibold">
+                <h4 className="text-2xl lg:text-4xl font-semibold text-gray-300">
                   Rehabilitación Post-Lesión
                 </h4>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="p-4 rounded-lg shadow-md">
+                <div className="p-4 rounded-lg shadow-md bg-gray-800 bg-opacity-50">
                   <p className="text-sm">
                     Programas personalizados diseñados para ayudar en la
                     recuperación de lesiones, utilizando ejercicios específicos
                     para fortalecer las áreas afectadas.
                   </p>
-                  <h5 className="mt-4 mb-2 text-lg font-semibold">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Beneficios:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
@@ -74,8 +69,7 @@ const Services = () => {
                     <li>Reduce el dolor y la inflamación.</li>
                     <li>Previene futuras lesiones.</li>
                   </ul>
-
-                  <h5 className="mt-4 mb-2 text-lg font-semibold">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Ejercicios típicos:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
@@ -103,21 +97,20 @@ const Services = () => {
                 </div>
               </AccordionContent>
             </AccordionItem>
-
             <AccordionItem value="entrenamiento_salud_general">
               <AccordionTrigger>
-                <h4 className="text-4xl font-semibold">
+                <h4 className="text-2xl lg:text-4xl font-semibold text-gray-300">
                   Entrenamiento para la Salud General
                 </h4>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="p-4 rounded-lg shadow-md">
+                <div className="p-4 rounded-lg shadow-md bg-gray-800 bg-opacity-50">
                   <p className="text-sm">
                     Rutinas enfocadas en mantener y mejorar la salud general del
                     cuerpo, combinando ejercicios cardiovasculares, de fuerza y
                     de flexibilidad.
                   </p>
-                  <h5 className="mt-4 mb-2 text-lg font-semibold">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Beneficios:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
@@ -126,8 +119,7 @@ const Services = () => {
                     <li>Mejora la flexibilidad y la movilidad.</li>
                     <li>Reduce el riesgo de enfermedades crónicas.</li>
                   </ul>
-
-                  <h5 className="mt-4 mb-2 text-lg font-semibold">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Ejercicios típicos:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
@@ -145,32 +137,32 @@ const Services = () => {
             </AccordionItem>
           </Accordion>
         </div>
-        <img src="dancing.png" alt="dancing" className="rounded-lg" />
+        <img src="dancing.png" alt="dancing" className="rounded-lg mt-10 lg:mt-0 lg:w-1/2" />
       </div>
 
-      <div className="mt-20  w-full flex justify-between" id="sports">
-        <div className="w-1/2 h-screen  mt-10">
-          <h3 className="text-8xl font-extrabold mt-10 ">Deporte</h3>
+      <div className="mt-20 w-full flex flex-col lg:flex-row justify-between" id="sports">
+        <div className="w-full lg:w-1/2 mt-10">
+          <h3 className="text-6xl lg:text-8xl font-extrabold mt-10 text-white">Deporte</h3>
           <Accordion
             type="single"
             collapsible
-            className="w-full"
+            className="w-full mt-6"
             defaultValue="hiit"
           >
             <AccordionItem value="hiit">
               <AccordionTrigger>
-                <h4 className="text-3xl font-semibold">
+                <h4 className="text-2xl lg:text-3xl font-semibold text-gray-300">
                   Entrenamiento de Alta Intensidad
                 </h4>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="p-4 rounded-lg shadow-md">
+                <div className="p-4 rounded-lg shadow-md bg-gray-800 bg-opacity-50">
                   <p className="text-sm">
                     Sesiones cortas de ejercicio intenso seguidas de periodos de
                     descanso o actividad de baja intensidad, ideal para mejorar
                     la capacidad cardiovascular y la quema de grasa.
                   </p>
-                  <h5 className="mt-4 mb-2 text-lg font-semibold">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Beneficios:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
@@ -179,8 +171,7 @@ const Services = () => {
                     <li>Incrementa la resistencia cardiovascular.</li>
                     <li>Mejora el rendimiento deportivo general.</li>
                   </ul>
-
-                  <h5 className="mt-4 mb-2 text-lg font-semibold">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Ejercicios típicos:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
@@ -190,49 +181,42 @@ const Services = () => {
                     <li>Burpees: 4 series de 20 repeticiones</li>
                     <li>Saltos de caja: 4 series de 15 repeticiones</li>
                     <li>Battle ropes: 4 series de 30 segundos</li>
-                    <li>Kettlebell swings: 4 series de 20 repeticiones</li>
+                    <li>Jumping jacks: 4 series de 30 segundos</li>
                   </ul>
                 </div>
               </AccordionContent>
             </AccordionItem>
-
             <AccordionItem value="entrenamiento_funcional">
               <AccordionTrigger>
-                <h4 className="text-3xl font-semibold">
+                <h4 className="text-2xl lg:text-3xl font-semibold text-gray-300">
                   Entrenamiento Funcional
                 </h4>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="p-4 rounded-lg shadow-md">
+                <div className="p-4 rounded-lg shadow-md bg-gray-800 bg-opacity-50">
                   <p className="text-sm">
-                    Rutinas que simulan movimientos naturales del cuerpo para
-                    mejorar la fuerza y la coordinación, siendo muy útiles para
-                    atletas de alto rendimiento.
+                    Ejercicios diseñados para mejorar la funcionalidad en
+                    actividades cotidianas, aumentando la fuerza, la
+                    coordinación y la estabilidad.
                   </p>
-                  <h5 className="mt-4 mb-2 text-lg font-semibold">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Beneficios:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
+                    <li>Mejora la funcionalidad diaria.</li>
+                    <li>Incrementa la fuerza y la estabilidad.</li>
                     <li>Mejora la coordinación y el equilibrio.</li>
-                    <li>Aumenta la fuerza funcional.</li>
                     <li>Reduce el riesgo de lesiones.</li>
-                    <li>
-                      Mejora el rendimiento deportivo en situaciones reales.
-                    </li>
                   </ul>
-
-                  <h5 className="mt-4 mb-2 text-lg font-semibold">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Ejercicios típicos:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Sentadilla con salto: 4 series de 15 repeticiones</li>
-                    <li>
-                      Lanzamiento de balón medicinal: 4 series de 15
-                      repeticiones
-                    </li>
-                    <li>TRX Rows: 4 series de 15 repeticiones</li>
-                    <li>Zancadas caminando con peso: 4 series de 20 pasos</li>
-                    <li>Mountain climbers: 4 series de 30 segundos</li>
+                    <li>Sentadillas: 4 series de 15 repeticiones</li>
+                    <li>Desplantes: 4 series de 20 repeticiones</li>
+                    <li>Push-ups: 4 series de 15 repeticiones</li>
+                    <li>Planks: 4 series de 1 minuto</li>
+                    <li>Medicine ball slams: 4 series de 15 repeticiones</li>
                   </ul>
                 </div>
               </AccordionContent>
@@ -242,99 +226,84 @@ const Services = () => {
         <img
           src="sport.png"
           alt="sport female"
-          className="rounded-lg w-1/3 h-screen"
+          className="rounded-lg mt-10 lg:mt-0 lg:w-1/3 h-auto"
         />
       </div>
 
-      <div
-        className="mt-24 h-screen  pt-20  w-full flex justify-between mb-80"
-        id="estetico"
-      >
-        <div className="w-1/2 h-screen  mt-10">
-          <h3 className="text-8xl font-extrabold mt-10 ">Estetico</h3>
+      <div className="mt-20 w-full flex flex-col lg:flex-row justify-between" id="estetico">
+        <div className="w-full lg:w-1/2 mt-10">
+          <h3 className="text-6xl lg:text-8xl font-extrabold mt-10 text-white">Estética</h3>
           <Accordion
             type="single"
             collapsible
-            className="w-full"
-            defaultValue="tonificacion"
+            className="w-full mt-6"
+            defaultValue="perdida_de_grasa"
           >
-            <AccordionItem value="tonificacion">
+            <AccordionItem value="perdida_de_grasa">
               <AccordionTrigger>
-                <h4 className="text-3xl font-semibold">Tonificación</h4>
+                <h4 className="text-2xl lg:text-3xl font-semibold text-gray-300">
+                  Pérdida de Grasa
+                </h4>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="p-4  rounded-lg shadow-md">
-                  <p className="text-sm ">
-                    Rutina enfocada en ejercicios de resistencia con pesas
-                    ligeras y altas repeticiones para definir y tonificar los
-                    músculos sin incrementar significativamente el volumen
-                    muscular.
+                <div className="p-4 rounded-lg shadow-md bg-gray-800 bg-opacity-50">
+                  <p className="text-sm">
+                    Planes de ejercicio y nutrición enfocados en la reducción de
+                    grasa corporal y la mejora de la composición corporal.
                   </p>
-                  <h5 className="mt-4 mb-2 text-lg font-semibold ">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Beneficios:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Mejora la resistencia muscular.</li>
+                    <li>Reducción de grasa corporal.</li>
                     <li>Mejora la definición muscular.</li>
-                    <li>Incrementa la fuerza muscular.</li>
-                    <li>Incrementa la resistencia cardiovascular.</li>
+                    <li>Aumenta el metabolismo.</li>
+                    <li>Mejora la composición corporal.</li>
                   </ul>
-
-                  <h5 className="mt-4 mb-2 text-lg font-semibold ">
-                    Ejercicios típicos
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
+                    Ejercicios típicos:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>
-                      Sentadillas con mancuernas: 3 series de 15 repeticiones
-                    </li>
-                    <li>
-                      Press de hombros con mancuernas: 3 series de 15
-                      repeticiones
-                    </li>
-                    <li>Curl de bíceps: 3 series de 15 repeticiones</li>
-                    <li>Elevaciones laterales: 3 series de 15 repeticiones</li>
-                    <li>Plancha: 3 series de 30 segundos</li>
+                    <li>Cardio HIIT: 3 series de 20 minutos</li>
+                    <li>Levantamiento de pesas: 4 series de 12 repeticiones</li>
+                    <li>Entrenamiento en circuito: 3 series de 15 repeticiones</li>
+                    <li>Entrenamiento funcional: 3 series de 20 repeticiones</li>
+                    <li>Ejercicios de cuerpo completo: 4 series de 15 repeticiones</li>
                   </ul>
                 </div>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="tonificacion_intensiva">
+            <AccordionItem value="musculacion">
               <AccordionTrigger>
-                <h4 className="text-3xl font-semibold">
-                  Musculación Intensiva
+                <h4 className="text-2xl lg:text-3xl font-semibold text-gray-300">
+                  Musculación
                 </h4>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="p-4  rounded-lg shadow-md">
-                  <p className="text-sm ">
-                    Programa de entrenamiento con pesas pesadas y bajas
-                    repeticiones para aumentar la masa muscular y la fuerza.
+                <div className="p-4 rounded-lg shadow-md bg-gray-800 bg-opacity-50">
+                  <p className="text-sm">
+                    Programas de entrenamiento diseñados para aumentar la masa
+                    muscular y la fuerza, con ejercicios de resistencia y
+                    levantamiento de pesas.
                   </p>
-                  <h5 className="mt-4 mb-2 text-lg font-semibold ">
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Beneficios:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Press de banca: 4 series de 8 repeticiones.</li>
-                    <li>Peso muerto: 4 series de 8 repeticiones.</li>
-                    <li>Dominadas: 4 series al fallo.</li>
-                    <li>Prensa de piernas: 4 series de 8 repeticiones.</li>
-                    <li>Remo con barra: 4 series de 8 repeticiones.</li>
+                    <li>Incremento de masa muscular.</li>
+                    <li>Mejora de la fuerza.</li>
+                    <li>Mejora de la resistencia muscular.</li>
+                    <li>Mejora la estética corporal.</li>
                   </ul>
-
-                  <h5 className="mt-4 mb-2 text-lg font-semibold ">
-                    Ejercicios típicos
+                  <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
+                    Ejercicios típicos:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>
-                      Sentadillas con mancuernas: 3 series de 15 repeticiones
-                    </li>
-                    <li>
-                      Press de hombros con mancuernas: 3 series de 15
-                      repeticiones
-                    </li>
-                    <li>Curl de bíceps: 3 series de 15 repeticiones</li>
-                    <li>Elevaciones laterales: 3 series de 15 repeticiones</li>
-                    <li>Plancha: 3 series de 30 segundos</li>
+                    <li>Press de banca: 4 series de 12 repeticiones</li>
+                    <li>Sentadillas: 4 series de 15 repeticiones</li>
+                    <li>Deadlifts: 4 series de 12 repeticiones</li>
+                    <li>Pull-ups: 4 series de 10 repeticiones</li>
+                    <li>Push-ups: 4 series de 15 repeticiones</li>
                   </ul>
                 </div>
               </AccordionContent>
@@ -344,7 +313,7 @@ const Services = () => {
         <img
           src="estetico.png"
           alt="estetico"
-          className="rounded-lg h-[70vh] "
+          className="rounded-lg mt-10 lg:mt-0 lg:w-1/3 h-auto"
         />
       </div>
     </div>

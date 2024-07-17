@@ -39,7 +39,7 @@ const Contact = () => {
     return (
         <div className="flex md:justify-start items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/image.png')" }}>
             <div className="w-full max-w-sm p-4 bg-black border border-gray-800 rounded-lg shadow sm:p-6 md:p-8 md:ml-10 md:mb-10">
-                <h5 className="text-xl font-medium text-white mb-4">Escribenos!</h5>
+                <h5 className="text-xl font-medium text-white mb-4">Contáctanos</h5>
                 <Formik<IContactValues>
                     initialValues={{
                         name: "",
