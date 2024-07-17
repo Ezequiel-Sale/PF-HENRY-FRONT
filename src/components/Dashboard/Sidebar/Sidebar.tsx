@@ -34,21 +34,9 @@ const Sidebar = () => {
             <LayoutDashboard className="mr-2 h4 w4" />
             <Link href="/dashboard">Dashboard</Link>
           </CommandItem>
-          <CommandItem>
-            <Newspaper className="mr-2 h4 w4" />
-            <Link href="#">Suscripciones</Link>
-          </CommandItem>
-          <CommandItem>
-            <Folders className="mr-2 h4 w4" />
-            <Link href="#">Categorias</Link>
-          </CommandItem>
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="">
-          <CommandItem>
-            <User className="mr-2 h4 w4" />
-            <span>Perfil</span>
-          </CommandItem>
           <CommandItem>
             <UsersRound className="mr-2 h4 w4" />
             <Link href="/dashboard/users">

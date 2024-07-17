@@ -149,7 +149,7 @@ export const crearAviso = async ({ message }: Anuncios) => {
       },
       body: JSON.stringify({
         message: message,
-        durationInHours: 24,
+        durationInHours: 1,
       }),
     });
     if (!response.ok) {

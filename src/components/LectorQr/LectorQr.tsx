@@ -20,6 +20,7 @@ interface UserData {
 
 const QrScannerComponent: React.FC<QrScannerProps> = ({ delay = 300, style = { height: 240, width: 320 } }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
+  console.log(userData)
 
   const handleScan = (result: any) => {
     if (result) {
