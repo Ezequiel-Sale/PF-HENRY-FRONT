@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import QrScanner from 'react-qr-scanner';
 
 interface QrScannerProps {
@@ -20,8 +20,12 @@ interface UserData {
 
 const QrScannerComponent: React.FC<QrScannerProps> = ({ delay = 300, style = { height: 240, width: 320 } }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [isClient, setIsClient] = useState(false);
   console.log(userData)
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const handleScan = (result: any) => {
     if (result) {
       try {
@@ -42,12 +46,14 @@ const QrScannerComponent: React.FC<QrScannerProps> = ({ delay = 300, style = { h
     <div className="flex flex-col items-center min-h-screen py-2">
       <h1 className="text-2xl font-bold mb-4">QR Code Reader</h1>
       <div className="mb-4">
-        <QrScanner
-          delay={delay}
-          style={style}
-          onError={handleError}
-          onScan={handleScan}
-        />
+        {isClient && (
+          <QrScanner
+            delay={delay}
+            style={style}
+            onError={handleError}
+            onScan={handleScan}
+          />
+        )}
       </div>
       {userData && (
         <div className="bg-white shadow-lg rounded-lg p-6 max-w-sm w-full">
