@@ -85,9 +85,6 @@ const SuscriptionTable = ({ limit, title }: SuscriptionTableProps) => {
       </h3>
       <div className="overflow-x-auto">
         <Table className="w-full border-collapse">
-          <TableCaption className="mb-2 text-gray-600">
-            Lista de las últimas suscripciones realizadas
-          </TableCaption>
           <TableHeader>
             <TableRow className="bg-blue-100">
               <TableHead className="text-center py-3 px-4 font-semibold text-gray-700">
