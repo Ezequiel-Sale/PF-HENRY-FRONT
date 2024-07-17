@@ -120,7 +120,7 @@ const PlansForm = () => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto px-4">
       <Card>
         <CardHeader>
           <CardTitle>Crear plan</CardTitle>
@@ -128,7 +128,7 @@ const PlansForm = () => {
         <CardContent>
           <Form {...form}>
             <form
-              className="flex gap-4 justify-center items-center text-black"
+              className="flex flex-col sm:flex-row gap-4 justify-center items-center text-black"
               onSubmit={form.handleSubmit((values) => onSubmit({ ...values }))}
             >
               <FormField
@@ -136,7 +136,7 @@ const PlansForm = () => {
                 name="numeroDias"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="block  text-sm font-medium">
+                    <FormLabel className="block text-sm font-medium">
                       Selecciona el numero de días del plan
                     </FormLabel>
                     <FormControl>
@@ -165,7 +165,7 @@ const PlansForm = () => {
                 name="nombre"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="block text-sm font-medium ">
+                    <FormLabel className="block text-sm font-medium">
                       Nombre del plan
                     </FormLabel>
                     <FormControl>
@@ -185,7 +185,7 @@ const PlansForm = () => {
                 name="precio"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="block text-sm font-medium ">
+                    <FormLabel className="block text-sm font-medium">
                       Precio
                     </FormLabel>
                     <FormControl>
@@ -205,7 +205,7 @@ const PlansForm = () => {
               />
               <Button
                 className="bg-red-500 text-white hover:bg-red-600
-                mt-7 px-4 py-2 rounded-md text-center"
+                mt-4 sm:mt-0 px-4 py-2 rounded-md text-center"
                 type="submit"
               >
                 Crear plan
@@ -216,7 +216,7 @@ const PlansForm = () => {
       </Card>
       <div>
         <h2 className="text-3xl font-bold my-10">Planes</h2>
-        <div className="flex gap-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan) => (
             <Card key={plan.id}>
               <CardHeader className="relative">

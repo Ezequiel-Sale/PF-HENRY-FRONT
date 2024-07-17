@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { TabsContent, TabsList } from "@/components/ui/tabs";
-import { getUsers } from "@/helper/petitions";
 import ButtonFile from "./ButtonFile";
+import { getUsers } from "@/services/users";
 
 interface User {
   id: string;
@@ -12,8 +12,8 @@ interface User {
   peso: string;
   altura: string;
   objetivo: string;
-  horario: string;
-  diasSeleccionados: string; // Assuming this is a string representation of days like '{"Lunes","Martes","Miercoles"}'
+  horario: string[];
+  diasSeleccionados: string; 
   profesor: {
     id: string;
   };
@@ -25,6 +25,10 @@ interface LunesProps {
 
 const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
   const [users, setUsers] = useState<User[]>([]);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
+  const [pageIndex, setPageIndex] = useState(1);
+  console.log("usuarios obtenidos",users)
 
   function calcularEdad(fechaNacimiento: string): number {
     const hoy = new Date();
@@ -40,12 +44,27 @@ const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
   }
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await getUsers();
-      setUsers(data);
+    const fetchAllUsers = async () => {
+      let allUsers: User[] = [];
+      let currentPage = 1;
+      let hasMorePages = true;
+  
+      while (hasMorePages) {
+        const { users, metadata } = await getUsers(currentPage, 100); // Obtén 100 usuarios por página
+        allUsers = [...allUsers, ...users];
+        if (users.length < 100) {
+          hasMorePages = false;
+        } else {
+          currentPage++;
+        }
+      }
+  
+      console.log('Total de usuarios obtenidos:', allUsers.length);
+      setUsers(allUsers);
     };
-    fetchUsers();
-  }, []);
+  
+    fetchAllUsers();
+  }, []); // Este efecto se ejecutará solo una vez al montar el componente
 
   const timeSlots = [
     "08:00 a 10:00",
@@ -60,9 +79,9 @@ const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
 
   const getUsersForTimeSlot = (slot: string) => {
     return users.filter(user => 
-      user.horario === slot && 
+      user.horario.includes(slot) && 
       user.profesor.id === profesorId && 
-      user.diasSeleccionados.includes('Lunes') // Check user's selected days
+      user.diasSeleccionados.includes('Lunes') // Verifica los días seleccionados del usuario
     );
   };
 
@@ -71,7 +90,7 @@ const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
       {timeSlots.map((slot, index) => (
         <Accordion key={index} type="single" collapsible className="w-full max-w-6xl my-2">
           <AccordionItem value={`item-${index}`}>
-            <AccordionTrigger className="text-center">{slot}</AccordionTrigger>
+            <AccordionTrigger className="text-center">{slot} - {getUsersForTimeSlot(slot).length} inscritos</AccordionTrigger>
             <AccordionContent>
               <TabsContent value="lunes">
                 <TabsList className="flex justify-around mb-4">

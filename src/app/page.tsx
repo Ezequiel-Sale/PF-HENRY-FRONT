@@ -2,6 +2,8 @@ import Image from "next/image";
 import { MdHealthAndSafety } from "react-icons/md";
 import { MdOutlineSportsMartialArts } from "react-icons/md";
 import { LuScanFace } from "react-icons/lu";
+import ProfesorCard from "@/components/ProfesorCard/ProfesorCard";
+import PlanCard from "@/components/PlanCard/PlanCard";
 
 export default function Home() {
   return (
@@ -45,7 +47,8 @@ export default function Home() {
         </div>
         <img src="female.png" alt="fire man" className="md:max-h-[90vh]" />
       </div>
-
+      <ProfesorCard />
+      <PlanCard />
       <div className="flex flex-col items-center p-4  text-white rounded-lg shadow">
         <h3 className=" text-6xl  text-red-600 font-extrabold mb-4">
           Calificación del Gimnasio

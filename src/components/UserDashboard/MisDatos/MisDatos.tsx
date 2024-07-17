@@ -20,7 +20,6 @@ const MisDatos = () => {
     objetivo: [],
     nivelActividad: '',
     metodoPago: '',
-    contraseña: '••••••'
   });
   console.log("Prueba de userData", userData)
 
@@ -28,8 +27,8 @@ const MisDatos = () => {
   const [tempValue, setTempValue] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const editableFields = ['email', 'telefono', 'contraseña'];
+  const apiUri = process.env.NEXT_PUBLIC_API;
+  const editableFields = ['telefono', 'peso', 'altura'];
 
   const fieldLabels = {
     nombre: 'Nombre',
@@ -45,7 +44,6 @@ const MisDatos = () => {
     objetivo: 'Objetivo',
     nivelActividad: 'Nivel de actividad',
     metodoPago: 'Método de pago',
-    contraseña: 'Contraseña'
   };
 
   const [userId, setUserId] = useState<string | null>(null);
@@ -93,7 +91,6 @@ const MisDatos = () => {
         objetivo: data.objetivo || [],
         nivelActividad: data.nivelActividad || '',
         metodoPago: data.metodoPago || '',
-        contraseña: '••••••'
       });
       setIsLoading(false);
     } catch (error) {
@@ -125,22 +122,23 @@ const MisDatos = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const userId = localStorage.getItem('id');
+    const userSession = JSON.parse(localStorage.getItem("userSession") || "{}");
+    const userId = userSession.id;
     if (!userId) {
       console.error('No se encontró el ID del usuario en el localStorage');
       return;
     }
   
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+      const response = await fetch(`${apiUri}/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: userData.email,
           phone: userData.telefono,
-          password: userData.contraseña !== '••••••' ? userData.contraseña : undefined
+          peso: userData.peso,
+          altura: userData.altura,
         }),
       });
   
@@ -205,7 +203,7 @@ const MisDatos = () => {
                   {editingField === key ? (
                     <div className="flex items-center">
                       <input
-                        type={key === 'contraseña' ? 'password' : 'text'}
+                        type="text"
                         value={tempValue}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"

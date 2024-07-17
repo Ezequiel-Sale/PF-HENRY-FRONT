@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { TabsContent, TabsList } from "@/components/ui/tabs";
-import { getUsers } from "@/helper/petitions";
 import ButtonFile from "./ButtonFile";
+import { getUsers } from "@/services/users";
 
 interface User {
   id: string;
@@ -12,8 +12,8 @@ interface User {
   peso: string;
   altura: string;
   objetivo: string;
-  horario: string;
-  diasSeleccionados: string;
+  horario: string[];
+  diasSeleccionados: string; 
   profesor: {
     id: string;
   };
@@ -40,11 +40,26 @@ const Sabado: React.FC<SabadoProps> = ({ profesorId }) => {
   }
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await getUsers();
-      setUsers(data);
+    const fetchAllUsers = async () => {
+      let allUsers: User[] = [];
+      let currentPage = 1;
+      let hasMorePages = true;
+  
+      while (hasMorePages) {
+        const { users, metadata } = await getUsers(currentPage, 100);
+        allUsers = [...allUsers, ...users];
+        if (users.length < 100) {
+          hasMorePages = false;
+        } else {
+          currentPage++;
+        }
+      }
+  
+      console.log('Total de usuarios obtenidos:', allUsers.length);
+      setUsers(allUsers);
     };
-    fetchUsers();
+  
+    fetchAllUsers();
   }, []);
 
   const timeSlots = [
@@ -60,7 +75,7 @@ const Sabado: React.FC<SabadoProps> = ({ profesorId }) => {
 
   const getUsersForTimeSlot = (slot: string) => {
     return users.filter(user => 
-      user.horario === slot && 
+      user.horario.includes(slot) && 
       user.profesor.id === profesorId && 
       user.diasSeleccionados.includes('Sabado')
     );
@@ -71,7 +86,7 @@ const Sabado: React.FC<SabadoProps> = ({ profesorId }) => {
       {timeSlots.map((slot, index) => (
         <Accordion key={index} type="single" collapsible className="w-full max-w-6xl my-2">
           <AccordionItem value={`item-${index}`}>
-            <AccordionTrigger className="text-center">{slot}</AccordionTrigger>
+            <AccordionTrigger className="text-center">{slot} - {getUsersForTimeSlot(slot).length} inscritos</AccordionTrigger>
             <AccordionContent>
               <TabsContent value="sabado">
                 <TabsList className="flex justify-around mb-4">

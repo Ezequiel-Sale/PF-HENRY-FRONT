@@ -55,6 +55,7 @@ const Login = () => {
   //     }
   //   }
   // }, [userRole, router]);
+  
 
   useEffect(() => {
     const userSession = localStorage.getItem("userSession");
@@ -115,35 +116,40 @@ const Login = () => {
     try {
       const { auth, googleProvider } = getGoogleProvider();
       const result = await signInWithPopup(auth, googleProvider);
-
+  
       const resultFullProps: typeof result & {
         user: {
           accessToken: string;
+          uid: string;
+          email: string;
+          displayName: string;
         };
       } = result as any;
-
-      try {
-        const alreadyExists = await userAlreadyExists(
-          resultFullProps.user.email ?? "",
-          resultFullProps.user.accessToken
-        );
-        router.push("/userdashboard");
-      } catch (error) {
-        window.localStorage.setItem(
-          "token",
-          resultFullProps.user.accessToken ?? ""
-        );
-        window.localStorage.setItem("email", resultFullProps.user.email ?? "");
-        window.localStorage.setItem(
-          "name",
-          resultFullProps.user.displayName ?? ""
-        );
-        router.push("/register");
-      }
+  
+      // Crear un objeto con los datos necesarios
+      const googleSession = {
+        token: resultFullProps.user.accessToken,
+        id: resultFullProps.user.uid,
+        email: resultFullProps.user.email,
+        name: resultFullProps.user.displayName,
+        role: "user" // Asignar un rol por defecto
+      };
+  
+      // Guardar el objeto en el localStorage
+      window.localStorage.setItem("googleSession", JSON.stringify(googleSession));
+  
+      // Crear una cookie de sesión
+      document.cookie = `googleSession=${JSON.stringify(googleSession)}; path=/; max-age=86400; SameSite=Strict;`;
+  
+      // Redirigir al usuario al dashboard correspondiente
+      router.push("/userdashboard");
     } catch (error) {
-      console.error(error);
+      console.error("Error en inicio de sesión con Google:", error);
     }
   };
+  
+  
+  
 
   return (
     <div
@@ -241,30 +247,6 @@ const Login = () => {
                   </FormItem>
                 )}
               />
-            </div>
-            <div className="flex items-start">
-              <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <input
-                    id="remember"
-                    type="checkbox"
-                    value=""
-                    className="w-4 h-4 border border-gray-700 rounded bg-gray-900 focus:ring-3 focus:ring-red-300"
-                  />
-                </div>
-                <label
-                  htmlFor="remember"
-                  className="ms-2 text-sm font-medium text-gray-300"
-                >
-                  Recuérdame
-                </label>
-              </div>
-              <a
-                href="#"
-                className="ms-auto text-sm text-red-500 hover:underline"
-              >
-                ¿Olvidaste tu contraseña?
-              </a>
             </div>
             <button
               type="submit"

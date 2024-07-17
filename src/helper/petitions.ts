@@ -1,97 +1,90 @@
+"use client";
+
 import { Anuncios } from "@/components/Dashboard/Anuncios/Anuncios";
 import { ICredential } from "@/types/credentialInterface";
 import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
+import axios from "axios";
 import Swal from "sweetalert2";
-const apiUri = process.env.NEXT_PUBLIC_API
+const apiUri = process.env.NEXT_PUBLIC_API;
 
 export const registerUser = async (user: IFormValues) => {
-    try {
-      const response = await fetch(`http://localhost:3001/users/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(user),
-      })
-      if (response.ok) {
-        return response.json();
-      }else {
-        throw new Error('El usuario ya existe con esos datos');
-      }
-    } catch (error: any) {
-      throw new Error(error);
+  try {
+    const response = await fetch(`${apiUri}/users/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error("El usuario ya existe con esos datos");
     }
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+export async function createProfesor(profesor: IProfesor) {
+  try {
+    const profesorData = {
+      ...profesor,
+      dia: Array.isArray(profesor.dia) ? profesor.dia : [profesor.dia],
+      horario: Array.isArray(profesor.horario)
+        ? profesor.horario
+        : [profesor.horario],
+    };
+
+
+    const response = await fetch(`${apiUri}/profesor/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profesorData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Error: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+
+    const createdProfesor = await response.json();
+    return createdProfesor;
+  } catch (error: any) {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: error.message,
+    });
+    throw error;
+  }
 }
 
-export async function getUsers() {
-    try {
-      const response = await fetch(`http://localhost:3001/users`);
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
-      }
-      const users = await response.json();
-      return users;
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    }
-  }
-
-  export async function createProfesor(profesor: IProfesor) {
-    try {
-      const profesorData = {
-        ...profesor,
-        dia: Array.isArray(profesor.dia) ? profesor.dia : [profesor.dia],
-        horario: Array.isArray(profesor.horario) ? profesor.horario : [profesor.horario]
-      };
-  
-      const response = await fetch(`http://localhost:3001/profesor/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(profesorData),
-      });
-  
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error: ${response.status} ${response.statusText} - ${errorText}`);
-      }
-  
-      const createdProfesor = await response.json();
-      return createdProfesor;
-    } catch (error: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: error.message,
-      })
-      throw error;
-    }
-  }
-  
-
-export async function getProfesors() {
+export async function getProfesors(page: number, limit: number) {
   try {
-    const response = await fetch(`http://localhost:3001/profesor/profesores`);
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
-    }
-    const users = await response.json();
-    return users;
+    const response = await axios.get(
+      `${apiUri}/profesor/profesores?page=${page}&limit=${limit}`
+    );
+    console.log("Profesores ***", response.data);
+    return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error("Error fetching users:", error);
   }
 }
 
 export async function updateUserStatus(id: string) {
   try {
-    const response = await fetch(`http://localhost:3001/profesor/users/${id}`, {
-      method: 'PUT',
+    const response = await fetch(`${apiUri}/profesor/users/${id}`, {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({id}),
+      body: JSON.stringify({ id }),
     });
 
     if (!response.ok) {
@@ -101,19 +94,18 @@ export async function updateUserStatus(id: string) {
     const updatedUser = await response.json();
     return updatedUser;
   } catch (error) {
-    console.error('Error updating user status:', error);
+    console.error("Error updating user status:", error);
   }
 }
 
-
-export async function loginUser({email, password}: ICredential) {
+export async function loginUser({ email, password }: ICredential) {
   try {
-    const response = await fetch(`http://localhost:3001/auth/signin`, {
-      method: 'POST',
+    const response = await fetch(`${apiUri}/auth/signin`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({email , password, type: "user" ||  "profesor"}),
+      body: JSON.stringify({ email, password, type: "user" || "profesor" }),
     });
 
     if (!response.ok) {
@@ -123,18 +115,18 @@ export async function loginUser({email, password}: ICredential) {
     const loginData = await response.json();
     return loginData;
   } catch (error) {
-    console.error('Error logging in:', error);
+    console.error("Error logging in:", error);
   }
 }
 
 export async function updateProfesorStatus(id: string) {
   try {
-    const response = await fetch(`http://localhost:3001/profesor/${id}`, {
-      method: 'PUT',
+    const response = await fetch(`${apiUri}/profesor/${id}`, {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({id}),
+      body: JSON.stringify({ id }),
     });
 
     if (!response.ok) {
@@ -144,59 +136,50 @@ export async function updateProfesorStatus(id: string) {
     const updatedUser = await response.json();
     return updatedUser;
   } catch (error) {
-    console.error('Error updating user status:', error);
+    console.error("Error updating user status:", error);
   }
 }
 
-export const crearAviso = async ({message}: Anuncios) => {
+export const crearAviso = async ({ message }: Anuncios) => {
   try {
-      const response = await fetch(`${apiUri}/avisos/enviarAtodos`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: message,
-          durationInHours: 24
-        }),
-      });
-      if (!response.ok) {
-        throw new Error(`Error al enviar la notificación: ${response.statusText}`);
-      }
-      const result = await response.json();
-      console.log("Notificación enviada exitosamente:", result);
-    } catch (error) {
-      console.error("Error:", error);
+    const response = await fetch(`${apiUri}/avisos/enviarAtodos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: message,
+        durationInHours: 1,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Error al enviar la notificación: ${response.statusText}`
+      );
     }
-}
-
-// export async function getNotifications() {
-//   try {
-//     const response = await fetch('http://localhost:3001/notifications/rutinaSubida');
-//     if (!response.ok) {
-//       throw new Error(`Error: ${response.status} ${response.statusText}`);
-//     }
-//     const notifications = await response.json();
-//     return notifications;
-//   } catch (error) {
-//     console.error('Error fetching notifications:', error);
-//   }
-// }
+    const result = await response.json();
+    console.log("Notificación enviada exitosamente:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
 export async function getUserData(userId: string) {
   if (!userId) {
-    throw new Error('El ID del usuario es undefined');
+    throw new Error("El ID del usuario es undefined");
   }
 
   try {
-    const response = await fetch(`http://localhost:3001/users/${userId}`);
+    const response = await fetch(`${apiUri}/users/${userId}`);
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`¡Error HTTP! estado: ${response.status}, mensaje: ${errorText}`);
+      throw new Error(
+        `¡Error HTTP! estado: ${response.status}, mensaje: ${errorText}`
+      );
     }
     return await response.json();
   } catch (error) {
-    console.error('Error al obtener los datos del usuario:', error);
+    console.error("Error al obtener los datos del usuario:", error);
     throw error;
   }
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import axios from "axios";
+const apiUri = process.env.NEXT_PUBLIC_API;
+
 
 export const login = async (email: string, password: string) => {
   try {
@@ -17,7 +19,7 @@ export const login = async (email: string, password: string) => {
 export const userAlreadyExists = async (email: string, token: string) => {
   try {
     const response = await axios.post(
-      `http://localhost:3001/users/exist`,
+      `${apiUri}/users/exist`,
       {
         email,
       },
