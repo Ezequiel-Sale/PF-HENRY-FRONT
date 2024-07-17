@@ -248,30 +248,6 @@ const Login = () => {
                 )}
               />
             </div>
-            <div className="flex items-start">
-              <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <input
-                    id="remember"
-                    type="checkbox"
-                    value=""
-                    className="w-4 h-4 border border-gray-700 rounded bg-gray-900 focus:ring-3 focus:ring-red-300"
-                  />
-                </div>
-                <label
-                  htmlFor="remember"
-                  className="ms-2 text-sm font-medium text-gray-300"
-                >
-                  Recuérdame
-                </label>
-              </div>
-              <a
-                href="#"
-                className="ms-auto text-sm text-red-500 hover:underline"
-              >
-                ¿Olvidaste tu contraseña?
-              </a>
-            </div>
             <button
               type="submit"
               className="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"

@@ -39,10 +39,6 @@ const UserSidebar = () => {
                     <Link href="/userdashboard/pagos"><span>Pagos</span></Link>
                 </CommandItem>
                 <CommandItem>
-                    <LineChart className='mr-2 h-4 w-4' />
-                    <Link href="#"><span>Progreso</span></Link>
-                </CommandItem>
-                <CommandItem>
                     <QrCode className='mr-2 h-4 w-4' />
                     <Link href="/userdashboard/acceso-qr"><span>Generar acceso/pago</span></Link>
                 </CommandItem>
