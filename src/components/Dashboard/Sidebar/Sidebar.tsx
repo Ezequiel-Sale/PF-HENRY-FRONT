@@ -19,17 +19,17 @@ import {
   GraduationCap,
   UsersRound,
   Bell,
-  QrCode
+  QrCode,
 } from "lucide-react";
 import Link from "next/link";
 
 const Sidebar = () => {
   return (
     <Command className="bg-secondary rounded-none h-screen w-full">
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput placeholder="Escribe la seccion a buscar..." />
       <CommandList>
         <CommandEmpty>No se encontraron resultados.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
+        <CommandGroup heading="Sugerencias">
           <CommandItem>
             <LayoutDashboard className="mr-2 h4 w4" />
             <Link href="/dashboard">Dashboard</Link>
@@ -44,7 +44,7 @@ const Sidebar = () => {
           </CommandItem>
         </CommandGroup>
         <CommandSeparator />
-        <CommandGroup heading="Settings">
+        <CommandGroup heading="">
           <CommandItem>
             <User className="mr-2 h4 w4" />
             <span>Perfil</span>
@@ -57,7 +57,9 @@ const Sidebar = () => {
           </CommandItem>
           <CommandItem>
             <CreditCard className="mr-2 h4 w4" />
-            <span>Pagos</span>
+            <Link href="/dashboard/pays">
+              <span>Pagos</span>
+            </Link>
           </CommandItem>
           <CommandItem>
             <Settings className="mr-2 h4 w4" />
@@ -80,13 +82,13 @@ const Sidebar = () => {
           <CommandItem>
             <CreditCard className="mr-2 h4 w4" />
             <Link href="/dashboard/registrarpago">
-            <span>Registrar Pago</span>
+              <span>Registrar Pago</span>
             </Link>
           </CommandItem>
           <CommandItem>
             <QrCode className="mr-2 h4 w4" />
             <Link href="/dashboard/qr">
-            <span>Lector Qr</span>
+              <span>Lector Qr</span>
             </Link>
           </CommandItem>
         </CommandGroup>

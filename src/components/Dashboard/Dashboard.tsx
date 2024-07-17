@@ -24,11 +24,12 @@ const Dashboard = () => {
   const [inactiveUser, setInactiveUser] = useState(0);
   const [totalUserActives, setTotalUserActives] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [totalProfessors, setTotalProfessors] = useState(0);
 
   useEffect(() => {
     const fetchProfesors = async () => {
-      const profesors = await getProfesors();
-      setProfesorNumber(profesors);
+      const { professors } = await getProfesors(1, 1000);
+      setProfesorNumber(professors);
       const { users, metadata } = await getUsers(1, 5);
       setUsers(users);
       setTotalUserActives(metadata.totalUserActives);
@@ -37,9 +38,7 @@ const Dashboard = () => {
     };
 
     fetchProfesors();
-    console.log("Metadata", totalUserActives, inactiveUser);
   }, [users.length, inactiveUser, totalUserActives]);
-
 
   return (
     <>

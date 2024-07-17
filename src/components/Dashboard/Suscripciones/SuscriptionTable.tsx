@@ -43,13 +43,15 @@ const SuscriptionTable = ({ limit, title }: SuscriptionTableProps) => {
   const [pageSize, setPageSize] = useState(5);
   const [pageIndex, setPageIndex] = useState(1);
   const [totalPagesIndex, setTotalPagesIndex] = useState(2);
+  const [totalUsers, setTotalUsers] = useState(0);
 
   const fetchUsers = async () => {
     try {
-      const { users } = await getUsers(pageIndex, pageSize);
+      const { users, metadata } = await getUsers(pageIndex, pageSize);
       console.log("Users", users);
       if (Array.isArray(users)) {
         setUsers(users);
+        setTotalUsers(metadata.totalUsers);
       } else {
         console.error("La respuesta no es un array:", users);
         setUsers([]);
@@ -83,9 +85,6 @@ const SuscriptionTable = ({ limit, title }: SuscriptionTableProps) => {
       </h3>
       <div className="overflow-x-auto">
         <Table className="w-full border-collapse">
-          <TableCaption className="mb-2 text-gray-600">
-            Lista de las últimas suscripciones realizadas
-          </TableCaption>
           <TableHeader>
             <TableRow className="bg-blue-100">
               <TableHead className="text-center py-3 px-4 font-semibold text-gray-700">
@@ -130,7 +129,7 @@ const SuscriptionTable = ({ limit, title }: SuscriptionTableProps) => {
         </Table>
         <DataTablePagination
           data={usersOrdenados}
-          allDataSize={users.length}
+          allDataSize={totalUsers}
           pageSizeOptions={[5, 10, 15, 20, 25]}
           pageSize={pageSize}
           setPageSize={setPageSize}

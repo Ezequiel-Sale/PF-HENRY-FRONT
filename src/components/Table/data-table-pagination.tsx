@@ -36,10 +36,14 @@ export function DataTablePagination<TData>({
   setPageIndex,
   totalPagesIndex,
 }: DataTablePaginationProps<TData>) {
+  const selectedRows = (pageIndex - 1) * pageSize + 10;
+  const showSelectedRows =
+    selectedRows > allDataSize ? allDataSize : selectedRows;
+
   return (
     <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
       <div className="flex-1 whitespace-nowrap text-sm text-muted-foreground">
-        {data.length} de {allDataSize} fila(s) seleccionadas.
+        {showSelectedRows} de {allDataSize} fila(s) seleccionadas.
       </div>
       <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
         <div className="flex items-center space-x-2">
@@ -93,7 +97,7 @@ export function DataTablePagination<TData>({
             size="icon"
             className="size-8"
             onClick={() => setPageIndex(pageIndex + 1)}
-            disabled={pageIndex === totalPagesIndex}
+            disabled={pageIndex === totalPagesIndex + 1}
           >
             <ChevronRightIcon className="size-4" aria-hidden="true" />
           </Button>
@@ -103,7 +107,7 @@ export function DataTablePagination<TData>({
             size="icon"
             className="hidden size-8 lg:flex"
             onClick={() => setPageIndex(totalPagesIndex - 1)}
-            disabled={pageIndex === totalPagesIndex}
+            disabled={pageIndex === totalPagesIndex + 1}
           >
             <DoubleArrowRightIcon className="size-4" aria-hidden="true" />
           </Button>

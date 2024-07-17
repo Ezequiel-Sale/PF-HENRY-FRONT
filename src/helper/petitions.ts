@@ -1,7 +1,10 @@
+"use client";
+
 import { Anuncios } from "@/components/Dashboard/Anuncios/Anuncios";
 import { ICredential } from "@/types/credentialInterface";
 import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
+import axios from "axios";
 import Swal from "sweetalert2";
 const apiUri = process.env.NEXT_PUBLIC_API;
 
@@ -23,7 +26,6 @@ export const registerUser = async (user: IFormValues) => {
     throw new Error(error);
   }
 };
-
 
 export async function createProfesor(profesor: IProfesor) {
   try {
@@ -62,14 +64,13 @@ export async function createProfesor(profesor: IProfesor) {
   }
 }
 
-export async function getProfesors() {
+export async function getProfesors(page: number, limit: number) {
   try {
-    const response = await fetch(`http://localhost:3001/profesor/profesores`);
-    if (!response.ok) {
-      throw new Error(`Error: ${response.status} ${response.statusText}`);
-    }
-    const users = await response.json();
-    return users;
+    const response = await axios.get(
+      `http://localhost:3001/profesor/profesores?page=${page}&limit=${limit}`
+    );
+    console.log("Profesores ***", response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
   }
