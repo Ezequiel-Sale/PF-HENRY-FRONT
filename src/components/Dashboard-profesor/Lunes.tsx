@@ -12,7 +12,7 @@ interface User {
   peso: string;
   altura: string;
   objetivo: string;
-  horario: string;
+  horario: string[];
   diasSeleccionados: string; 
   profesor: {
     id: string;
@@ -28,6 +28,8 @@ const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
   const [totalUsers, setTotalUsers] = useState(0);
   const [pageSize, setPageSize] = useState(5);
   const [pageIndex, setPageIndex] = useState(1);
+  console.log("usuarios obtenidos",users)
+
   function calcularEdad(fechaNacimiento: string): number {
     const hoy = new Date();
     const nacimiento = new Date(fechaNacimiento);
@@ -77,9 +79,9 @@ const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
 
   const getUsersForTimeSlot = (slot: string) => {
     return users.filter(user => 
-      user.horario === slot && 
+      user.horario.includes(slot) && 
       user.profesor.id === profesorId && 
-      user.diasSeleccionados.includes('Lunes') // Check user's selected days
+      user.diasSeleccionados.includes('Lunes') // Verifica los días seleccionados del usuario
     );
   };
 
