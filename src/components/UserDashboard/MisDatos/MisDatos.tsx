@@ -27,7 +27,7 @@ const MisDatos = () => {
   const [tempValue, setTempValue] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const apiUri = process.env.NEXT_PUBLIC_API;
   const editableFields = ['telefono', 'peso', 'altura'];
 
   const fieldLabels = {
@@ -130,7 +130,7 @@ const MisDatos = () => {
     }
   
     try {
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+      const response = await fetch(`${apiUri}/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

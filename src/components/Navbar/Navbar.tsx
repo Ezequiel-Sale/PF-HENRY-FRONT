@@ -31,7 +31,7 @@ const Navbar = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<userSession>();
   const [userGoogle, setUserGoogle] = useState<GoogleSession>();
-  console.log("navbar userData",userData)
+  const apiUri = process.env.NEXT_PUBLIC_API;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -77,7 +77,7 @@ const Navbar = () => {
 
   useEffect(() => {
     if (userData) {
-      const socket = io("http://localhost:3001",{
+      const socket = io(`${apiUri}`,{
         query: { userId: userData.id },
       });
 

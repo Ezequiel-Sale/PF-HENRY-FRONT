@@ -10,7 +10,7 @@ const apiUri = process.env.NEXT_PUBLIC_API;
 
 export const registerUser = async (user: IFormValues) => {
   try {
-    const response = await fetch(`http://localhost:3001/users/register`, {
+    const response = await fetch(`${apiUri}/users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export async function createProfesor(profesor: IProfesor) {
     };
 
 
-    const response = await fetch(`http://localhost:3001/profesor/create`, {
+    const response = await fetch(`${apiUri}/profesor/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export async function createProfesor(profesor: IProfesor) {
 export async function getProfesors(page: number, limit: number) {
   try {
     const response = await axios.get(
-      `http://localhost:3001/profesor/profesores?page=${page}&limit=${limit}`
+      `${apiUri}/profesor/profesores?page=${page}&limit=${limit}`
     );
     console.log("Profesores ***", response.data);
     return response.data;
@@ -79,7 +79,7 @@ export async function getProfesors(page: number, limit: number) {
 
 export async function updateUserStatus(id: string) {
   try {
-    const response = await fetch(`http://localhost:3001/profesor/users/${id}`, {
+    const response = await fetch(`${apiUri}/profesor/users/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export async function updateUserStatus(id: string) {
 
 export async function loginUser({ email, password }: ICredential) {
   try {
-    const response = await fetch(`http://localhost:3001/auth/signin`, {
+    const response = await fetch(`${apiUri}/auth/signin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -121,7 +121,7 @@ export async function loginUser({ email, password }: ICredential) {
 
 export async function updateProfesorStatus(id: string) {
   try {
-    const response = await fetch(`http://localhost:3001/profesor/${id}`, {
+    const response = await fetch(`${apiUri}/profesor/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -164,26 +164,13 @@ export const crearAviso = async ({ message }: Anuncios) => {
   }
 };
 
-// export async function getNotifications() {
-//   try {
-//     const response = await fetch('http://localhost:3001/notifications/rutinaSubida');
-//     if (!response.ok) {
-//       throw new Error(`Error: ${response.status} ${response.statusText}`);
-//     }
-//     const notifications = await response.json();
-//     return notifications;
-//   } catch (error) {
-//     console.error('Error fetching notifications:', error);
-//   }
-// }
-
 export async function getUserData(userId: string) {
   if (!userId) {
     throw new Error("El ID del usuario es undefined");
   }
 
   try {
-    const response = await fetch(`http://localhost:3001/users/${userId}`);
+    const response = await fetch(`${apiUri}/users/${userId}`);
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(

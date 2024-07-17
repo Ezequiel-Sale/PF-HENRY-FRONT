@@ -30,6 +30,8 @@ const UsersPage = () => {
   const [pageIndex, setPageIndex] = useState(1);
   const [totalPagesIndex, setTotalPagesIndex] = useState(2);
   const [totalUsers, setTotalUsers] = useState(0);
+  const apiUri = process.env.NEXT_PUBLIC_API;
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -51,7 +53,7 @@ const UsersPage = () => {
   const updateUserStatus = async (id: string, newState: boolean) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/users/updateState/${id}`,
+        `${apiUri}/users/updateState/${id}`,
         {
           method: "PUT",
           headers: {

@@ -1,8 +1,9 @@
 import axios from "axios";
+const apiUri = process.env.NEXT_PUBLIC_API;
 
 export const getHorariosCupos = async (idProfesor: string) => {
   const response = await axios.get(
-    `http://localhost:3001/profesor/cupos?id=${idProfesor}`
+    `${apiUri}/profesor/cupos?id=${idProfesor}`
   );
   return response.data;
 };
