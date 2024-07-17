@@ -57,7 +57,7 @@ const QRaccess: React.FC = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [professorsList, setProfessorsList] = useState<any[]>([]);
   const [horariosProfesor, setHorariosProfesor] = useState<any[]>([]);
-  const apiUri = process.env.NEXT_PUBLIC_API;
+  const apiUri = process.env.NEXT_PUBLIC_API_URL;
 
 
   const form = useForm<ActivationFormValues>({

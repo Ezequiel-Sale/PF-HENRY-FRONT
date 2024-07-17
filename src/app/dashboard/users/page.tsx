@@ -30,7 +30,7 @@ const UsersPage = () => {
   const [pageIndex, setPageIndex] = useState(1);
   const [totalPagesIndex, setTotalPagesIndex] = useState(2);
   const [totalUsers, setTotalUsers] = useState(0);
-  const apiUri = process.env.NEXT_PUBLIC_API;
+  const apiUri = process.env.NEXT_PUBLIC_API_URL;
 
 
   useEffect(() => {

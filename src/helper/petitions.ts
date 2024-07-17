@@ -6,7 +6,7 @@ import { IProfesor } from "@/types/profesorInterface";
 import { IFormValues } from "@/types/registerInterface";
 import axios from "axios";
 import Swal from "sweetalert2";
-const apiUri = process.env.NEXT_PUBLIC_API;
+const apiUri = process.env.NEXT_PUBLIC_API_URL;
 
 export const registerUser = async (user: IFormValues) => {
   try {

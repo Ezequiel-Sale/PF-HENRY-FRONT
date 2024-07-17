@@ -1,5 +1,5 @@
 import axios from "axios";
-const apiUri = process.env.NEXT_PUBLIC_API;
+const apiUri = process.env.NEXT_PUBLIC_API_URL;
 
 interface IPay {
   metodoPago: string;

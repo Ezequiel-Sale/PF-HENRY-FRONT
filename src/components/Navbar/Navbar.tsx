@@ -31,7 +31,7 @@ const Navbar = () => {
   const router = useRouter();
   const [userData, setUserData] = useState<userSession>();
   const [userGoogle, setUserGoogle] = useState<GoogleSession>();
-  const apiUri = process.env.NEXT_PUBLIC_API;
+  const apiUri = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (typeof window !== "undefined") {
