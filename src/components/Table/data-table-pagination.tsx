@@ -93,7 +93,7 @@ export function DataTablePagination<TData>({
             size="icon"
             className="size-8"
             onClick={() => setPageIndex(pageIndex + 1)}
-            disabled={pageIndex === totalPagesIndex}
+            disabled={pageIndex === totalPagesIndex + 1}
           >
             <ChevronRightIcon className="size-4" aria-hidden="true" />
           </Button>
@@ -103,7 +103,7 @@ export function DataTablePagination<TData>({
             size="icon"
             className="hidden size-8 lg:flex"
             onClick={() => setPageIndex(totalPagesIndex - 1)}
-            disabled={pageIndex === totalPagesIndex}
+            disabled={pageIndex === totalPagesIndex + 1}
           >
             <DoubleArrowRightIcon className="size-4" aria-hidden="true" />
           </Button>
