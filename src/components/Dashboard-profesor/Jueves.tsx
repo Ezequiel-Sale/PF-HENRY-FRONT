@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { TabsContent, TabsList } from "@/components/ui/tabs";
-import { getUsers } from "@/helper/petitions";
 import ButtonFile from "./ButtonFile";
+import { getUsers } from "@/services/users";
 
 interface User {
   id: string;
@@ -25,7 +25,9 @@ interface JuevesProps {
 
 const Jueves: React.FC<JuevesProps> = ({ profesorId }) => {
   const [users, setUsers] = useState<User[]>([]);
-
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [pageSize, setPageSize] = useState(5);
+  const [pageIndex, setPageIndex] = useState(1);
   function calcularEdad(fechaNacimiento: string): number {
     const hoy = new Date();
     const nacimiento = new Date(fechaNacimiento);
@@ -40,12 +42,27 @@ const Jueves: React.FC<JuevesProps> = ({ profesorId }) => {
   }
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const data = await getUsers();
-      setUsers(data);
+    const fetchAllUsers = async () => {
+      let allUsers: User[] = [];
+      let currentPage = 1;
+      let hasMorePages = true;
+  
+      while (hasMorePages) {
+        const { users, metadata } = await getUsers(currentPage, 100); // Obtén 100 usuarios por página
+        allUsers = [...allUsers, ...users];
+        if (users.length < 100) {
+          hasMorePages = false;
+        } else {
+          currentPage++;
+        }
+      }
+  
+      console.log('Total de usuarios obtenidos:', allUsers.length);
+      setUsers(allUsers);
     };
-    fetchUsers();
-  }, []);
+  
+    fetchAllUsers();
+  }, []); // Este efecto se ejecutará solo una vez al montar el componente
 
   const timeSlots = [
     "08:00 a 10:00",

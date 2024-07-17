@@ -10,10 +10,19 @@ import Sabado from './Sabado';
 import Domingo from './Domingo';
 import { userSession } from '@/types/profesorInterface';
 import { usePathname } from 'next/navigation';
+import { getProfessors } from '@/services/professor';
 
 interface ProfesorProps {
   id: string;
   nombre: string;
+}
+
+interface ProfesoresResponse {
+  metadata: {
+    totalProfessors: number;
+    totalPages: number;
+  };
+  professors: ProfesorProps[];
 }
 
 const Profesor = () => {
@@ -22,6 +31,7 @@ const Profesor = () => {
   const [profesorActual, setProfesorActual] = useState<ProfesorProps | null>(null);
   const [loginData, setLoginData] = useState<userSession | null>(null);
   const pathName = usePathname();
+
 
 
   useEffect(() => {
@@ -37,23 +47,31 @@ const Profesor = () => {
   useEffect(() => {
     const fetchProfesores = async () => {
       try {
-        const response = await fetch(`http://localhost:3001/profesor/profesores`);
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
-        }
-        const profesoresData: ProfesorProps[] = await response.json();
-        setProfesores(profesoresData);
-        
-        if (loginData && loginData.id) {
-          const profesorEncontrado = profesoresData.find(prof => prof.id === loginData.id);
-          if (profesorEncontrado) {
-            setProfesorActual(profesorEncontrado);
-          } else {
-            console.log("No se encontró un profesor con el ID del login");
+        const response: ProfesoresResponse = await getProfessors();
+        console.log('Datos recibidos en fetchProfesores:', response);
+    
+        if (response && Array.isArray(response.professors)) {
+          setProfesores(response.professors);
+          
+          if (loginData && loginData.id) {
+            const profesorEncontrado = response.professors.find(prof => prof.id === loginData.id);
+            if (profesorEncontrado) {
+              setProfesorActual(profesorEncontrado);
+              console.log('Profesor actual establecido:', profesorEncontrado);
+            } else {
+              console.log("No se encontró un profesor con el ID del login");
+              setProfesorActual(null);
+            }
           }
+        } else {
+          console.error('Formato de datos inesperado:', response);
+          setProfesores([]);
+          setProfesorActual(null);
         }
       } catch (error) {
-        console.error('Error fetching profesores:', error);
+        console.error('Error al obtener profesores:', error);
+        setProfesores([]);
+        setProfesorActual(null);
       }
     };
   

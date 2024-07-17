@@ -23,6 +23,7 @@ interface IPayment {
     name: string;
     price: number;
   };
+  total: number;
 }
 
 const Pays = () => {
@@ -33,6 +34,9 @@ const Pays = () => {
   const [pageIndex, setPageIndex] = useState(1);
   const [totalPagesIndex, setTotalPagesIndex] = useState(2);
   const [totalPayments, setTotalPayments] = useState(0);
+
+  const [sortField, setSortField] = useState<keyof IPayment | null>(null);
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -58,6 +62,41 @@ const Pays = () => {
     fetchUsers();
   }, [pageSize, pageIndex, totalPagesIndex, totalPayments]);
 
+  const handleSort = (field: keyof IPayment) => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
+    }
+  };
+
+  const sortedPayments = [...payments].sort((a, b) => {
+    if (!sortField) return 0;
+    
+    let aValue: any = a[sortField];
+    let bValue: any = b[sortField];
+    
+    if (sortField === 'clientes') {
+      aValue = a.clientes.email;
+      bValue = b.clientes.email;
+    } else if (sortField === 'id_plan') {
+      aValue = a.id_plan.name;
+      bValue = b.id_plan.name;
+    } else if (sortField === 'total') {
+      aValue = a.id_plan.price;
+      bValue = b.id_plan.price;
+    }
+    
+    if (typeof aValue === 'string') {
+      return sortOrder === 'asc' 
+        ? aValue.localeCompare(bValue) 
+        : bValue.localeCompare(aValue);
+    } else {
+      return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+    }
+  });
+
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -68,25 +107,40 @@ const Pays = () => {
         <Table className="w-full border-collapse">
           <TableHeader>
             <TableRow className="bg-blue-100">
-              <TableHead className="text-center py-3 px-4 font-semibold text-gray-700">
-                Método de pago
+              <TableHead 
+                className="text-center py-3 px-4 font-semibold text-gray-700 cursor-pointer"
+                onClick={() => handleSort('metodopago')}
+              >
+                Método de pago {sortField === 'metodopago' && (sortOrder === 'asc' ? '▲' : '▼')}
               </TableHead>
-              <TableHead className="text-center py-3 px-4 font-semibold text-gray-700 hidden md:table-cell">
-                Fecha de pago
+              <TableHead 
+                className="text-center py-3 px-4 font-semibold text-gray-700 hidden md:table-cell cursor-pointer"
+                onClick={() => handleSort('fecha_pago')}
+              >
+                Fecha de pago {sortField === 'fecha_pago' && (sortOrder === 'asc' ? '▲' : '▼')}
               </TableHead>
-              <TableHead className="text-center py-3 px-4 font-semibold text-gray-700">
-                Correo usuario
+              <TableHead 
+                className="text-center py-3 px-4 font-semibold text-gray-700 cursor-pointer"
+                onClick={() => handleSort('clientes')}
+              >
+                Correo usuario {sortField === 'clientes' && (sortOrder === 'asc' ? '▲' : '▼')}
               </TableHead>
-              <TableHead className="text-center py-3 px-4 font-semibold text-gray-700">
-                Plan
+              <TableHead 
+                className="text-center py-3 px-4 font-semibold text-gray-700 cursor-pointer"
+                onClick={() => handleSort('id_plan')}
+              >
+                Plan {sortField === 'id_plan' && (sortOrder === 'asc' ? '▲' : '▼')}
               </TableHead>
-              <TableHead className="text-center py-3 px-4 font-semibold text-gray-700">
-                Total
+              <TableHead 
+                className="text-center py-3 px-4 font-semibold text-gray-700 cursor-pointer"
+                onClick={() => handleSort('total')}
+              >
+                Total {sortField === 'total' && (sortOrder === 'asc' ? '▲' : '▼')}
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {payments.map((payment: IPayment, index: number) => (
+            {sortedPayments.map((payment: IPayment, index: number) => (
               <TableRow
                 key={payment.id}
                 className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}

@@ -166,7 +166,7 @@ const Navbar = () => {
                     )}
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="w-72 p-0">
+                <PopoverContent className="w-80 p-0">
                   <NotificationsDropdown />
                 </PopoverContent>
               </Popover>

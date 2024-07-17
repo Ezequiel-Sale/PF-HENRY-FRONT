@@ -37,6 +37,7 @@ export async function createProfesor(profesor: IProfesor) {
         : [profesor.horario],
     };
 
+
     const response = await fetch(`http://localhost:3001/profesor/create`, {
       method: "POST",
       headers: {
