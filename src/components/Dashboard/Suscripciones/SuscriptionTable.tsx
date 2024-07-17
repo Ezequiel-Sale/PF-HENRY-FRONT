@@ -96,9 +96,6 @@ const SuscriptionTable = ({ limit, title }: SuscriptionTableProps) => {
               <TableHead className="text-center py-3 px-4 font-semibold text-gray-700 hidden md:table-cell">
                 Fecha de nacimiento
               </TableHead>
-              <TableHead className="text-center py-3 px-4 font-semibold text-gray-700">
-                Ver
-              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -115,13 +112,6 @@ const SuscriptionTable = ({ limit, title }: SuscriptionTableProps) => {
                 </TableCell>
                 <TableCell className="text-center py-2 px-4 hidden md:table-cell">
                   {user.fecha_nacimiento}
-                </TableCell>
-                <TableCell className="text-center py-2 px-4">
-                  <Link href="#">
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs transition duration-300 ease-in-out">
-                      Ver
-                    </button>
-                  </Link>
                 </TableCell>
               </TableRow>
             ))}
