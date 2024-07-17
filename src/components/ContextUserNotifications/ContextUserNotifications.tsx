@@ -33,7 +33,7 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [anuncio, setAnuncio] = useState<Anuncio | null>(null);
   const [userData, setUserData] = useState<userSession | null>(null);
-  const apiUri = process.env.NEXT_PUBLIC_API;
+  const apiUri = process.env.NEXT_PUBLIC_API_URL;
 
 
   useEffect(() => {

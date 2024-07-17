@@ -27,7 +27,7 @@ const MisDatos = () => {
   const [tempValue, setTempValue] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const apiUri = process.env.NEXT_PUBLIC_API;
+  const apiUri = process.env.NEXT_PUBLIC_API_URL;
   const editableFields = ['telefono', 'peso', 'altura'];
 
   const fieldLabels = {
