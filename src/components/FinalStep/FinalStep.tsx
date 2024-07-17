@@ -107,8 +107,6 @@ const AdditionalInfoForm = () => {
 
         const urlPasarelaPago = payment.init_point;
         window.location.href = urlPasarelaPago;
-
-        // router.push("/dashboard");
       }
     }
   }
@@ -122,11 +120,6 @@ const AdditionalInfoForm = () => {
     );
     fetchProfessors();
     const token = window.localStorage.getItem("userId");
-    // if (!token) {
-    //   router.push("/login");
-    // }
-    // const decodedToken = token ? JSON.parse(atob(token.split(".")[1])) : null;
-    // setUser(decodedToken);
   }, []);
 
   useEffect(() => {
@@ -418,149 +411,92 @@ const AdditionalInfoForm = () => {
           </form>
         </Form>
         <Sheet
-          open={isOpen}
-          onOpenChange={() => {
-            isOpen ? setIsOpen(false) : setIsOpen(true);
-          }}
-        >
-          <SheetContent className="bg-black text-white">
-            <SheetHeader>
-              <SheetTitle className="text-white">Resumen del plan</SheetTitle>
-              <SheetDescription>
-                <div>
-                  <table className="table-auto text-white rounded-xl">
-                    <tbody>
-                      <tr>
-                        <td className="border px-2 py-2">Profesor</td>
-                        <td className="border px-2 py-2">
-                          {selectedProfessor?.nombre}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-2">Dias</td>
-                        <td className="border px-2 py-2">
-                          {form.watch("diasSeleccionados").join(" ")}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-2">Horario</td>
-                        <td className="border px-2 py-2">
-                          {form.watch("horario")}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-2">Objetivo</td>
-                        <td className="border px-2 py-2">
-                          {form.watch("objetivo")}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-2">Nivel de actividad</td>
-                        <td className="border px-2 py-2">
-                          {form.watch("nivelActividad")}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-2">Altura</td>
-                        <td className="border px-2 py-2">
-                          {form.watch("altura")}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-2">Peso</td>
-                        <td className="border px-2 py-2">
-                          {form.watch("peso")}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div className="flex justify-end mt-4 flex-col">
-                    <h4 className="text-red-500 font-bold text-2xl">
-                      Total a pagar:{" $"}
-                      {plans.length > 0 &&
-                        (plans.find(
-                          (plan) =>
-                            plan.id === form.watch("diasSeleccionados").length
-                        )?.price ||
-                          "No disponible")}
-                    </h4>
-                    <div className="flex flex-col text-white mt-5 space-y-2">
-                      <label className="text-xl">
-                        Selecciona método de pago
-                      </label>
-                      <div className="flex space-x-4 justify-center">
-                        <div className="flex items-center ">
-                          <input
-                            type="radio"
-                            name="metodoPago"
-                            id="efectivo"
-                            className="hidden"
-                            value="efectivo"
-                            checked={selectedPaymentMethod === "efectivo"}
-                            onChange={handlePaymentMethodChange}
-                          />
-                          <label
-                            htmlFor="efectivo"
-                            className={`flex flex-col rounded-md border p-2 items-center cursor-pointer space-x-2 w-28
-                              ${
-                                selectedPaymentMethod === "efectivo" &&
-                                "border-red-500"
-                              }`}
-                          >
-                            <IoIosCash className="text-yellow-400" size={30} />
-                            <p className="text-sm">Efectivo</p>
-                          </label>
-                        </div>
-                        <div className="flex flex-col items-center">
-                          <input
-                            type="radio"
-                            name="MercadoPago"
-                            id="MercadoPago"
-                            className="hidden"
-                            value="MercadoPago"
-                            checked={selectedPaymentMethod === "MercadoPago"}
-                            onChange={handlePaymentMethodChange}
-                          />
-                          <label
-                            htmlFor="MercadoPago"
-                            className={`flex flex-col rounded-md border p-2 items-center cursor-pointer space-x-2 w-28
-                              ${
-                                selectedPaymentMethod === "MercadoPago" &&
-                                "border-red-500"
-                              }`}
-                          >
-                            <SiMercadopago
-                              className="text-blue-400"
-                              size={30}
-                            />
-                            <p className="text-sm">MercadoPago</p>
-                          </label>
-                        </div>
-                      </div>
-                      <p
-                        className={
-                          selectedPaymentMethod === ""
-                            ? "text-red-500 text-sm"
-                            : "hidden"
-                        }
-                      >
-                        !Selecciona por favor un método de pago
-                      </p>
-                    </div>
-                    <div className="flex justify-center mt-8">
-                      <Button
-                        onClick={handleOnPay}
-                        className="bg-red-500 px-10 hover:bg-red-700"
-                      >
-                        Pagar
-                      </Button>
-                    </div>
-                  </div>
+  open={isOpen}
+  onOpenChange={() => {
+    isOpen ? setIsOpen(false) : setIsOpen(true);
+  }}
+>
+  <SheetContent className="bg-black text-white overflow-y-auto">
+    <SheetHeader className="text-center mb-6">
+      <SheetTitle className="text-3xl font-bold text-red-600">Resumen del Plan</SheetTitle>
+    </SheetHeader>
+    <SheetDescription>
+      <div className="space-y-6">
+        <div className="bg-gray-900 rounded-lg p-6 shadow-lg">
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { label: "Profesor", value: selectedProfessor?.nombre },
+              { label: "Días", value: form.watch("diasSeleccionados").join(", ") },
+              { label: "Horario", value: form.watch("horario") },
+              { label: "Objetivo", value: form.watch("objetivo") },
+              { label: "Nivel de actividad", value: form.watch("nivelActividad") },
+              { label: "Altura", value: `${form.watch("altura")} cm` },
+              { label: "Peso", value: `${form.watch("peso")} kg` },
+            ].map((item, index) => (
+              <div key={index} className="border-b border-gray-700 pb-2 last:border-b-0">
+                <p className="text-sm font-medium text-red-400">{item.label}</p>
+                <p className="text-lg">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div className="text-center">
+          <h4 className="text-red-500 font-bold text-2xl mb-5">
+            Total a pagar: ${plans.length > 0 &&
+              (plans.find(
+                (plan) =>
+                  plan.id === form.watch("diasSeleccionados").length
+              )?.price ||
+                "No disponible")}
+          </h4>
+          
+          <div className="space-y-5">
+            <p className="text-lg font-semibold text-white">Selecciona método de pago</p>
+            <div className="flex space-x-4 justify-center">
+              {[
+                { id: "efectivo", icon: IoIosCash, color: "text-yellow-400", label: "Efectivo" },
+                { id: "MercadoPago", icon: SiMercadopago, color: "text-blue-400", label: "MercadoPago" },
+              ].map((method) => (
+                <div key={method.id} className="flex items-center">
+                  <input
+                    type="radio"
+                    name="metodoPago"
+                    id={method.id}
+                    className="hidden"
+                    value={method.id}
+                    checked={selectedPaymentMethod === method.id}
+                    onChange={handlePaymentMethodChange}
+                  />
+                  <label
+                    htmlFor={method.id}
+                    className={`flex flex-col rounded-lg border-2 p-3 items-center cursor-pointer space-y-2 w-36 transition-all
+                      ${selectedPaymentMethod === method.id ? "border-red-500 bg-gray-800" : "border-gray-700 hover:bg-gray-800"}`}
+                  >
+                    <method.icon className={method.color} size={40} />
+                    <p className="text-sm font-medium">{method.label}</p>
+                  </label>
                 </div>
-              </SheetDescription>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
+              ))}
+            </div>
+            {selectedPaymentMethod === "" && (
+              <p className="text-red-500 text-sm mt-2">
+                Por favor, selecciona un método de pago
+              </p>
+            )}
+          </div>
+          
+          <Button
+            onClick={handleOnPay}
+            className="w-full bg-red-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-red-700 transition duration-300 mt-6 text-base"
+          >
+            Confirmar Pago
+          </Button>
+        </div>
+      </div>
+    </SheetDescription>
+  </SheetContent>
+</Sheet>
       </div>
     </div>
   );
