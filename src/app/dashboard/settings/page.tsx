@@ -243,7 +243,7 @@ const Settings: React.FC = () => {
               )}
             </div>
           </div>
-          <div className="flex justify-end mt-6">
+          <div className="flex justify-center md:justify-end mt-6">
             <button
               type="submit"
               className="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75 transition-colors duration-200"

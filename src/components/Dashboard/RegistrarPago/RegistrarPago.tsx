@@ -117,13 +117,13 @@ const RegistrarPago = () => {
               name="search"
               id="searchInput"
               placeholder="Correo electrónico"
-              className="p-1.5 rounded-xl w-64"
+              className="p-1.5 rounded-xl w-64 mb-3 mr-2"
               onChange={handleSearchInput}
               value={searchInput}
             />
             <button
               type="submit"
-              className="p-1 rounded-xl w-20 h-8 bg-black text-white ml-2"
+              className="p-1 rounded-xl w-20 h-8 bg-black text-white"
             >
               Buscar
             </button>
