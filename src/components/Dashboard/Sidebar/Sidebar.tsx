@@ -16,6 +16,7 @@ import {
   UsersRound,
   Bell,
   QrCode,
+  FolderKanban,
 } from "lucide-react";
 import Link from "next/link";
 
