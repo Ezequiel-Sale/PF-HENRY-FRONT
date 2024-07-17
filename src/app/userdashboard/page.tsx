@@ -1,14 +1,45 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { Dumbbell } from 'lucide-react'
+import { getUserData } from '@/helper/petitions'
 
 const UserDashboard = () => {
   const [userName, setUserName] = useState("")
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const userSession = JSON.parse(localStorage.getItem("userSession") || "{}")
-    setUserName(userSession.name || "Usuario")
+    const fetchUserData = async () => {
+      const userSession = JSON.parse(localStorage.getItem("userSession") || "{}")
+      const userId = userSession.id
+
+      if (userId) {
+        try {
+          const userData = await getUserData(userId)
+          setUserName(userData.name || "Usuario")
+        } catch (err) {
+          console.error('Error fetching user data:', err)
+          setError(err instanceof Error ? err.message : 'Error desconocido al obtener datos del usuario')
+        } finally {
+          setLoading(false)
+        }
+      } else {
+        console.error("No se encontró el ID del usuario en el localStorage")
+        setError("No se pudo obtener el ID del usuario")
+        setLoading(false)
+      }
+    }
+
+    fetchUserData()
   }, [])
+
+  if (loading) {
+    return <div>Cargando...</div>
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>
+  }
 
   return (
     <div className="flex-1 p-8 bg-white">

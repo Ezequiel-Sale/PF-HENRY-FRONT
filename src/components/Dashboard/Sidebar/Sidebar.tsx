@@ -20,6 +20,7 @@ import {
   UsersRound,
   Bell,
   QrCode,
+  FolderKanban,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -74,7 +75,7 @@ const Sidebar = () => {
             </Link>
           </CommandItem>
           <CommandItem>
-            <img src="/plans.png" className="mr-2 h-6" />
+          <FolderKanban className="mr-2 h4 w4" />
             <Link href="/dashboard/plans">
               <span>Gestionar planes</span>
             </Link>
