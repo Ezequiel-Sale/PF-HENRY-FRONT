@@ -1,6 +1,6 @@
 import { IPlan } from "@/types/FinalStepInterfaces";
 import axios from "axios";
-const apiUri = process.env.NEXT_PUBLIC_API;
+const apiUri = process.env.NEXT_PUBLIC_API_URL;
 const urlApi = `${apiUri}/plan`;
 
 export const getPlanById = async (idPlan: number) => {

@@ -21,7 +21,7 @@ interface User {
 const RegistrarPago = () => {
   const [searchInput, setSearchInput] = useState("");
   const [foundUser, setFoundUser] = useState<User | null>(null);
-  const apiUri = process.env.NEXT_PUBLIC_API;
+  const apiUri = process.env.NEXT_PUBLIC_API_URL;
 
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {

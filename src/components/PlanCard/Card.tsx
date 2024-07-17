@@ -10,7 +10,7 @@ interface Plan {
 const Card = () => {
     const [plans, setPlans] = useState<Plan[]>([])
     const [isLoading, setIsLoading] = useState(false)
-    const apiUri = process.env.NEXT_PUBLIC_API;
+    const apiUri = process.env.NEXT_PUBLIC_API_URL;
 
 
     const fetchPlans = async () => {
