@@ -57,6 +57,8 @@ const QRaccess: React.FC = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [professorsList, setProfessorsList] = useState<any[]>([]);
   const [horariosProfesor, setHorariosProfesor] = useState<any[]>([]);
+  const apiUri = process.env.NEXT_PUBLIC_API;
+
 
   const form = useForm<ActivationFormValues>({
     resolver: zodResolver(activationSchema),
@@ -101,7 +103,7 @@ const QRaccess: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/users/generaqr/${userId}`);
+      const response = await fetch(`${apiUri}/users/generaqr/${userId}`);
       if (!response.ok) {
         throw new Error('Error al obtener los datos del usuario');
       }

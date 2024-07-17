@@ -21,6 +21,8 @@ interface User {
 const RegistrarPago = () => {
   const [searchInput, setSearchInput] = useState("");
   const [foundUser, setFoundUser] = useState<User | null>(null);
+  const apiUri = process.env.NEXT_PUBLIC_API;
+
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(event.target.value);
@@ -29,7 +31,7 @@ const RegistrarPago = () => {
   const searchUser = async (email: string): Promise<User | null> => {
     try {
       const response = await fetch(
-        `http://localhost:3001/profesor/users?email=${email}`
+        `${apiUri}/profesor/users?email=${email}`
       );
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
@@ -65,7 +67,7 @@ const RegistrarPago = () => {
         throw new Error("No se ha encontrado un usuario");
       }
 
-      const response = await fetch(`http://localhost:3001/payments/efectivo`, {
+      const response = await fetch(`${apiUri}/payments/efectivo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

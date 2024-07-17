@@ -54,6 +54,7 @@ const AdditionalInfoForm = () => {
     email: string;
     id: string;
   }>();
+  const apiUri = process.env.NEXT_PUBLIC_API;
 
   const router = useRouter();
   const form = useForm<AdditionalInfoFormValues>({
@@ -170,7 +171,7 @@ const AdditionalInfoForm = () => {
       fetchPlans();
       values.plan = values.diasSeleccionados.length;
       console.log("Values:", values);
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+      const response = await fetch(`${apiUri}/users/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

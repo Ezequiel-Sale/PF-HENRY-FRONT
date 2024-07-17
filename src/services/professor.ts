@@ -1,6 +1,8 @@
+const apiUri = process.env.NEXT_PUBLIC_API;
+
 export const getProfessors = async () => {
   const response = await fetch(
-    "http://localhost:3001/profesor/profesores?page=1&limit=100"
+    `${apiUri}/profesor/profesores?page=1&limit=100`
   );
   return await response.json();
 };

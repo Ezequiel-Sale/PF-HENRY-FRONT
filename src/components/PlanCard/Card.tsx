@@ -10,11 +10,13 @@ interface Plan {
 const Card = () => {
     const [plans, setPlans] = useState<Plan[]>([])
     const [isLoading, setIsLoading] = useState(false)
+    const apiUri = process.env.NEXT_PUBLIC_API;
+
 
     const fetchPlans = async () => {
         setIsLoading(true)
         try {
-            const response = await fetch(`http://localhost:3001/plan`)
+            const response = await fetch(`${apiUri}/plan`)
             const data: Plan[] = await response.json()
             setPlans(data)
         } catch (error) {

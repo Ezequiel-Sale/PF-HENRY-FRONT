@@ -33,6 +33,8 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [anuncio, setAnuncio] = useState<Anuncio | null>(null);
   const [userData, setUserData] = useState<userSession | null>(null);
+  const apiUri = process.env.NEXT_PUBLIC_API;
+
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.localStorage) {
@@ -62,7 +64,7 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
   // Recuperar notificaciones del backend
   useEffect(() => {
     if (userId) {
-      axios.get(`http://localhost:3001/notifications/${userId}`)
+      axios.get(`${apiUri}/notifications/${userId}`)
         .then(response => {
           setNotifications(response.data);
         })
@@ -86,7 +88,7 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
   useEffect(() => {
     if (!userId) return;
 
-    const socket = io('http://localhost:3001', {
+    const socket = io(`${apiUri}`, {
       query: { userId },
       withCredentials: true,
     });
@@ -141,7 +143,7 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
 
   const markAsRead = async (id: string) => {
     try {
-      await axios.patch(`http://localhost:3001/notifications/${id}/read`);
+      await axios.patch(`${apiUri}/notifications/${id}/read`);
       const updatedNotifications = notifications.map(notif =>
         notif.id === id ? { ...notif, read: true } : notif
       );
@@ -156,7 +158,7 @@ export const CombinedProvider: FC<{ children: React.ReactNode }> = ({ children }
 
   useEffect(() => {
     if (userId) {
-      axios.get(`http://localhost:3001/avisos`)
+      axios.get(`${apiUri}/avisos`)
         .then(response => {
           const lastAnuncio = response.data[response.data.length - 1];
           setAnuncio(lastAnuncio);

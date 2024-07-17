@@ -10,6 +10,8 @@ const ButtonFile = ({ id }: ButtonFileProps) => {
   const { addNotification } = useContextCombined();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const apiUri = process.env.NEXT_PUBLIC_API;
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -55,7 +57,7 @@ const ButtonFile = ({ id }: ButtonFileProps) => {
         console.log(`${key}: ${value}`);
       });
       console.log("token en peticion", token)
-      const response = await fetch(`http://localhost:3001/file/${id}`, {
+      const response = await fetch(`${apiUri}/file/${id}`, {
         method: "POST",
         body: formData,
         headers: {
