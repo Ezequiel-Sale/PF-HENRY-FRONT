@@ -67,7 +67,7 @@ const AdditionalInfoForm = () => {
 
   const fetchProfessors = async () => {
     try {
-      const professors = await getProfessors();
+      const { professors } = await getProfessors();
       setProfessorsList(professors);
     } catch (error) {
       Swal.fire({
