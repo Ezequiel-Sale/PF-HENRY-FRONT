@@ -42,7 +42,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justift-betweeen gap-5 mb-5">
+      <div className="flex flex-col md:flex-row md:justify-center md:items-center md:flex-wrap justift-betweeen gap-5 mb-5">
         <DashboardCard
           title="Usuarios"
           count={totalUsers}
