@@ -137,7 +137,9 @@ const Services = () => {
             </AccordionItem>
           </Accordion>
         </div>
-        <img src="dancing.png" alt="dancing" className="rounded-lg mt-10 lg:mt-0 lg:w-1/2" />
+        <div className="lg:w-1/2 flex items-center justify-center">
+          <img src="dancing.png" alt="dancing" className="rounded-lg mt-10 lg:mt-0 w-[450px] h-[600px]" />
+        </div>
       </div>
 
       <div className="mt-20 w-full flex flex-col lg:flex-row justify-between" id="sports">
@@ -179,55 +181,63 @@ const Services = () => {
                       Sprints: 8 series de 30 segundos con 1 minuto de descanso
                     </li>
                     <li>Burpees: 4 series de 20 repeticiones</li>
-                    <li>Saltos de caja: 4 series de 15 repeticiones</li>
-                    <li>Battle ropes: 4 series de 30 segundos</li>
-                    <li>Jumping jacks: 4 series de 30 segundos</li>
+                    <li>
+                      Saltos de cuerda: 5 series de 1 minuto con 30 segundos de
+                      descanso
+                    </li>
+                    <li>Mountain climbers: 4 series de 30 segundos</li>
+                    <li>Sentadillas con salto: 3 series de 15 repeticiones</li>
                   </ul>
                 </div>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="entrenamiento_funcional">
+            <AccordionItem value="deporte">
               <AccordionTrigger>
                 <h4 className="text-2xl lg:text-3xl font-semibold text-gray-300">
-                  Entrenamiento Funcional
+                  Entrenamiento Deportivo Específico
                 </h4>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="p-4 rounded-lg shadow-md bg-gray-800 bg-opacity-50">
                   <p className="text-sm">
-                    Ejercicios diseñados para mejorar la funcionalidad en
-                    actividades cotidianas, aumentando la fuerza, la
-                    coordinación y la estabilidad.
+                    Programas diseñados para mejorar habilidades específicas de
+                    un deporte, incluyendo ejercicios técnicos, tácticos y de
+                    acondicionamiento físico.
                   </p>
                   <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Beneficios:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Mejora la funcionalidad diaria.</li>
-                    <li>Incrementa la fuerza y la estabilidad.</li>
-                    <li>Mejora la coordinación y el equilibrio.</li>
+                    <li>Mejora las habilidades técnicas y tácticas.</li>
+                    <li>Incrementa la resistencia y la fuerza.</li>
+                    <li>Optimiza el rendimiento en competiciones.</li>
                     <li>Reduce el riesgo de lesiones.</li>
                   </ul>
                   <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Ejercicios típicos:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Sentadillas: 4 series de 15 repeticiones</li>
-                    <li>Desplantes: 4 series de 20 repeticiones</li>
-                    <li>Push-ups: 4 series de 15 repeticiones</li>
-                    <li>Planks: 4 series de 1 minuto</li>
-                    <li>Medicine ball slams: 4 series de 15 repeticiones</li>
+                    <li>Drills específicos del deporte: 30 minutos</li>
+                    <li>
+                      Entrenamiento de fuerza funcional: 3 series de 12
+                      repeticiones
+                    </li>
+                    <li>Ejercicios de agilidad: 20 minutos</li>
+                    <li>Sesión de estiramientos y movilidad: 15 minutos</li>
+                    <li>Simulación de juego o competición: 30 minutos</li>
                   </ul>
                 </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>
+        <div className="lg:w-1/2 flex items-center justify-center">
         <img
           src="sport.png"
           alt="sport female"
-          className="rounded-lg mt-10 lg:mt-0 lg:w-1/3 h-auto"
+          className="rounded-lg mt-10 lg:mt-0 w-[450px] h-[600px]"
         />
+        </div>
       </div>
 
       <div className="mt-20 w-full flex flex-col lg:flex-row justify-between" id="estetico">
@@ -237,84 +247,101 @@ const Services = () => {
             type="single"
             collapsible
             className="w-full mt-6"
-            defaultValue="perdida_de_grasa"
+            defaultValue="p_perdida_grasa"
           >
-            <AccordionItem value="perdida_de_grasa">
+            <AccordionItem value="p_perdida_grasa">
               <AccordionTrigger>
                 <h4 className="text-2xl lg:text-3xl font-semibold text-gray-300">
-                  Pérdida de Grasa
+                  Programas de Pérdida de Grasa
                 </h4>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="p-4 rounded-lg shadow-md bg-gray-800 bg-opacity-50">
                   <p className="text-sm">
-                    Planes de ejercicio y nutrición enfocados en la reducción de
-                    grasa corporal y la mejora de la composición corporal.
+                    Entrenamientos y planes nutricionales diseñados para
+                    maximizar la quema de grasa y mejorar la composición
+                    corporal.
                   </p>
                   <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Beneficios:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Reducción de grasa corporal.</li>
-                    <li>Mejora la definición muscular.</li>
-                    <li>Aumenta el metabolismo.</li>
-                    <li>Mejora la composición corporal.</li>
+                    <li>Reducción significativa de la grasa corporal.</li>
+                    <li>Mejora de la definición muscular.</li>
+                    <li>Incremento del metabolismo basal.</li>
+                    <li>Mejora de la salud cardiovascular.</li>
                   </ul>
                   <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Ejercicios típicos:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Cardio HIIT: 3 series de 20 minutos</li>
-                    <li>Levantamiento de pesas: 4 series de 12 repeticiones</li>
-                    <li>Entrenamiento en circuito: 3 series de 15 repeticiones</li>
-                    <li>Entrenamiento funcional: 3 series de 20 repeticiones</li>
-                    <li>Ejercicios de cuerpo completo: 4 series de 15 repeticiones</li>
+                    <li>
+                      Intervalos de alta intensidad: 8 series de 1 minuto con 30
+                      segundos de descanso
+                    </li>
+                    <li>
+                      Circuito de fuerza con pesas moderadas: 3 series de 15
+                      repeticiones
+                    </li>
+                    <li>
+                      Cardio en estado estacionario: 30 minutos a ritmo
+                      moderado
+                    </li>
+                    <li>Ejercicios de core: 4 series de 20 repeticiones</li>
+                    <li>Estiramientos y flexibilidad: 10 minutos</li>
                   </ul>
                 </div>
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="musculacion">
+            <AccordionItem value="m_hipertrofia">
               <AccordionTrigger>
                 <h4 className="text-2xl lg:text-3xl font-semibold text-gray-300">
-                  Musculación
+                  Planes de Hipertrofia Muscular
                 </h4>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="p-4 rounded-lg shadow-md bg-gray-800 bg-opacity-50">
                   <p className="text-sm">
-                    Programas de entrenamiento diseñados para aumentar la masa
-                    muscular y la fuerza, con ejercicios de resistencia y
-                    levantamiento de pesas.
+                    Rutinas centradas en el aumento de la masa muscular,
+                    combinando ejercicios de resistencia con una nutrición
+                    adecuada.
                   </p>
                   <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Beneficios:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Incremento de masa muscular.</li>
-                    <li>Mejora de la fuerza.</li>
-                    <li>Mejora de la resistencia muscular.</li>
-                    <li>Mejora la estética corporal.</li>
+                    <li>Incremento significativo de la masa muscular.</li>
+                    <li>Mejora de la fuerza y la resistencia.</li>
+                    <li>Optimización de la síntesis de proteínas.</li>
+                    <li>Mejora de la estética corporal.</li>
                   </ul>
                   <h5 className="mt-4 mb-2 text-lg font-semibold text-gray-300">
                     Ejercicios típicos:
                   </h5>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li>Press de banca: 4 series de 12 repeticiones</li>
-                    <li>Sentadillas: 4 series de 15 repeticiones</li>
-                    <li>Deadlifts: 4 series de 12 repeticiones</li>
-                    <li>Pull-ups: 4 series de 10 repeticiones</li>
-                    <li>Push-ups: 4 series de 15 repeticiones</li>
+                    <li>
+                      Levantamiento de pesas: 4 series de 10 repeticiones con
+                      peso progresivo
+                    </li>
+                    <li>
+                      Ejercicios compuestos como sentadillas y press de banca: 4
+                      series de 8 repeticiones
+                    </li>
+                    <li>Series de drop sets: 3 series de 12 repeticiones</li>
+                    <li>
+                      Entrenamiento de aislamiento para grupos musculares
+                      específicos: 3 series de 15 repeticiones
+                    </li>
+                    <li>Estiramientos post-entrenamiento: 10 minutos</li>
                   </ul>
                 </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>
-        <img
-          src="estetico.png"
-          alt="estetico"
-          className="rounded-lg mt-10 lg:mt-0 lg:w-1/3 h-auto"
-        />
+        <div className="lg:w-1/2 flex items-center justify-center">
+          <img src="estetico.png" alt="estetico" className="rounded-lg mt-10 lg:mt-0 w-[400px] h-[450px]" />
+        </div>
       </div>
     </div>
   );
