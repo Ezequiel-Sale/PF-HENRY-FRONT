@@ -58,6 +58,7 @@ const QRaccess: React.FC = () => {
   const [professorsList, setProfessorsList] = useState<any[]>([]);
   const [horariosProfesor, setHorariosProfesor] = useState<any[]>([]);
   const apiUri = process.env.NEXT_PUBLIC_API_URL;
+  console.log("profesor lista",professorsList)
 
 
   const form = useForm<ActivationFormValues>({
@@ -120,8 +121,12 @@ const QRaccess: React.FC = () => {
 
   const fetchProfessors = async () => {
     try {
-      const professors = await getProfessors();
-      setProfessorsList(professors);
+      const response = await getProfessors();
+      if (response && response.professors) {
+        setProfessorsList(response.professors);
+      } else {
+        setProfessorsList([]);
+      }
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -302,7 +307,9 @@ const QRaccess: React.FC = () => {
                         }}
                       >
                         <option value="">Selecciona un profesor</option>
-                        {professorsList.map((profesor) => (
+                        {Array.isArray(professorsList) &&
+                                professorsList.length > 0 &&
+                                professorsList.map((profesor) => (
                           <option key={profesor.id} value={profesor.id}>
                             {profesor.nombre}
                           </option>
@@ -322,7 +329,9 @@ const QRaccess: React.FC = () => {
                     <FormControl>
                       <select {...field} className="w-full bg-gray-100 text-gray-800 p-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Selecciona un horario</option>
-                        {horariosProfesor.map((horario) => (
+                        {Array.isArray(professorsList) &&
+                                professorsList.length > 0 &&
+                                horariosProfesor.map((horario) => (
                           <option key={horario.id} value={horario.id}>
                             {horario.horario} - {horario.cupos} cupos
                           </option>
