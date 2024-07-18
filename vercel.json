@@ -1,0 +1,26 @@
+{
+    "headers": [
+      {
+        "source": "/(.*)",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "https://pf-henry-front-rouge.vercel.app"
+          },
+          {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
+          },
+          {
+            "key": "Access-Control-Allow-Credentials",
+            "value": "true"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "x-requested-with,authorization,content-type"
+          }
+        ]
+      }
+    ]
+  }
+  
