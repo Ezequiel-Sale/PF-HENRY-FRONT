@@ -39,26 +39,21 @@ const Register: React.FC = () => {
   };
 
   useEffect(() => {
-    const storedEmail = window.localStorage.getItem("email");
-    const storedName = window.localStorage.getItem("name");
+    // Leer los datos de la sesión de Google del localStorage
+    const googleSession = JSON.parse(window.localStorage.getItem("googleSession") || "{}");
 
-    if (storedEmail && storedName) {
-      setEmail(storedEmail);
-      setName(storedName);
+    if (googleSession.email && googleSession.name) {
+      setEmail(googleSession.email);
+      setName(googleSession.name);
       setPassword("R@@t12345");
       setIsDisabled(true);
-      window.localStorage.removeItem("email");
-      window.localStorage.removeItem("name");
     }
-    window.localStorage.removeItem("email");
-    window.localStorage.removeItem("name");
   }, []);
 
 
   const handleRegister = async (values: IFormValues, { resetForm }: any) => {
     try {
       const response = await registerUser(values);
-      console.log(response)
       const userId = response.id; // Assuming your API response has the ID of the created user
       console.log("User registered:", response);
 
@@ -80,7 +75,6 @@ const Register: React.FC = () => {
         icon: "error",
         title: "Error al registrar el usuario",
         text: error.message,
-        showConfirmButton: true,
       });
     }
   };
@@ -191,7 +185,7 @@ const Register: React.FC = () => {
                 <Field
                   type="password"
                   name="password"
-                  placeholder="********"
+                  placeholder="****"
                   className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                 />
                 <ErrorMessage name="password" component="div" className="text-red-500 text-xs text-center mt-1" />
@@ -201,7 +195,7 @@ const Register: React.FC = () => {
                 <Field
                   type="password"
                   name="confirmPassword"
-                  placeholder="********"
+                  placeholder="****"
                   className="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5"
                 />
                 <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-xs text-center mt-1" />

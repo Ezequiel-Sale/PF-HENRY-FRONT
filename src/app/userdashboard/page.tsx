@@ -11,12 +11,21 @@ const UserDashboard = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const userSession = JSON.parse(localStorage.getItem("userSession") || "{}")
-      const userId = userSession.id
+      const googleSession = JSON.parse(localStorage.getItem("googleSession") || "{}")
+      
+      let userId = userSession.id || googleSession.id
+      let name = userSession.name || googleSession.name
 
       if (userId) {
         try {
-          const userData = await getUserData(userId)
-          setUserName(userData.name || "Usuario")
+          if (userSession.id) {
+            // Si es un usuario normal, obtenemos los datos del servidor
+            const userData = await getUserData(userId)
+            setUserName(userData.name || "Usuario")
+          } else if (googleSession.id) {
+            // Si es un usuario de Google, usamos el nombre directamente del googleSession
+            setUserName(name || "Usuario")
+          }
         } catch (err) {
           console.error('Error fetching user data:', err)
           setError(err instanceof Error ? err.message : 'Error desconocido al obtener datos del usuario')

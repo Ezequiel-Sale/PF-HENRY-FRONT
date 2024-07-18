@@ -142,7 +142,7 @@ const Login = () => {
       document.cookie = `googleSession=${JSON.stringify(googleSession)}; path=/; max-age=86400; SameSite=Strict;`;
   
       // Redirigir al usuario al dashboard correspondiente
-      router.push("/userdashboard");
+      router.push("/register");
     } catch (error) {
       console.error("Error en inicio de sesión con Google:", error);
     }
