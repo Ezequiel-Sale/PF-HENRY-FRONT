@@ -16,7 +16,7 @@ interface User {
   diasSeleccionados: string; 
   profesor: {
     id: string;
-  };
+  } | null;
 }
 
 interface JuevesProps {
@@ -25,6 +25,7 @@ interface JuevesProps {
 
 const Jueves: React.FC<JuevesProps> = ({ profesorId }) => {
   const [users, setUsers] = useState<User[]>([]);
+  console.log("usuarios", users);
 
   function calcularEdad(fechaNacimiento: string): number {
     const hoy = new Date();
@@ -44,7 +45,7 @@ const Jueves: React.FC<JuevesProps> = ({ profesorId }) => {
       let allUsers: User[] = [];
       let currentPage = 1;
       let hasMorePages = true;
-  
+
       while (hasMorePages) {
         const { users, metadata } = await getUsers(currentPage, 100);
         allUsers = [...allUsers, ...users];
@@ -54,11 +55,11 @@ const Jueves: React.FC<JuevesProps> = ({ profesorId }) => {
           currentPage++;
         }
       }
-  
-      console.log('Total de usuarios obtenidos:', allUsers.length);
+
+      console.log('usuarios obtenidos:', allUsers);
       setUsers(allUsers);
     };
-  
+
     fetchAllUsers();
   }, []);
 
@@ -76,7 +77,7 @@ const Jueves: React.FC<JuevesProps> = ({ profesorId }) => {
   const getUsersForTimeSlot = (slot: string) => {
     return users.filter(user => 
       user.horario.includes(slot) && 
-      user.profesor.id === profesorId && 
+      user.profesor?.id === profesorId && 
       user.diasSeleccionados.includes('Jueves')
     );
   };
