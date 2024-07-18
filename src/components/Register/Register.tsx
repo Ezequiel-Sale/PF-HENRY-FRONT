@@ -109,7 +109,7 @@ const Register: React.FC = () => {
           {() => (
             <Form ref={form} className="grid grid-cols-2 gap-4">
               <h5 className="col-span-2 text-xl font-medium text-white">
-                Formulario de registro
+                Registrate
               </h5>
               <p className="col-span-2 text-sm font-medium text-gray-300 text-center mb-4">
                 ¿Ya tienes una cuenta?{" "}
