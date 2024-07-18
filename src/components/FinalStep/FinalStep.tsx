@@ -104,6 +104,9 @@ const AdditionalInfoForm = () => {
           metodoPago: selectedPaymentMethod,
           userEmail: user?.email ?? "",
           id_plan: form.watch("diasSeleccionados").length,
+          id_profesor: form.watch("profesor"),
+          diasSeleccionados: form.watch("diasSeleccionados"),
+          horarios: [form.watch("horario")],
         });
 
         const urlPasarelaPago = payment.init_point;

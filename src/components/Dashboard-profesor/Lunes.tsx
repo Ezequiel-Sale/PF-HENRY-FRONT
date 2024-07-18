@@ -16,7 +16,7 @@ interface User {
   diasSeleccionados: string; 
   profesor: {
     id: string;
-  };
+  } | null;
 }
 
 interface LunesProps {
@@ -25,10 +25,7 @@ interface LunesProps {
 
 const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
   const [users, setUsers] = useState<User[]>([]);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
-  const [pageIndex, setPageIndex] = useState(1);
-  console.log("usuarios obtenidos",users)
+  console.log("usuarios", users);
 
   function calcularEdad(fechaNacimiento: string): number {
     const hoy = new Date();
@@ -48,9 +45,9 @@ const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
       let allUsers: User[] = [];
       let currentPage = 1;
       let hasMorePages = true;
-  
+
       while (hasMorePages) {
-        const { users, metadata } = await getUsers(currentPage, 100); // Obtén 100 usuarios por página
+        const { users, metadata } = await getUsers(currentPage, 100);
         allUsers = [...allUsers, ...users];
         if (users.length < 100) {
           hasMorePages = false;
@@ -58,13 +55,13 @@ const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
           currentPage++;
         }
       }
-  
-      console.log('Total de usuarios obtenidos:', allUsers.length);
+
+      console.log('usuarios obtenidos:', allUsers);
       setUsers(allUsers);
     };
-  
+
     fetchAllUsers();
-  }, []); // Este efecto se ejecutará solo una vez al montar el componente
+  }, []);
 
   const timeSlots = [
     "08:00 a 10:00",
@@ -80,8 +77,8 @@ const Lunes: React.FC<LunesProps> = ({ profesorId }) => {
   const getUsersForTimeSlot = (slot: string) => {
     return users.filter(user => 
       user.horario.includes(slot) && 
-      user.profesor.id === profesorId && 
-      user.diasSeleccionados.includes('Lunes') // Verifica los días seleccionados del usuario
+      user.profesor?.id === profesorId && 
+      user.diasSeleccionados.includes('Lunes')
     );
   };
 
