@@ -89,15 +89,15 @@ const ButtonFile = ({ id }: ButtonFileProps) => {
     <div className="relative inline-block">
       <input
         type="file"
-        id={`file-input-${id}`} // Use a unique ID for each input
+        id={`file-input-${id}`}
         className="hidden"
         onChange={handleFileChange}
         disabled={isUploading}
       />
       {!isUploading && (
         <label
-          htmlFor={`file-input-${id}`} // Match the input's ID here
-          className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-700 transition-colors duration-300"
+          htmlFor={`file-input-${id}`}
+          className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md cursor-pointer hover:bg-green-600 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg"
         >
           <span className="mr-2">📁</span>
           <span>Rutina</span>
@@ -106,10 +106,20 @@ const ButtonFile = ({ id }: ButtonFileProps) => {
       {selectedFile && (
         <button
           onClick={handleUpload}
-          className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded cursor-pointer hover:bg-green-700 transition-colors duration-300"
+          className="inline-flex items-center px-4 py-2 ml-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600 transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg"
           disabled={isUploading}
         >
-          {isUploading ? 'Cargando...' : 'Subir'}
+          {isUploading ? (
+            <span className="flex items-center">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Cargando...
+            </span>
+          ) : (
+            'Subir'
+          )}
         </button>
       )}
     </div>

@@ -108,9 +108,9 @@ const Pagos: React.FC = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Historial de Pagos</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="p-4 sm:p-8 bg-gray-100 min-h-screen">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center mb-4 sm:mb-8 text-gray-800">Historial de Pagos</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {userData && userData.pagos && userData.pagos.map((pago) => 
           renderPagoCard(pago, userData.plan, isSubscriptionExpired(pago.fecha_pago))
         )}
