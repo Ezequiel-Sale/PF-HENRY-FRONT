@@ -82,41 +82,39 @@ const Miercoles: React.FC<MiercolesProps> = ({ profesorId }) => {
   };
 
   return (
-    <div className="px-2 flex flex-col items-center">
+    <div className="px-2 flex flex-col items-center bg-white">
       {timeSlots.map((slot, index) => (
         <Accordion key={index} type="single" collapsible className="w-full max-w-6xl my-2">
-          <AccordionItem value={`item-${index}`}>
-            <AccordionTrigger className="text-center">{slot} - {getUsersForTimeSlot(slot).length} inscritos</AccordionTrigger>
-            <AccordionContent>
+          <AccordionItem value={`item-${index}`} className="border border-gray-200 rounded-lg overflow-hidden">
+            <AccordionTrigger className="text-center bg-red-600 text-white p-4 hover:bg-red-700 transition-colors duration-300">
+              {slot} - {getUsersForTimeSlot(slot).length} inscritos
+            </AccordionTrigger>
+            <AccordionContent className="bg-white">
               <TabsContent value="miercoles">
-                <TabsList className="flex justify-around mb-4">
-                  <div className="w-20 text-center font-bold">Nombre</div>
-                  <div className="w-20 text-center font-bold">Teléfono</div>
-                  <div className="w-20 text-center font-bold">Edad</div>
-                  <div className="w-20 text-center font-bold">Peso</div>
-                  <div className="w-20 text-center font-bold">Altura</div>
-                  <div className="w-20 text-center font-bold">Objetivo</div>
-                  <div className="w-20 text-center font-bold">Rutina</div>
+                <TabsList className="flex justify-around mb-4 bg-gray-100 p-2 rounded-t-lg">
+                  {["Nombre", "Teléfono", "Edad", "Peso", "Altura", "Objetivo", "Rutina"].map((header) => (
+                    <div key={header} className="w-1/7 text-center font-bold text-gray-700">{header}</div>
+                  ))}
                 </TabsList>
                 {getUsersForTimeSlot(slot).length > 0 ? (
                   getUsersForTimeSlot(slot).map((user) => (
                     <div
                       key={user.id}
-                      className="flex justify-around items-center bg-black my-1 py-2"
+                      className="flex justify-around items-center bg-white hover:bg-gray-50 transition-colors duration-200 border-b border-gray-200 py-3"
                     >
-                      <div className="w-20 text-center text-white">{user.name}</div>
-                      <div className="w-20 text-center text-white">{user.phone}</div>
-                      <div className="w-20 text-center text-white">{calcularEdad(user.fecha_nacimiento)}</div>
-                      <div className="w-20 text-center text-white">{user.peso}</div>
-                      <div className="w-20 text-center text-white">{user.altura}</div>
-                      <div className="w-20 text-center text-white">{user.objetivo}</div>
-                      <div className="w-20 text-center">
+                      <div className="w-1/7 text-center text-gray-800">{user.name}</div>
+                      <div className="w-1/7 text-center text-gray-800">{user.phone}</div>
+                      <div className="w-1/7 text-center text-gray-800">{calcularEdad(user.fecha_nacimiento)}</div>
+                      <div className="w-1/7 text-center text-gray-800">{user.peso}</div>
+                      <div className="w-1/7 text-center text-gray-800">{user.altura}</div>
+                      <div className="w-1/7 text-center text-gray-800">{user.objetivo}</div>
+                      <div className="w-1/7 text-center">
                         <ButtonFile id={user.id} />
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center py-4 text-gray-500">
+                  <div className="text-center py-8 text-gray-500 bg-gray-50">
                     No hay usuarios programados para este horario.
                   </div>
                 )}
