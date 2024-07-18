@@ -160,7 +160,7 @@ const Login = () => {
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <h5 className="text-xl font-medium text-white">
-              Inicia sesión en tu cuenta
+              Inicia sesión
             </h5>
             <div>
               <FormField

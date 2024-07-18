@@ -104,7 +104,7 @@ const Sidebar = () => {
               </Link>
             </CommandItem>
             <CommandItem>
-              <img src="/plans.png" className="mr-2 h-6" />
+            <FolderKanban className="mr-2 h-4 w-4" />
               <Link href="/dashboard/plans" onClick={close}>
                 <span>Gestionar planes</span>
               </Link>
