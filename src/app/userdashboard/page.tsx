@@ -46,7 +46,7 @@ const UserDashboard = () => {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <Dumbbell className="h-16 w-16 text-red-600 mx-auto mb-4" />
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Bienvenido a tu Dashboard, {userName}!</h1>
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">Bienvenido a tu dashboard, {userName}!</h1>
           <p className="text-xl text-gray-600">
             Aquí podrás gestionar toda tu información y actividades en el gimnasio.
           </p>

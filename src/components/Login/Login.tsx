@@ -252,7 +252,7 @@ const Login = () => {
               type="submit"
               className="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
-              Iniciar sesión
+              Ingresar
             </button>
             <div className="text-sm font-medium text-gray-300">
               ¿No tienes una cuenta?{" "}
