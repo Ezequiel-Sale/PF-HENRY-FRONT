@@ -50,7 +50,10 @@ const MisDatos = () => {
 
   useEffect(() => {
     const userSession = JSON.parse(localStorage.getItem("userSession") || "{}");
-    const id = userSession.id;
+    const googleSession = JSON.parse(localStorage.getItem("googleSession") || "{}");
+    
+    let id = userSession.id || googleSession.id;
+
     if (id) {
       setUserId(id);
     } else {
